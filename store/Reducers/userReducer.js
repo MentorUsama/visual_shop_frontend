@@ -3,7 +3,7 @@ import {updateObject} from '../Utility/utility';
 
 // States
 const initialState = {
-    session_id:null,
+    session_id:"Fake Sesison",
     email:"",
     isLoggedIn:false
 };

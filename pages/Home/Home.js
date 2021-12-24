@@ -1,13 +1,14 @@
 import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 // Redux
 import { connect } from 'react-redux';
 
 
 const Home=(props)=>{
     return (
-        <div>
-            This is homepage
-        </div>
+        <View>
+            <Text>This is homepage {props.session_id}</Text>
+        </View>
     )
 }
 
