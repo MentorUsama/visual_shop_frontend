@@ -8,16 +8,8 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import {
     VisitorHomeStack,
     CustomerHomeStack,
-    VisitorCartStack,
-    CustomerCartStack,
-    LoginStack,
-    ComplaintStack,
-    OrdersStack,
-    UserStack
 }
     from './Stacks';
-// Importing Screens without Login
-import About from '../pages/About/About';
 
 
 
@@ -28,9 +20,26 @@ const Drawer = createDrawerNavigator();
 const CustomDrawer = (props) => {
     return (
         <DrawerContentScrollView {...props}>
-            <DrawerItemList {...props} />
-            {props.isLoggedIn?<DrawerItem label="logout" onPress={() => props.logout()}/>:null}
-            <Drawer.Screen name="Complaint Pageasd" component={ComplaintStack} />
+            <DrawerItem label="Home" onPress={() => props.navigation.navigate("HomePage")} />
+            <DrawerItem label="About Us" onPress={() => props.navigation.navigate("About")} />
+            <DrawerItem label="Cart" onPress={() => props.navigation.navigate("Cart")} />
+            {
+                props.isLoggedIn ?
+                    (
+                        <>
+                            <DrawerItem label="Information Page" onPress={() => props.navigation.navigate("UserInfo")} />
+                            <DrawerItem label="Orders Page" onPress={() => props.navigation.navigate("Orders")} />
+                            <DrawerItem label="Complaint Page" onPress={() => props.navigation.navigate("Complaints")} />
+                            <DrawerItem label="logout" onPress={() => props.logout()} />
+                        </>
+                    )
+                    :
+                    (
+                        <>
+                            <DrawerItem label="Login" onPress={() => props.navigation.navigate("Login")} />
+                        </>
+                    )
+            }
         </DrawerContentScrollView>
     );
 }
@@ -41,25 +50,8 @@ const MyDrawer = (props) => {
             drawerContent={(drawerProps) => <CustomDrawer {...drawerProps} isLoggedIn={isLoggedIn} logout={props.logout} />}
         >
             {
-                isLoggedIn ?
-                    (
-                        <>
-                            <Drawer.Screen name="Home" component={CustomerHomeStack} />
-                            <Drawer.Screen name="About Us" component={About} />
-                            <Drawer.Screen name="Cart" component={CustomerCartStack} />
-                            <Drawer.Screen name="Information Page" component={UserStack} />
-                            <Drawer.Screen name="Order Page" component={OrdersStack} />
-                            <Drawer.Screen name="Complaint Page" component={ComplaintStack} />
-                        </>
-                    ) :
-                    (
-                        <>
-                            <Drawer.Screen name="Home" component={VisitorHomeStack} />
-                            <Drawer.Screen name="About Us" component={About} />
-                            <Drawer.Screen name="Cart" component={VisitorCartStack} />
-                            <Drawer.Screen name="Login" component={LoginStack} />
-                        </>
-                    )
+                props.isLoggedIn ?<Drawer.Screen name='Home' component={CustomerHomeStack} />:<Drawer.Screen name="Home" component={VisitorHomeStack}/>
+
             }
         </Drawer.Navigator>
     )
