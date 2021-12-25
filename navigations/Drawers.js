@@ -1,9 +1,11 @@
+import React from 'react';
 // Redux
 import { connect } from 'react-redux';
 import * as actions from '../store/Actions/index';
 // Navigation
 import { DrawerContentScrollView, DrawerItemList, DrawerItem } from '@react-navigation/drawer';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 // Importing Stacks
 import {
     VisitorHomeStack,
@@ -16,27 +18,28 @@ import {
 const Drawer = createDrawerNavigator();
 
 
-
 const CustomDrawer = (props) => {
+    const key = props.state.routes[0].key
+    const currentPage = props.descriptors[key].options.headerTitle
     return (
         <DrawerContentScrollView {...props}>
-            <DrawerItem label="Home" onPress={() => props.navigation.navigate("HomePage")} />
-            <DrawerItem label="About Us" onPress={() => props.navigation.navigate("About")} />
-            <DrawerItem label="Cart" onPress={() => props.navigation.navigate("Cart")} />
+            <DrawerItem focused={currentPage == "HomePage"} label="Home" onPress={() => props.navigation.navigate("HomePage")} />
+            <DrawerItem focused={currentPage == "About"} label="About Us" onPress={() => props.navigation.navigate("About")} />
+            <DrawerItem focused={currentPage == "Cart"} label="Cart" onPress={() => props.navigation.navigate("Cart")} />
             {
                 props.isLoggedIn ?
                     (
                         <>
-                            <DrawerItem label="Information Page" onPress={() => props.navigation.navigate("UserInfo")} />
-                            <DrawerItem label="Orders Page" onPress={() => props.navigation.navigate("Orders")} />
-                            <DrawerItem label="Complaint Page" onPress={() => props.navigation.navigate("Complaints")} />
+                            <DrawerItem focused={currentPage == "UserInfo"} label="Information Page" onPress={() => props.navigation.navigate("UserInfo")} />
+                            <DrawerItem focused={currentPage == "Orders"} label="Orders Page" onPress={() => props.navigation.navigate("Orders")} />
+                            <DrawerItem focused={currentPage == "Complaints"} label="Complaint Page" onPress={() => props.navigation.navigate("Complaints")} />
                             <DrawerItem label="logout" onPress={() => props.logout()} />
                         </>
                     )
                     :
                     (
                         <>
-                            <DrawerItem label="Login" onPress={() => props.navigation.navigate("Login")} />
+                            <DrawerItem focused={currentPage == "Login"} label="Login" onPress={() => props.navigation.navigate("Login")} />
                         </>
                     )
             }
@@ -50,7 +53,7 @@ const MyDrawer = (props) => {
             drawerContent={(drawerProps) => <CustomDrawer {...drawerProps} isLoggedIn={isLoggedIn} logout={props.logout} />}
         >
             {
-                props.isLoggedIn ?<Drawer.Screen name='Home' component={CustomerHomeStack} />:<Drawer.Screen name="Home" component={VisitorHomeStack}/>
+                props.isLoggedIn ? <Drawer.Screen name='Home' component={CustomerHomeStack} /> : <Drawer.Screen name="Home" component={VisitorHomeStack} />
 
             }
         </Drawer.Navigator>

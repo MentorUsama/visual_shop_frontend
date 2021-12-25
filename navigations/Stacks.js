@@ -1,6 +1,8 @@
+import React from 'react';
 // Navigation
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 // Importing Screens without Login
 import Home from '../pages/Home/Home';
 import ProductDetail from '../pages/ProductDetail/ProductDetail';
@@ -26,7 +28,10 @@ const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
 
-const VisitorHomeStack = () => {
+const VisitorHomeStack = ({ navigation, route }) => {
+    React.useLayoutEffect(() => {
+        navigation.setOptions({ headerTitle: getFocusedRouteNameFromRoute(route) ?? 'HomePage'});
+      }, [navigation, route]);
     return (
         <Stack.Navigator>
             <Stack.Screen name="HomePage" component={Home} />
@@ -41,7 +46,10 @@ const VisitorHomeStack = () => {
         </Stack.Navigator>
     )
 }
-const CustomerHomeStack = () => {
+const CustomerHomeStack = ({ navigation, route }) => {
+    React.useLayoutEffect(() => {
+        navigation.setOptions({ headerTitle: getFocusedRouteNameFromRoute(route) ?? 'HomePage'});
+      }, [navigation, route]);
     return (
         <Stack.Navigator>
             <Stack.Screen name="HomePage" component={Home} />
