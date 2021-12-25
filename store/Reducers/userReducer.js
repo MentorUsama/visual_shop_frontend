@@ -10,11 +10,18 @@ const initialState = {
 
 
 // Functions for Updating the state
-const addSessionID = (state, action) => {
+const Login = (state, action) => {
     return updateObject( state, { 
         session_id: action.session_id,
         email:action.email,
         isLoggedIn:action.isLoggedIn
+     } );
+};
+const Logout = (state, action) => {
+    return updateObject( state, { 
+        session_id: null,
+        email:null,
+        isLoggedIn:false
      } );
 };
 
@@ -22,7 +29,8 @@ const addSessionID = (state, action) => {
 // Reducer
 const reducer = ( state = initialState, action ) => {
     switch ( action.type ) {
-        case actionTypes.ADD_SESSION_ID: return addSessionID(state, action);
+        case actionTypes.LOGIN: return Login(state, action);
+        case actionTypes.LOGOUT: return Logout(state, action);
         default:
             return state;
     }

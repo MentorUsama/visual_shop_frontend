@@ -8,11 +8,9 @@ import AppLoading from 'expo-app-loading';
 import { Provider } from 'react-redux';
 import { createStore, combineReducers } from 'redux';
 import userReducer from './store/Reducers/userReducer'
-// Importing Screens
-import Home from './pages/Home/Home';
-
-
-
+// Importing Navigation
+import { NavigationContainer } from '@react-navigation/native';
+import Navigation from './navigations/Navigation';
 // Importing Fonts
 const fetchFonts = () => {
   return Font.loadAsync({
@@ -43,18 +41,9 @@ export default function App() {
   // Returning The Screen If loaded
   return (
     <Provider store={store}>
-      <View style={styles.container}>
-        <Home></Home>
-      </View>
+      <NavigationContainer>
+        <Navigation />
+      </NavigationContainer>
     </Provider>
   );
 }
-// Styling
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

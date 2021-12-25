@@ -1,3 +1,4 @@
 export {
-    addSessionID
+    login,
+    logout
 } from './userAction'

@@ -1,1 +1,2 @@
-export const ADD_SESSION_ID = 'SESSION_ID';
+export const LOGIN = 'LOGIN';
+export const LOGOUT = 'LOGOUT';
