@@ -1,12 +1,13 @@
 import React from 'react';
 import { Text, View } from 'react-native';
+import PageContainer from '../../components/container/PageContainer'
 
 
 const LoginForget=(props)=>{
     return (
-        <View>
+        <PageContainer navigation={props.navigation}>
             <Text>This is LoginForget Page</Text>
-        </View>
+        </PageContainer>
     )
 }
 export default LoginForget;

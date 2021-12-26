@@ -2,16 +2,18 @@ import React from 'react';
 import { Text, View,Button } from 'react-native';
 // Redux
 import { connect } from 'react-redux';
+// Cotainer
+import PageContainer from '../../components/container/PageContainer'
 
 
 const Cart=(props)=>{
     return (
-        <View>
+        <PageContainer navigation={props.navigation}>
             <Text>This is Cart Page</Text>
             <View style={{marginTop:10}}></View>
             <Button disabled={!props.isLoggedIn} onPress={() => props.navigation.navigate('Checkout')} title="Checkout"/>
             <Button  onPress={() => props.navigation.navigate('HomePage')} title="Add More Product"/>
-        </View>
+        </PageContainer>
     )
 }
 const mapStateToProps = state => {

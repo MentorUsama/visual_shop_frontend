@@ -25,7 +25,6 @@ import ComplaintsDetail from '../pages/ComplaintsDetail/ComplaintsDetail';
 
 
 const Stack = createNativeStackNavigator();
-const Drawer = createDrawerNavigator();
 
 
 const VisitorHomeStack = ({ navigation, route }) => {
@@ -33,7 +32,9 @@ const VisitorHomeStack = ({ navigation, route }) => {
         navigation.setOptions({ headerTitle: getFocusedRouteNameFromRoute(route) ?? 'HomePage'});
       }, [navigation, route]);
     return (
-        <Stack.Navigator>
+        <Stack.Navigator    
+            screenOptions={{ headerShown:false}}
+        >
             <Stack.Screen name="HomePage" component={Home} />
             <Stack.Screen name="ProductDetail" component={ProductDetail} />
             <Stack.Screen name="Cart" component={Cart} />
@@ -51,7 +52,9 @@ const CustomerHomeStack = ({ navigation, route }) => {
         navigation.setOptions({ headerTitle: getFocusedRouteNameFromRoute(route) ?? 'HomePage'});
       }, [navigation, route]);
     return (
-        <Stack.Navigator>
+        <Stack.Navigator
+            screenOptions={{ headerShown:false}}
+        >
             <Stack.Screen name="HomePage" component={Home} />
             <Stack.Screen name="ProductDetail" component={ProductDetail} />
             <Stack.Screen name="Cart" component={Cart} />

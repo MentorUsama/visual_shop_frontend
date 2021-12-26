@@ -1,12 +1,13 @@
 import React from 'react';
 import { Text, View } from 'react-native';
+import PageContainer from '../../components/container/PageContainer'
 
 
 const ComplaintsDetail=(props)=>{
     return (
-        <View>
+        <PageContainer navigation={props.navigation}>
             <Text>This is ComplaintsDetail Page</Text>
-        </View>
+        </PageContainer>
     )
 }
 export default ComplaintsDetail;

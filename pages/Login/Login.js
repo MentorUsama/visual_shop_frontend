@@ -3,15 +3,17 @@ import { Text, View,Button } from 'react-native';
 // Redux
 import { connect } from 'react-redux';
 import * as actions from '../../store/Actions/index';
+// Container
+import PageContainer from '../../components/container/PageContainer'
 
 
 const Login=(props)=>{
     return (
-        <View>
+        <PageContainer navigation={props.navigation}>
             <Text>This is Login Page</Text>
             <View style={{marginTop:10}}></View>
             <Button disabled={props.isLoggedIn} onPress={() => props.login("FakeId","Fake@gmail.com",true)} title="Login"/>
-        </View>
+        </PageContainer>
     )
 }
 const mapStateToProps = state => {

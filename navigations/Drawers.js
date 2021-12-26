@@ -51,6 +51,7 @@ const MyDrawer = (props) => {
     return (
         <Drawer.Navigator
             drawerContent={(drawerProps) => <CustomDrawer {...drawerProps} isLoggedIn={isLoggedIn} logout={props.logout} />}
+            screenOptions={{ headerShown:false}}
         >
             {
                 props.isLoggedIn ? <Drawer.Screen name='Home' component={CustomerHomeStack} /> : <Drawer.Screen name="Home" component={VisitorHomeStack} />

@@ -1,12 +1,13 @@
 import React from 'react';
 import { Text, View } from 'react-native';
+import PageContainer from '../../components/container/PageContainer'
 
 
 const LoginAddCode=(props)=>{
     return (
-        <View>
+        <PageContainer navigation={props.navigation}>
             <Text>This is Login Add Verification Code page</Text>
-        </View>
+        </PageContainer>
     )
 }
 export default LoginAddCode;
