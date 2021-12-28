@@ -1,11 +1,7 @@
 import React from 'react';
-// Redux
-import { connect } from 'react-redux';
-import * as actions from '../store/Actions/index';
 // Navigation
-import { DrawerContentScrollView, DrawerItemList, DrawerItem } from '@react-navigation/drawer';
+import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 // Importing Stacks
 import {
     VisitorHomeStack,
@@ -54,7 +50,7 @@ const MyDrawer = (props) => {
             screenOptions={{ headerShown:false}}
         >
             {
-                props.isLoggedIn ? <Drawer.Screen name='Home' component={CustomerHomeStack} /> : <Drawer.Screen name="Home" component={VisitorHomeStack} />
+                props.isLoggedIn ? <Drawer.Screen name='Home'  component={CustomerHomeStack} /> : <Drawer.Screen name="Home" component={VisitorHomeStack} />
 
             }
         </Drawer.Navigator>

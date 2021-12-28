@@ -1,31 +1,42 @@
-import React from 'react';
-import { Text, View,Button } from 'react-native';
+import React,{useState} from 'react';
+import { Text, View,Button,TextInput } from 'react-native';
 // Redux
 import { connect } from 'react-redux';
 import * as actions from '../../store/Actions/index';
+// Axios
+import {customerLoginHandler} from '../../Utility/Customer/customerHandler';
 // Container
 import PageContainer from '../../components/container/PageContainer'
 
 
 const Login=(props)=>{
+    const [email,setEmail]=useState("");
+    const [password,setPassword]=useState("");
+    const UserLogin=async ()=>{
+        const response=await customerLoginHandler(email,password);
+        console.log(response);
+    }
+    // Function
     return (
         <PageContainer navigation={props.navigation}>
             <Text>This is Login Page</Text>
             <View style={{marginTop:10}}></View>
-            <Button disabled={props.isLoggedIn} onPress={() => props.login("FakeId","Fake@gmail.com",true)} title="Login"/>
+            <TextInput onChangeText={(val)=>setEmail(val)} placeholder="Enter Your Email" value={email}/>
+            <TextInput onChangeText={(val)=>setPassword(val)} placeholder="Enter Your Password" secureTextEntry={true} value={password}/>
+            <Button disabled={props.isLoggedIn} onPress={UserLogin} title="Login"/>
         </PageContainer>
     )
 }
 const mapStateToProps = state => {
     return {
-        session_id: state.userReducer.session_id,
+        access: state.userReducer.access,
         email:state.userReducer.email,
         isLoggedIn:state.userReducer.isLoggedIn
     };
 };
 const mapDispatchToProps = dispatch => {
     return {
-      login: (session_id,email,isLoggedIn) => dispatch(actions.login(session_id,email,isLoggedIn))
+      login: (access,email,isLoggedIn) => dispatch(actions.login(access,email,isLoggedIn))
     };
   };
 export default connect(mapStateToProps,mapDispatchToProps)(Login);

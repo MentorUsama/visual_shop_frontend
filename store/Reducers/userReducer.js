@@ -1,9 +1,9 @@
 import * as actionTypes from '../Actions/actionTypes';
-import {updateObject} from '../Utility/utility';
+import {updateObject} from '../StoreUtility/utility';
 
 // States
 const initialState = {
-    session_id:"Fake Sesison",
+    access:"Fake Sesison",
     email:"",
     isLoggedIn:false
 };
@@ -12,14 +12,14 @@ const initialState = {
 // Functions for Updating the state
 const Login = (state, action) => {
     return updateObject( state, { 
-        session_id: action.session_id,
+        access: action.access,
         email:action.email,
         isLoggedIn:action.isLoggedIn
      } );
 };
 const Logout = (state, action) => {
     return updateObject( state, { 
-        session_id: null,
+        access: null,
         email:null,
         isLoggedIn:false
      } );

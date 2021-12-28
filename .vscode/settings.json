@@ -1,3 +1,15 @@
 {
-  "files.exclude": {}
+  "files.exclude": {
+    "node_modules": true,
+    ".vscode": true,
+    ".expo-shared": true,
+    ".expo": true,
+    "README.md": true,
+    "package.json": true,
+    "package-lock.json": true,
+    "babel.config.js": true,
+    "app.json": true,
+    ".gitignore": true,
+    "assets": true
+  }
 }

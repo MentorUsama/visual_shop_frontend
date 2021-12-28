@@ -1,9 +1,9 @@
 import * as actionTypes from './actionTypes';
 
-export const login = (session_id,email,isLoggedIn) => {
+export const login = (access,email,isLoggedIn) => {
     return {
         type: actionTypes.LOGIN,
-        session_id: session_id,
+        access: access,
         email:email,
         isLoggedIn:isLoggedIn
     };

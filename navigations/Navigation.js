@@ -18,7 +18,7 @@ const Navigation = (props) => {
 
 const mapStateToProps = state => {
     return {
-        session_id: state.userReducer.session_id,
+        access: state.userReducer.token,
         email: state.userReducer.email,
         isLoggedIn: state.userReducer.isLoggedIn
     };
