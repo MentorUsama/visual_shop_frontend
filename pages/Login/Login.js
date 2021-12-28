@@ -4,7 +4,7 @@ import { Text, View,Button,TextInput } from 'react-native';
 import { connect } from 'react-redux';
 import * as actions from '../../store/Actions/index';
 // Axios
-import {customerLoginHandler} from '../../Utility/Customer/customerHandler';
+import {customerLoginHandler} from '../../Utility/APIS/Customer/customerHandler';
 // Container
 import PageContainer from '../../components/container/PageContainer'
 // Importing Components
@@ -18,6 +18,7 @@ const Login=(props)=>{
     const UserLogin=async ()=>{
         setLoading(true);
         const response=await customerLoginHandler(email,password);
+        console.log(response)
         setLoading(false);
     }
     // Function
