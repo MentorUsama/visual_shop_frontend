@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-// Importing Fonts
+// Expo Imports
 import * as Font from 'expo-font';
-// Importing App Loading
 import AppLoading from 'expo-app-loading';
 // Redux Imports
 import { Provider } from 'react-redux';
@@ -27,7 +25,6 @@ const rootReducer = combineReducers({ userReducer: userReducer });
 const store = createStore(rootReducer);
 
 export default function App() {
-  // Makin Sure Fonts Are Loaded
   const [fontLoaded, setFontLoaded] = useState(false);
   if (!fontLoaded) {
     return (

@@ -7,18 +7,25 @@ import * as actions from '../../store/Actions/index';
 import {customerLoginHandler} from '../../Utility/Customer/customerHandler';
 // Container
 import PageContainer from '../../components/container/PageContainer'
+// Importing Components
+import Loader from '../../components/components/Global/Loader';
 
 
 const Login=(props)=>{
     const [email,setEmail]=useState("");
     const [password,setPassword]=useState("");
+    const [loading,setLoading]=useState(false);
     const UserLogin=async ()=>{
+        setLoading(true);
         const response=await customerLoginHandler(email,password);
-        console.log(response);
+        setLoading(false);
     }
     // Function
     return (
         <PageContainer navigation={props.navigation}>
+            <Loader 
+                loading={loading}
+            />
             <Text>This is Login Page</Text>
             <View style={{marginTop:10}}></View>
             <TextInput onChangeText={(val)=>setEmail(val)} placeholder="Enter Your Email" value={email}/>
