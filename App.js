@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect} from 'react';
 // Expo Imports
 import * as Font from 'expo-font';
 import AppLoading from 'expo-app-loading';
@@ -6,9 +6,13 @@ import AppLoading from 'expo-app-loading';
 import { Provider } from 'react-redux';
 import { createStore, combineReducers } from 'redux';
 import userReducer from './store/Reducers/userReducer'
+import * as actions from './store/Actions/index';
 // Importing Navigation
 import { NavigationContainer } from '@react-navigation/native';
 import Navigation from './navigations/Navigation';
+// Importing Helper Function
+import {getData,USER_LOGIN_INFO_CONST,diff_minutes} from './Utility/HelperFunctions/index'
+const d = new Date();
 // Importing Fonts
 const fetchFonts = () => {
   return Font.loadAsync({
@@ -26,6 +30,16 @@ const store = createStore(rootReducer);
 
 export default function App() {
   const [fontLoaded, setFontLoaded] = useState(false);
+  useEffect(async ()=>{
+    const result=await getData(USER_LOGIN_INFO_CONST)
+    if(result.isSuccess)
+    { 
+      if(diff_minutes(d.getTime(),result.data.timeAdded)<50)
+      {
+        store.dispatch(actions.login(result.data.access,result.data.email,result.data.isLoggedIn,result.data.timeAdded))
+      }
+    }
+  },[])
   if (!fontLoaded) {
     return (
       <AppLoading

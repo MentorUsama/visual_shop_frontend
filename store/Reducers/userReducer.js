@@ -1,11 +1,13 @@
 import * as actionTypes from '../Actions/actionTypes';
 import {updateObject} from '../StoreUtility/utility';
+const d = new Date();
 
 // States
 const initialState = {
     access:"Fake Sesison",
     email:"",
-    isLoggedIn:false
+    isLoggedIn:false,
+    timeAdded:null
 };
 
 
@@ -14,14 +16,16 @@ const Login = (state, action) => {
     return updateObject( state, { 
         access: action.access,
         email:action.email,
-        isLoggedIn:action.isLoggedIn
+        isLoggedIn:action.isLoggedIn,
+        timeAdded:action.timeAdded
      } );
 };
 const Logout = (state, action) => {
     return updateObject( state, { 
         access: null,
         email:null,
-        isLoggedIn:false
+        isLoggedIn:false,
+        timeAdded:null
      } );
 };
 

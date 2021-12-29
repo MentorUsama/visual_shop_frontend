@@ -1,4 +1,4 @@
-import {CUSTOMER_LOGIN} from '../apis';
+import {CUSTOMER_LOGIN} from '../Constants/apiConstants';
 import axios from 'axios';
 
 
