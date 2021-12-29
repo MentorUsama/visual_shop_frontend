@@ -1,7 +1,8 @@
 // Exporting asyncStorageFunctions
 export {
     storeData,
-    getData
+    getData,
+    clearData
 } from './asyncStorage'
 // Exporting Storage Keys Constants
 export {

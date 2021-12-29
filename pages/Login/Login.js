@@ -25,7 +25,7 @@ const Login=(props)=>{
         if(response.status==200)
         {
             props.login(response.data.access,email,true)
-            storeData(USER_LOGIN_INFO_CONST,{access:response.data.access,email:email,isLoggedIn:true,timeAdded:d.getTime()})
+            await storeData(USER_LOGIN_INFO_CONST,{access:response.data.access,email:email,isLoggedIn:true,timeAdded:d.getTime()})
         }
         else
         {

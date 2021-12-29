@@ -20,4 +20,14 @@ const getData = async (key) =>
         return {isSuccess:false,detail:value}
     }
 }
-export {storeData,getData}
+const clearData=async (key)=>
+{
+  try{
+    await AsyncStorage.removeItem(key)
+    return true
+  }
+  catch(e){
+    return false
+  }
+}
+export {storeData,getData,clearData}

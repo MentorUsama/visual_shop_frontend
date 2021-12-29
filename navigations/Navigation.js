@@ -1,16 +1,21 @@
 // Redux
 import { connect } from 'react-redux';
 import * as actions from '../store/Actions/index';
+import {clearData,USER_LOGIN_INFO_CONST} from '../Utility/HelperFunctions/index'
 // Navigation
 import MyDrawer from './Drawers';
 
 
 const Navigation = (props) => {
     const { isLoggedIn } = props;
+    const logout=async ()=>{
+        props.logout()
+        await clearData(USER_LOGIN_INFO_CONST)
+    }
     return (
         <MyDrawer 
             isLoggedIn={isLoggedIn} 
-            logout={props.logout}
+            logout={logout}
         />
     )
 }

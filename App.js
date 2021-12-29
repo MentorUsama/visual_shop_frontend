@@ -32,7 +32,7 @@ export default function App() {
   const [fontLoaded, setFontLoaded] = useState(false);
   useEffect(async ()=>{
     const result=await getData(USER_LOGIN_INFO_CONST)
-    if(result.isSuccess)
+    if(result.isSuccess && result.data!=null)
     { 
       if(diff_minutes(d.getTime(),result.data.timeAdded)<50)
       {
