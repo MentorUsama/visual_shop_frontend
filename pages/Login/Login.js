@@ -4,7 +4,7 @@ import { Text, View,Button,TextInput } from 'react-native';
 import { connect } from 'react-redux';
 import * as actions from '../../store/Actions/index';
 // Axios
-import {customerLoginHandler} from '../../Utility/APIS/index';
+import {customerLoginHandler,customerGoogleAuthHandler} from '../../Utility/APIS/index';
 // Container
 import PageContainer from '../../components/container/PageContainer'
 // Importing Components
@@ -21,7 +21,6 @@ const Login=(props)=>{
     const [password,setPassword]=useState("");
     const [loading,setLoading]=useState(false);
     const [globalError,setGlobalError]=useState("")
-    const [accessToke,setAccessToken]=useState("");
     const UserLogin=async ()=>{
         setLoading(true);
         const response=await customerLoginHandler(email,password);
@@ -32,12 +31,14 @@ const Login=(props)=>{
         }
         else
         {
-            setGlobalError("Something Went Wrong!!")
+            setGlobalError("Something Went Wrong Please Try Again!!")
             setLoading(false);
         }
     }
     const loginWithGoogle=async ()=>{
-        try{
+        setLoading(true);
+        try
+        {
             const result=await Google.logInAsync({
                 androidClientId:"691282853878-k6e955ti68hce0re23bpve4n6m6fuk9s.apps.googleusercontent.com",
                 iosClientId:"691282853878-45d5a1nra6vfaiehd8gjlnsk69okmbch.apps.googleusercontent.com",
@@ -45,12 +46,29 @@ const Login=(props)=>{
             })
             if(result.type=="success")
             {
-                console.log(result)
+                const response=await customerGoogleAuthHandler(result.accessToken)
+                if(response.status==200)
+                {
+                    props.login(response.data.access,email,true)
+                    await storeData(USER_LOGIN_INFO_CONST,{access:response.data.access,email:email,isLoggedIn:true,timeAdded:d.getTime()})
+                }
+                else
+                {
+                    setGlobalError(response.data)
+                    setLoading(false);
+                }
             }
+            else
+            {
+                setGlobalError("Something Went Wrong!!")
+                setLoading(false);
+            }
+                
         }
         catch(e)
         {
-
+            setGlobalError("Something Went Wrong!! e")
+            setLoading(false);
         }
     }
     // Function

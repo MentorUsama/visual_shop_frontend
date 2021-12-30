@@ -9,3 +9,4 @@ export const ORDER_BASE_URL=`${BASE_URL}api/order/`;
 
 // =============== FULL API's  ===============
 export const CUSTOMER_LOGIN=`${CUSTOMER_BASE_URL}auth/login`
+export const CUSTOMER_GOOGLE_AUTH=`${CUSTOMER_BASE_URL}auth/google`

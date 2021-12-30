@@ -1,4 +1,4 @@
-import {CUSTOMER_LOGIN} from '../Constants/apiConstants';
+import {CUSTOMER_GOOGLE_AUTH, CUSTOMER_LOGIN} from '../Constants/apiConstants';
 import axios from 'axios';
 
 
@@ -24,4 +24,13 @@ const customerLoginHandler=async (email,password)=>{
         }
     }
 }
-export {customerLoginHandler};
+const customerGoogleAuthHandler=async (token)=>{
+    try{
+        const response=await axios.post(CUSTOMER_GOOGLE_AUTH,{token:token});
+        return {data:response,status:response.status}
+    }
+    catch(error){
+        return {data:"Something Went Wrong Please Try Again!!",status:error.response.status}
+    }
+}
+export {customerLoginHandler,customerGoogleAuthHandler};
