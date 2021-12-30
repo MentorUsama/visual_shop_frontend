@@ -9,6 +9,8 @@ import {customerLoginHandler} from '../../Utility/APIS/index';
 import PageContainer from '../../components/container/PageContainer'
 // Importing Components
 import Loader from '../../components/components/Global/Loader';
+// Importin Google Auth
+import * as Google from 'expo-google-app-auth';
 // Importing Utilityfunction
 import {storeData,USER_LOGIN_INFO_CONST} from '../../Utility/HelperFunctions/index'
 const d = new Date();
@@ -19,6 +21,7 @@ const Login=(props)=>{
     const [password,setPassword]=useState("");
     const [loading,setLoading]=useState(false);
     const [globalError,setGlobalError]=useState("")
+    const [accessToke,setAccessToken]=useState("");
     const UserLogin=async ()=>{
         setLoading(true);
         const response=await customerLoginHandler(email,password);
@@ -33,6 +36,23 @@ const Login=(props)=>{
             setLoading(false);
         }
     }
+    const loginWithGoogle=async ()=>{
+        try{
+            const result=await Google.logInAsync({
+                androidClientId:"691282853878-k6e955ti68hce0re23bpve4n6m6fuk9s.apps.googleusercontent.com",
+                iosClientId:"691282853878-45d5a1nra6vfaiehd8gjlnsk69okmbch.apps.googleusercontent.com",
+                scopes:["profile","email"]
+            })
+            if(result.type=="success")
+            {
+                console.log(result)
+            }
+        }
+        catch(e)
+        {
+
+        }
+    }
     // Function
     return (
         <PageContainer navigation={props.navigation}>
@@ -45,6 +65,7 @@ const Login=(props)=>{
             <TextInput onChangeText={(val)=>setEmail(val)} placeholder="Enter Your Email" value={email}/>
             <TextInput onChangeText={(val)=>setPassword(val)} placeholder="Enter Your Password" secureTextEntry={true} value={password}/>
             <Button disabled={props.isLoggedIn} onPress={UserLogin} title="Login"/>
+            <Button  onPress={loginWithGoogle} title="Login With Google"/>
         </PageContainer>
     )
 }
