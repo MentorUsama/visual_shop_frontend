@@ -1,0 +1,8 @@
+.saveArea{
+    flex: 1;
+}   
+.mainContainer{
+    padding-left: 50;
+    padding-right: 50;
+    margin-top: 50;
+}
