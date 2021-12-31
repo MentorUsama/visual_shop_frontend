@@ -71,7 +71,6 @@ const Login=(props)=>{
             setLoading(false);
         }
     }
-    // Function
     return (
         <PageContainer navigation={props.navigation}>
             <Loader 

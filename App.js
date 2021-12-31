@@ -10,6 +10,9 @@ import * as actions from './store/Actions/index';
 // Importing Navigation
 import { NavigationContainer } from '@react-navigation/native';
 import Navigation from './navigations/Navigation';
+// React Native Paper
+import { Provider as PaperProvider } from 'react-native-paper';
+import theme from './Utility/Theme/Theme'
 // Importing Helper Function
 import {getData,USER_LOGIN_INFO_CONST,diff_minutes} from './Utility/HelperFunctions/index'
 const d = new Date();
@@ -30,6 +33,8 @@ const store = createStore(rootReducer);
 
 export default function App() {
   const [fontLoaded, setFontLoaded] = useState(false);
+
+  // Storing Local Data into Redux
   useEffect(async ()=>{
     const result=await getData(USER_LOGIN_INFO_CONST)
     if(result.isSuccess && result.data!=null)
@@ -40,6 +45,8 @@ export default function App() {
       }
     }
   },[])
+
+  // Making Sure To Load All Fonts Before Loading The App
   if (!fontLoaded) {
     return (
       <AppLoading
@@ -49,12 +56,15 @@ export default function App() {
       />
     );
   }
+
   // Returning The Screen If loaded
   return (
     <Provider store={store}>
-      <NavigationContainer>
-        <Navigation />
-      </NavigationContainer>
+      <PaperProvider theme={theme}>
+        <NavigationContainer>
+          <Navigation />
+        </NavigationContainer>
+      </PaperProvider>
     </Provider>
   );
 }
