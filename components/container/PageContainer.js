@@ -1,6 +1,5 @@
 import React from 'react'
 import { View,StyleSheet,SafeAreaView,TouchableOpacity  } from 'react-native'
-import { useTheme } from 'react-native-paper';
 // Importing Icons
 import MenuBar from '../../assets/icons/menue-bar'
 import BackArrow from '../../assets/icons/back-arrow'
@@ -9,9 +8,8 @@ import {useRoute} from '@react-navigation/native';
 
 export default function PageContainer(props) {
     const route = useRoute();
-    const { colors } = useTheme();
     return (
-        <SafeAreaView style={[styles.saveArea,{backgroundColor:colors.background}]}>
+        <SafeAreaView style={[styles.saveArea]}>
             <View style={styles.mainContainer}>
                 {/* ====== Navigations =====*/}
                 <View style={styles.navigationContainer}>
@@ -48,6 +46,7 @@ export default function PageContainer(props) {
 const styles = StyleSheet.create({
     saveArea: {
       flex: 1,
+      backgroundColor:"#E5E5E5"
     },
     mainContainer:{
         marginTop: 50,

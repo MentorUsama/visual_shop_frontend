@@ -8,6 +8,11 @@
     "app.json": true,
     ".gitignore": true,
     "node_modules": true,
-    ".vscode": true
+    ".vscode": true,
+    "assets\\splash.png": true,
+    "assets\\icon.png": true,
+    "assets\\favicon.png": true,
+    "assets\\adaptive-icon.png": true,
+    "babel.config.js": true
   }
 }

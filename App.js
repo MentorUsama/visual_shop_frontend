@@ -10,9 +10,6 @@ import * as actions from './store/Actions/index';
 // Importing Navigation
 import { NavigationContainer } from '@react-navigation/native';
 import Navigation from './navigations/Navigation';
-// React Native Paper
-import { Provider as PaperProvider } from 'react-native-paper';
-import theme from './Utility/Theme/Theme'
 // Importing Helper Function
 import {getData,USER_LOGIN_INFO_CONST,diff_minutes} from './Utility/HelperFunctions/index'
 const d = new Date();
@@ -60,11 +57,9 @@ export default function App() {
   // Returning The Screen If loaded
   return (
     <Provider store={store}>
-      <PaperProvider theme={theme}>
         <NavigationContainer>
           <Navigation />
         </NavigationContainer>
-      </PaperProvider>
     </Provider>
   );
 }
