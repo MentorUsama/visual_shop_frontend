@@ -1,24 +1,17 @@
 import React, { useState } from 'react';
 import { Text, View, Image, StyleSheet,TouchableOpacity } from 'react-native';
-// Redux
-import { connect } from 'react-redux';
-import * as actions from '../../store/Actions/index';
-// Axios
-import { customerLoginHandler, customerGoogleAuthHandler } from '../../Utility/APIS/index';
 // Container
 import PageContainer from '../../components/container/PageContainer'
 // Importing Components
 import Loader from '../../components/components/Loader/Loader';
 import InputField from '../../components/components/Input/InputField';
 import MyButton from '../../components/components/Button/MyButton';
-// Importing Function
-import {ValidateEmail} from '../../Utility/HelperFunctions/preparedataHelper';
 // Importing Assets
 import Profile from '../../assets/images/profile.png'
 // Importin Google Auth
 import * as Google from 'expo-google-app-auth';
 // Importing Utilityfunction
-import { storeData, USER_LOGIN_INFO_CONST } from '../../Utility/HelperFunctions/index'
+import { storeData, USER_LOGIN_INFO_CONST,ValidateEmail } from '../../Utility/HelperFunctions/index'
 const d = new Date();
 
 

@@ -10,8 +10,9 @@ export {
     USER_LOGIN_INFO_CONST
 } from './storageKeys';
 
-// Exporting Prepare Data functions
+// Exporting Validate Data functions
 export {
-    diff_minutes
+    diff_minutes,
+    ValidateEmail
 }
-from './preparedataHelper'
+from './helpers'

@@ -11,12 +11,10 @@ import PageContainer from '../../components/container/PageContainer'
 import Loader from '../../components/components/Loader/Loader';
 import InputField from '../../components/components/Input/InputField';
 import MyButton from '../../components/components/Button/MyButton';
-// Importing Function
-import {ValidateEmail} from '../../Utility/HelperFunctions/preparedataHelper';
 // Importing Assets
 import Profile from '../../assets/images/profile.png'
 // Importing Utilityfunction
-import { storeData, USER_LOGIN_INFO_CONST } from '../../Utility/HelperFunctions/index'
+import { storeData, USER_LOGIN_INFO_CONST,ValidateEmail } from '../../Utility/HelperFunctions/index'
 const d = new Date();
 
 
@@ -47,40 +45,22 @@ const Login = (props) => {
         }
         else // Error Occured 
         {
-            if(response.status==400) // Invalid Data Error
-            {   
-                setGlobalError("Incorrect Email or Password")
-                setLoading(false);
-            }
-            else // Unknown Error
-            {
-                setGlobalError(response.data)
-                setLoading(false);
-            }
+            setGlobalError(response.data)
+            setLoading(false);
         }
     }
     const loginWithGoogle = async () => {
         setLoading(true);
-        try 
+        const response = await continueWithGoogle()
+        if(response.status==200)
         {
-            const response = await continueWithGoogle()
-            if(response.status==200)
-            {
-                props.login(response.data.access, email, true)
-                await storeData(USER_LOGIN_INFO_CONST, { access: response.data.access, email: email, isLoggedIn: true, timeAdded: d.getTime() })
-                return;
-            }
-            else // Unknown Error
-            {
-                setGlobalError(response.data)
-                setLoading(false);
-                return;
-            }
+            props.login(response.data.access, email, true)
+            await storeData(USER_LOGIN_INFO_CONST, { access: response.data.access, email: email, isLoggedIn: true, timeAdded: d.getTime() })
+            return;
         }
-        catch (e) 
+        else // Unknown Error
         {
-            console.log(e)
-            setGlobalError("Something Went Wrong!! e")
+            setGlobalError(response.data)
             setLoading(false);
             return;
         }
