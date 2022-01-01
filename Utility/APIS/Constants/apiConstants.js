@@ -11,3 +11,5 @@ export const ORDER_BASE_URL=`${BASE_URL}api/order/`;
 export const CUSTOMER_LOGIN=`${CUSTOMER_BASE_URL}auth/login`
 export const CUSTOMER_GOOGLE_AUTH=`${CUSTOMER_BASE_URL}auth/google`
 export const CUSTOMER_REGISTER=`${CUSTOMER_BASE_URL}auth/register`
+export const CUSTOMER_FORGET_PASSWORD=`${CUSTOMER_BASE_URL}auth/password_reset/`
+export const CUSTOMER_RESET_PASSWORD=`${CUSTOMER_BASE_URL}auth/password_reset/confirm/`

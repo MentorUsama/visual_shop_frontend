@@ -2,7 +2,9 @@ import {
     customerLoginHandler,
     customerGoogleAuthHandler,
     continueWithGoogle,
-    customerRegister
+    customerRegister,
+    forgetPasswordHandler,
+    resetPasswordHandler
 } 
 from './Customer/customerHandler'
 
@@ -11,5 +13,7 @@ export {
     customerLoginHandler, // Handle Customer Login
     customerGoogleAuthHandler,
     continueWithGoogle,
-    customerRegister
+    customerRegister,
+    forgetPasswordHandler,
+    resetPasswordHandler
 }

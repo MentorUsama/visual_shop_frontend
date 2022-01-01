@@ -1,4 +1,10 @@
-import {CUSTOMER_GOOGLE_AUTH, CUSTOMER_LOGIN,CUSTOMER_REGISTER} from '../Constants/apiConstants';
+import {
+    CUSTOMER_GOOGLE_AUTH, 
+    CUSTOMER_LOGIN,
+    CUSTOMER_REGISTER,
+    CUSTOMER_FORGET_PASSWORD,
+    CUSTOMER_RESET_PASSWORD
+} from '../Constants/apiConstants';
 import axios from 'axios';
 import * as Google from 'expo-google-app-auth';
 import {KEY_ANDROID_CLIENT_ID,KEY_IOS_CLIENT_ID} from '../../../config'
@@ -88,7 +94,62 @@ const customerRegister=async (email,password)=>{
         return {status:null,data:"Something Went Wrong Please Try Again"} // Unknown error occured
     }
 }
-export {customerLoginHandler,customerGoogleAuthHandler,continueWithGoogle,customerRegister};
+const forgetPasswordHandler=async (email)=>{
+    try
+    {
+        var bodyFormData = new FormData();
+        bodyFormData.append('email',email);
+        const response=await axios({
+            method: "POST",
+            url: CUSTOMER_FORGET_PASSWORD,
+            data: bodyFormData,
+        });
+        return {status:response.status,data:response.data}
+    }
+    catch(e)
+    {
+        if(e.response.status==400)
+        {
+            const keys=Object.keys(e.response.data)
+            if(keys.includes("email"))
+            {
+                return {status:e.response.status,data:e.response.data.email[0]}
+            }
+        }
+        return {status:null,data:"Something Went Wrong Please Try Again"} // Unknown error occured
+    }
+}
+const resetPasswordHandler=async (code,password)=>{
+    try
+    {
+        var bodyFormData = new FormData();
+        bodyFormData.append('token',code);
+        bodyFormData.append('password',password);
+        const response=await axios({
+            method: "POST",
+            url: CUSTOMER_RESET_PASSWORD,
+            data: bodyFormData,
+        });
+        return {status:response.status,data:response.data}
+    }
+    catch(e)
+    {
+        if(e.response.status==400)
+        {
+            const keys=Object.keys(e.response.data)
+            if(keys.includes("password"))
+            {
+                return {status:e.response.status,data:e.response.data.password[0]}
+            }
+        }
+        if(e.response.status==404) // Not Found
+        {
+            return {status:e.response.status,data:"Invalid Code Please Try Again"}
+        }
+    }
+    return {status:null,data:"Something Went Wrong Please Try Again"} // Unknown error occured
+}
+export {customerLoginHandler,customerGoogleAuthHandler,continueWithGoogle,customerRegister,forgetPasswordHandler,resetPasswordHandler};
 
 
 
