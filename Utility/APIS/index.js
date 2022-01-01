@@ -1,8 +1,15 @@
-import {customerLoginHandler,customerGoogleAuthHandler,continueWithGoogle} from './Customer/customerHandler'
+import {
+    customerLoginHandler,
+    customerGoogleAuthHandler,
+    continueWithGoogle,
+    customerRegister
+} 
+from './Customer/customerHandler'
 
 // Exporting APIS Request
 export {
     customerLoginHandler, // Handle Customer Login
     customerGoogleAuthHandler,
-    continueWithGoogle
+    continueWithGoogle,
+    customerRegister
 }

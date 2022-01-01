@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { Text, View, Image, StyleSheet,TouchableOpacity } from 'react-native';
+// Redux
+import { connect } from 'react-redux';
+import * as actions from '../../store/Actions/index';
 // Container
 import PageContainer from '../../components/container/PageContainer'
 // Importing Components
@@ -8,10 +11,9 @@ import InputField from '../../components/components/Input/InputField';
 import MyButton from '../../components/components/Button/MyButton';
 // Importing Assets
 import Profile from '../../assets/images/profile.png'
-// Importin Google Auth
-import * as Google from 'expo-google-app-auth';
 // Importing Utilityfunction
 import { storeData, USER_LOGIN_INFO_CONST,ValidateEmail } from '../../Utility/HelperFunctions/index'
+import {customerRegister,continueWithGoogle} from '../../Utility/APIS/index'
 const d = new Date();
 
 
@@ -21,7 +23,7 @@ const Signup=(props)=>{
     const [newPassword, setNewPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const [globalError, setGlobalError] = useState("")
-    const Validate=()=>{
+    const Validate=async ()=>{
         if(!ValidateEmail(email))
         {
             setGlobalError("Invalid Email")
@@ -41,6 +43,38 @@ const Signup=(props)=>{
         {
             setGlobalError("Password Does Not Match")
             return false;
+        }
+
+        // Registering
+        setLoading(true);
+        const response=await customerRegister(email,password)
+        if(response.status==200)
+        {
+            props.login(response.data.access, email, true)
+            await storeData(USER_LOGIN_INFO_CONST, { access: response.data.access, email: email, isLoggedIn: true, timeAdded: d.getTime() })
+            return;
+        }
+        else
+        {
+            setGlobalError(response.data)
+            setLoading(false);
+            return;
+        }
+    }
+    const loginWithGoogle = async () => {
+        setLoading(true);
+        const response = await continueWithGoogle()
+        if(response.status==200)
+        {
+            props.login(response.data.access, email, true)
+            await storeData(USER_LOGIN_INFO_CONST, { access: response.data.access, email: email, isLoggedIn: true, timeAdded: d.getTime() })
+            return;
+        }
+        else // Unknown Error
+        {
+            setGlobalError(response.data)
+            setLoading(false);
+            return;
         }
     }
     return (
@@ -66,10 +100,10 @@ const Signup=(props)=>{
                     <InputField icon="lock" title="Confirm Password" onChange={setNewPassword} placeholder="Type You Password Again" secure={true} value={newPassword} />
                 </View>
                 {/* Buttons */}
-                <MyButton  style={{marginTop:10}} isDisabled={props.isLoggedIn} onPress={Validate} title="Login" />
+                <MyButton  style={{marginTop:10}} isDisabled={props.isLoggedIn} onPress={Validate} title="Signup" />
                 {/* Seoerator */}
                 <Text style={{textAlign:'center',fontSize:20,marginBottom:10}}>OR</Text>
-                <MyButton isSecondary={true} onPress={null} title="Continue With Google" />
+                <MyButton isSecondary={true} onPress={loginWithGoogle} title="Continue With Google" />
                 {/* Already Login */}
                 <View style={styles.textContainer}>
                     <Text>Already Register ?</Text>
@@ -105,4 +139,16 @@ const styles = StyleSheet.create({
         flexDirection:'row'
     }
 })
-export default Signup;
+const mapStateToProps = state => {
+    return {
+        access: state.userReducer.access,
+        email: state.userReducer.email,
+        isLoggedIn: state.userReducer.isLoggedIn
+    };
+};
+const mapDispatchToProps = dispatch => {
+    return {
+        login: (access, email, isLoggedIn, timeAdded) => dispatch(actions.login(access, email, isLoggedIn, timeAdded))
+    };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(Signup);
