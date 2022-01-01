@@ -1,6 +1,7 @@
 import {CUSTOMER_GOOGLE_AUTH, CUSTOMER_LOGIN} from '../Constants/apiConstants';
 import axios from 'axios';
 import * as Google from 'expo-google-app-auth';
+import {KEY_ANDROID_CLIENT_ID,KEY_IOS_CLIENT_ID} from '../../../config'
 
 
 const customerLoginHandler=async (email,password)=>{
@@ -38,8 +39,8 @@ const continueWithGoogle = async () => {
     try 
     {
         const result = await Google.logInAsync({
-            androidClientId: "691282853878-k6e955ti68hce0re23bpve4n6m6fuk9s.apps.googleusercontent.com",
-            iosClientId: "691282853878-45d5a1nra6vfaiehd8gjlnsk69okmbch.apps.googleusercontent.com",
+            androidClientId: KEY_ANDROID_CLIENT_ID,
+            iosClientId: KEY_IOS_CLIENT_ID,
             scopes: ["profile", "email"]
         })
         if (result.type == "success") 

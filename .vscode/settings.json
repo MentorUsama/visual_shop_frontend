@@ -6,7 +6,6 @@
     "package.json": true,
     "package-lock.json": true,
     "app.json": true,
-    ".gitignore": true,
     "node_modules": true,
     ".vscode": true,
     "assets\\splash.png": true,
