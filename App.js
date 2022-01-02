@@ -1,12 +1,14 @@
 import React, { useState,useEffect} from 'react';
+import { Platform } from 'react-native';
 // Expo Imports
 import * as Font from 'expo-font';
 import AppLoading from 'expo-app-loading';
 // Redux Imports
 import { Provider } from 'react-redux';
-import { createStore, combineReducers } from 'redux';
+import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
 import userReducer from './store/Reducers/userReducer'
 import * as actions from './store/Actions/index';
+import thunk from 'redux-thunk';
 // Importing Navigation
 import { NavigationContainer } from '@react-navigation/native';
 import Navigation from './navigations/Navigation';
@@ -24,9 +26,30 @@ const fetchFonts = () => {
   });
 };
 
+
+
+
 // Setting up Stores
-const rootReducer = combineReducers({ userReducer: userReducer });
-const store = createStore(rootReducer);
+var store=null;
+var rootReducer=null;
+
+if(Platform.OS!='web')
+{
+  // Setting Store For Mobile
+  rootReducer = combineReducers({ userReducer: userReducer });
+  store = createStore(rootReducer);
+}
+else
+{
+  const composeEnhancers = process.env.NODE_ENV === 'development' ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : null || compose;
+  rootReducer = combineReducers({ userReducer: userReducer });
+  store = createStore(rootReducer, composeEnhancers(
+    applyMiddleware(thunk)
+  ));
+}
+
+
+
 
 export default function App() {
   const [fontLoaded, setFontLoaded] = useState(false);
