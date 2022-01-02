@@ -4,7 +4,7 @@ const d = new Date();
 
 // States
 const initialState = {
-    access:"Fake Sesison",
+    access:"",
     email:"",
     isLoggedIn:false,
     timeAdded:null,

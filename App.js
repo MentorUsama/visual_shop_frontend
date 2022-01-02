@@ -42,7 +42,6 @@ export default function App() {
       }
     }
   },[])
-
   // Making Sure To Load All Fonts Before Loading The App
   if (!fontLoaded) {
     return (
