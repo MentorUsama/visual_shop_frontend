@@ -7,7 +7,8 @@ const initialState = {
     access:"Fake Sesison",
     email:"",
     isLoggedIn:false,
-    timeAdded:null
+    timeAdded:null,
+    cities:null
 };
 
 
@@ -28,13 +29,18 @@ const Logout = (state, action) => {
         timeAdded:null
      } );
 };
-
+const setCities=(state,action)=>{
+    return updateObject(state,{
+        cities:action.cities
+    })
+}
 
 // Reducer
 const reducer = ( state = initialState, action ) => {
     switch ( action.type ) {
         case actionTypes.LOGIN: return Login(state, action);
         case actionTypes.LOGOUT: return Logout(state, action);
+        case actionTypes.SET_CITIES: return setCities(state,action)
         default:
             return state;
     }

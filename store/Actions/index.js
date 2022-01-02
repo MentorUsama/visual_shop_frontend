@@ -1,4 +1,5 @@
 export {
     login,
-    logout
+    logout,
+    setCities
 } from './userAction'

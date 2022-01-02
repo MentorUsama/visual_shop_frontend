@@ -3,7 +3,9 @@ import {
     CUSTOMER_LOGIN,
     CUSTOMER_REGISTER,
     CUSTOMER_FORGET_PASSWORD,
-    CUSTOMER_RESET_PASSWORD
+    CUSTOMER_RESET_PASSWORD,
+    CUSTOMER_GET_CITIES,
+    CUSTOMER_GET_PROFILE
 } from '../Constants/apiConstants';
 import axios from 'axios';
 import * as Google from 'expo-google-app-auth';
@@ -149,7 +151,42 @@ const resetPasswordHandler=async (code,password)=>{
     }
     return {status:null,data:"Something Went Wrong Please Try Again"} // Unknown error occured
 }
-export {customerLoginHandler,customerGoogleAuthHandler,continueWithGoogle,customerRegister,forgetPasswordHandler,resetPasswordHandler};
+const getCities=async()=>{
+    try
+    {
+        const response=await axios.get(CUSTOMER_GET_CITIES);
+        return {status:response.status,data:response.data}
+    }
+    catch(e)
+    {
+        return {status:null,data:'An Unknown Error Occured While Fetching Data For Cities'}
+    }
+}
+const getProfileHandler=async (token)=>{
+    try
+    {
+        const response=await axios({
+            method: "GET",
+            url: CUSTOMER_GET_PROFILE,
+            headers:{
+                Authorization:token
+            }
+        });
+        return {status:response.status,data:response.data}
+    }
+    catch(e)
+    {
+        if(e.response.status==401)
+        {
+            return {status:e.response.status,data:e.response.data.detail}
+        }
+        else
+        {
+            return {status:null,data:"An Unknown Error Occured While Fetching Data For Cities"}
+        }
+    }
+}
+export {customerLoginHandler,customerGoogleAuthHandler,continueWithGoogle,customerRegister,forgetPasswordHandler,resetPasswordHandler,getCities,getProfileHandler};
 
 
 

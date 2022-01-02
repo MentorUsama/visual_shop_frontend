@@ -9,7 +9,6 @@ import ProductDetail from '../pages/ProductDetail/ProductDetail';
 import Cart from '../pages/Cart/Cart';
 import Login from '../pages/Login/Login';
 import LoginForget from '../pages/LoginForget/LoginForget'
-import LoginAddCode from '../pages/LoginAddCode/LoginAddCode';
 import LoginReset from '../pages/LoginReset/LoginReset';
 import Signup from '../pages/Signup/Signup';
 import About from '../pages/About/About';
@@ -41,7 +40,6 @@ const VisitorHomeStack = ({ navigation, route }) => {
             <Stack.Screen name="About" component={About} />
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="LoginForget" component={LoginForget} />
-            <Stack.Screen name="LoginAddCode" component={LoginAddCode} />
             <Stack.Screen name="LoginReset" component={LoginReset} />
             <Stack.Screen name="Signup" component={Signup} />
         </Stack.Navigator>

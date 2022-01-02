@@ -4,7 +4,9 @@ import {
     continueWithGoogle,
     customerRegister,
     forgetPasswordHandler,
-    resetPasswordHandler
+    resetPasswordHandler,
+    getCities,
+    getProfileHandler
 } 
 from './Customer/customerHandler'
 
@@ -15,5 +17,7 @@ export {
     continueWithGoogle,
     customerRegister,
     forgetPasswordHandler,
-    resetPasswordHandler
+    resetPasswordHandler,
+    getCities,
+    getProfileHandler
 }
