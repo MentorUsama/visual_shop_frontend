@@ -4,7 +4,7 @@ import {
     CUSTOMER_REGISTER,
     CUSTOMER_FORGET_PASSWORD,
     CUSTOMER_RESET_PASSWORD,
-    CUSTOMER_GET_CITIES,
+    CUSTOMER_GET_PROVINCES_AND_CITIES,
     CUSTOMER_GET_PROFILE
 } from '../Constants/apiConstants';
 import axios from 'axios';
@@ -151,10 +151,10 @@ const resetPasswordHandler=async (code,password)=>{
     }
     return {status:null,data:"Something Went Wrong Please Try Again"} // Unknown error occured
 }
-const getCities=async()=>{
+const getProvincesAndCities=async()=>{
     try
     {
-        const response=await axios.get(CUSTOMER_GET_CITIES);
+        const response=await axios.get(CUSTOMER_GET_PROVINCES_AND_CITIES);
         return {status:response.status,data:response.data}
     }
     catch(e)
@@ -186,7 +186,7 @@ const getProfileHandler=async (token)=>{
         }
     }
 }
-export {customerLoginHandler,customerGoogleAuthHandler,continueWithGoogle,customerRegister,forgetPasswordHandler,resetPasswordHandler,getCities,getProfileHandler};
+export {customerLoginHandler,customerGoogleAuthHandler,continueWithGoogle,customerRegister,forgetPasswordHandler,resetPasswordHandler,getProvincesAndCities,getProfileHandler};
 
 
 

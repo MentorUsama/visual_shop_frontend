@@ -3,45 +3,40 @@ import { Text, View } from 'react-native';
 import PageContainer from '../../components/container/PageContainer'
 import DropDrown from '../../components/components/DropDown/DropDrown';
 // Importing APIS
-import {getCities,getProfileHandler} from '../../Utility/APIS/index'
+import {getProvincesAndCities,getProfileHandler} from '../../Utility/APIS/index'
 // Redux
 import { connect } from 'react-redux';
 import * as actions from '../../store/Actions/index';
 
 
 const UserInfo=(props)=>{
-    const newPersonData=useState({
-        name:'Usama',
-        address:"Valencia 8 no gate",
-        contact:'03472547540',
-        state:'Need To Fetch',
-        city:'Need To Fetch'
-    })
+    const [provinces,setProvinces]=useState(props.provincesAndCities)
+    const [profile,setProfile]=useState(null)
     useEffect(async ()=>{
         // Getting The Profile
         const profile=await getProfileHandler("sdsd")
-
-        // Getting The Cities
-        if(props.cities==null)
+        if(profile.status==200)
         {
-            const provinces=await getCities()
-            console.log("Now You Got The Cities")
-            if(provinces.status==200)
-            {
-                console.log("Now it is save in store")
-                props.setCities(provinces)
-            }
-            else
-            {
-                console.log("Error Getting Cities")
-            }
+            setProfile(profile);
         }
         else
         {
-            console.log("You got the cities already")
+            props.navigation.navigate("Home")
         }
-        
-        
+        // Getting The Provinces
+        if(props.cities==null)
+        {
+            const provinces=await getProvincesAndCities()
+            if(provinces.status==200)
+            {
+                props.setProvincesAndCities(provinces.data)
+                setProvinces(provinces.data)
+            }
+            else
+            {
+                props.navigation.navigate("Home")
+            }
+        }
     },[])
     return (
         <PageContainer navigation={props.navigation}>
@@ -60,12 +55,12 @@ const mapStateToProps = state => {
         access: state.userReducer.access,
         email: state.userReducer.email,
         isLoggedIn: state.userReducer.isLoggedIn,
-        cities:state.userReducer.cities
+        provincesAndCities:state.userReducer.provincesAndCities
     };
 };
 const mapDispatchToProps = dispatch => {
     return {
-        setCities:(cities)=>dispatch(actions.setCities(cities))
+        setProvincesAndCities:(cities)=>dispatch(actions.setProvincesAndCities(cities))
     };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(UserInfo);

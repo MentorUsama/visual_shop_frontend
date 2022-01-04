@@ -8,7 +8,7 @@ const initialState = {
     email:"",
     isLoggedIn:false,
     timeAdded:null,
-    cities:null
+    provincesAndCities:null
 };
 
 
@@ -29,9 +29,9 @@ const Logout = (state, action) => {
         timeAdded:null
      } );
 };
-const setCities=(state,action)=>{
+const setProvincesAndCities=(state,action)=>{
     return updateObject(state,{
-        cities:action.cities
+        provincesAndCities:action.provincesAndCities
     })
 }
 
@@ -40,7 +40,7 @@ const reducer = ( state = initialState, action ) => {
     switch ( action.type ) {
         case actionTypes.LOGIN: return Login(state, action);
         case actionTypes.LOGOUT: return Logout(state, action);
-        case actionTypes.SET_CITIES: return setCities(state,action)
+        case actionTypes.SET_PROVINCES_AND_CITIES: return setProvincesAndCities(state,action)
         default:
             return state;
     }

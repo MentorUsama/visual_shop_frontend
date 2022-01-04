@@ -5,7 +5,7 @@ import {
     customerRegister,
     forgetPasswordHandler,
     resetPasswordHandler,
-    getCities,
+    getProvincesAndCities,
     getProfileHandler
 } 
 from './Customer/customerHandler'
@@ -18,6 +18,6 @@ export {
     customerRegister,
     forgetPasswordHandler,
     resetPasswordHandler,
-    getCities,
+    getProvincesAndCities,
     getProfileHandler
 }

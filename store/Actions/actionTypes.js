@@ -1,3 +1,3 @@
 export const LOGIN = 'LOGIN';
 export const LOGOUT = 'LOGOUT';
-export const SET_CITIES='SET_CITIES'
+export const SET_PROVINCES_AND_CITIES='SET_PROVINCES_AND_CITIES'

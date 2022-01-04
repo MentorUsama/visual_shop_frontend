@@ -14,9 +14,9 @@ export const logout = () => {
         type: actionTypes.LOGOUT,
     };
 };
-export const setCities=(cities)=>{
+export const setProvincesAndCities=(provincesAndCities)=>{
     return {
-        type:actionTypes.SET_CITIES,
-        cities:cities
+        type:actionTypes.SET_PROVINCES_AND_CITIES,
+        provincesAndCities:provincesAndCities
     }
 }
