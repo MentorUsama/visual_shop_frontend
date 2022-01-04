@@ -8,7 +8,8 @@ const initialState = {
     email:"",
     isLoggedIn:false,
     timeAdded:null,
-    provincesAndCities:null
+    provincesAndCities:null,
+    profile:null
 };
 
 
@@ -34,6 +35,11 @@ const setProvincesAndCities=(state,action)=>{
         provincesAndCities:action.provincesAndCities
     })
 }
+const setProfile=(state,action)=>{
+    return updateObject(state,{
+        profile:action.profile
+    })
+}
 
 // Reducer
 const reducer = ( state = initialState, action ) => {
@@ -41,6 +47,7 @@ const reducer = ( state = initialState, action ) => {
         case actionTypes.LOGIN: return Login(state, action);
         case actionTypes.LOGOUT: return Logout(state, action);
         case actionTypes.SET_PROVINCES_AND_CITIES: return setProvincesAndCities(state,action)
+        case actionTypes.SET_PROFILE: return setProfile(state,action)
         default:
             return state;
     }

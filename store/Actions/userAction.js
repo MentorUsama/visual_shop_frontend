@@ -20,3 +20,9 @@ export const setProvincesAndCities=(provincesAndCities)=>{
         provincesAndCities:provincesAndCities
     }
 }
+export const setProfile=(profile)=>{
+    return {
+        type:actionTypes.SET_PROFILE,
+        profile:profile
+    }
+}

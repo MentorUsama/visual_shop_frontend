@@ -2,6 +2,7 @@ import React,{useState,useEffect} from 'react';
 import { Text, View } from 'react-native';
 import PageContainer from '../../components/container/PageContainer'
 import DropDrown from '../../components/components/DropDown/DropDrown';
+import Loader from '../../components/components/Loader/Loader';
 // Importing APIS
 import {getProvincesAndCities,getProfileHandler} from '../../Utility/APIS/index'
 // Redux
@@ -12,16 +13,28 @@ import * as actions from '../../store/Actions/index';
 const UserInfo=(props)=>{
     const [provinces,setProvinces]=useState(props.provincesAndCities)
     const [profile,setProfile]=useState(null)
+    const [loading, setLoading] = useState(false);
     useEffect(async ()=>{
+        setLoading(true)
         // Getting The Profile
-        const profile=await getProfileHandler("sdsd")
-        if(profile.status==200)
+        if(props.profile==null)
         {
-            setProfile(profile);
-        }
-        else
-        {
-            props.navigation.navigate("Home")
+            const profile=await getProfileHandler(props.access)
+            if(profile.status==200)
+            {
+                props.setProfile(profile.data)
+                setProfile(profile.data);
+            }
+            else
+            {
+                setLoading(false)
+                props.navigation.navigate({
+                    name:"HomePage",
+                    params:{error:'Unable To Fetch Profile Data From Server!!'},
+                    merge:true
+                })
+                return
+            }
         }
         // Getting The Provinces
         if(props.cities==null)
@@ -34,12 +47,20 @@ const UserInfo=(props)=>{
             }
             else
             {
-                props.navigation.navigate("Home")
+                setLoading(false)
+                props.navigation.navigate({
+                    name:"HomePage",
+                    params:{error:'Unable To Fetch Cities Data From Server!!'},
+                    merge:true
+                })
+                return;
             }
         }
+        setLoading(false)
     },[])
     return (
         <PageContainer navigation={props.navigation}>
+            <Loader loading={loading} />
             <View style={{marginTop:60}}></View>
             {/* Title */}
             <Text>Personal Information</Text>
@@ -55,12 +76,14 @@ const mapStateToProps = state => {
         access: state.userReducer.access,
         email: state.userReducer.email,
         isLoggedIn: state.userReducer.isLoggedIn,
-        provincesAndCities:state.userReducer.provincesAndCities
+        provincesAndCities:state.userReducer.provincesAndCities,
+        profile:state.userReducer.profile
     };
 };
 const mapDispatchToProps = dispatch => {
     return {
-        setProvincesAndCities:(cities)=>dispatch(actions.setProvincesAndCities(cities))
+        setProvincesAndCities:(cities)=>dispatch(actions.setProvincesAndCities(cities)),
+        setProfile:(profile)=>dispatch(actions.setProfile(profile))
     };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(UserInfo);

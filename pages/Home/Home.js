@@ -1,12 +1,29 @@
-import React from 'react';
-import { StyleSheet, Text, View,Button } from 'react-native';
+import React,{useEffect} from 'react';
+import { Text, View,Button } from 'react-native';
 // Redux
 import { connect } from 'react-redux';
 // Containers
 import PageContainer from '../../components/container/PageContainer'
+// Importing Component
+import Toast from 'react-native-toast-message';
 
 
 const Home=(props)=>{
+    const {navigation,route}=props
+    // ====== Checking Any Global Error ======
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            if(route.params?.error)
+            {
+                Toast.show({
+                    type: 'error',
+                    text1: 'Oops',
+                    text2: route.params.error
+                });
+            }   
+            return unsubscribe;
+        });
+    }, [route.params?.error])
     return (
         <PageContainer navigation={props.navigation}>
             <Text>This is homepage {props.token}</Text>
@@ -15,6 +32,8 @@ const Home=(props)=>{
         </PageContainer>
     )
 }
+
+
 
 
 

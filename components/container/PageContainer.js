@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useEffect} from 'react'
 import { View,StyleSheet,SafeAreaView,TouchableOpacity  } from 'react-native'
 // Importing Icons
 import MenuBar from '../../assets/icons/menue-bar'

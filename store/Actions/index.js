@@ -1,5 +1,6 @@
 export {
     login,
     logout,
-    setProvincesAndCities
+    setProvincesAndCities,
+    setProfile
 } from './userAction'
