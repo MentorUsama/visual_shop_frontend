@@ -16,7 +16,7 @@ const customerLoginHandler=async (email,password)=>{
     try
     {
         const response=await axios.post(CUSTOMER_LOGIN,{username:email,password:password});
-        return {data:response,status:response.status}
+        return {data:response.data,status:response.status}
     }
     catch(error)
     {
@@ -37,7 +37,7 @@ const customerLoginHandler=async (email,password)=>{
 const customerGoogleAuthHandler=async (token)=>{
     try{
         const response=await axios.post(CUSTOMER_GOOGLE_AUTH,{token:token});
-        return {data:response,status:response.status}
+        return {data:response.data,status:response.status}
     }
     catch(error){
         return {data:"Something Went Wrong Please Try Again!!",status:error.response.status}

@@ -40,7 +40,7 @@ const Login = (props) => {
         setLoading(true);
         const response = await customerLoginHandler(email, password);
         if (response.status == 200) {
-            props.login(response.data.access, email, true)
+            props.login(response.data.access, email, true,d.getTime())
             await storeData(USER_LOGIN_INFO_CONST, { access: response.data.access, email: email, isLoggedIn: true, timeAdded: d.getTime() })
         }
         else // Error Occured 
@@ -54,7 +54,7 @@ const Login = (props) => {
         const response = await continueWithGoogle()
         if(response.status==200)
         {
-            props.login(response.data.access, email, true)
+            props.login(response.data.access, email, true,d.getTime())
             await storeData(USER_LOGIN_INFO_CONST, { access: response.data.access, email: email, isLoggedIn: true, timeAdded: d.getTime() })
             return;
         }
