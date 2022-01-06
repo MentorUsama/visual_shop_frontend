@@ -169,13 +169,14 @@ const getProfileHandler=async (token)=>{
             method: "GET",
             url: CUSTOMER_GET_PROFILE,
             headers:{
-                Authorization:token
+                Authorization:"Bearer "+token
             }
         });
         return {status:response.status,data:response.data}
     }
     catch(e)
     {
+        console.log(e.response)
         if(e.response.status==401)
         {
             return {status:e.response.status,data:e.response.data.detail}

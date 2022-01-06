@@ -1,51 +1,55 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import { StyleSheet, View,Text,TouchableOpacity } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import ArrowIcon from '../../../assets/icons/downArrow'
 
 export default function DropDrown(props) {
-    const [open, setOpen] = useState(false);
-    const [value, setValue] = useState(null);
-    const [items, setItems] = useState([
-        { name: 'Apple', id: 'apple' },
-        { name: 'Banana', id: 'banana' },
-        { name: 'Banana1', id: 'banana1' },
-        { name: 'Banana2', id: 'banana2' },
-        { name: 'Banana3', id: 'banana3' },
-        { name: 'Banana4', id: 'banana4' }
-    ]);
+    const {data,zIndex=5000}=props;
+    const [items, setItems] = useState(data==null?[]:data);
+    useEffect(() => {
+        if(data!=null)
+        {
+            setItems(data)
+        }
+    }, [data])
+    const openHandler=()=>{
+        props.setOpen(props.name)
+    }
 
     return (
         <View style={{paddingLeft:20,paddingRight:20}}>
             <TouchableOpacity 
-                onPress={()=>setOpen(!open)} 
+                onPress={openHandler} 
                 activeOpacity={1} 
-                style={[myStyle.textContainer,open?myStyle.textContainerActive:null]}>
-                <Text style={open?myStyle.textActiveStyle:myStyle.textStyle}>{props.title}</Text>
+                style={[myStyle.textContainer,props.open?myStyle.textContainerActive:null]}>
+                <Text style={props.open?myStyle.textActiveStyle:myStyle.textStyle}>{props.title}</Text>
             </TouchableOpacity>
             <DropDownPicker
                 schema={{
                     label: 'name',
                     value: 'id'
                 }}
-                open={open}
-                value={value}
+                open={props.open}
+                value={props.value}
                 items={items}
-                setOpen={setOpen}
-                setValue={setValue}
+                setOpen={openHandler}
+                setValue={props.setValue}
                 setItems={setItems}
                 showTickIcon={false}
-                placeholder="Select an item"
+                placeholder={props.placeholder}
                 closeAfterSelecting={true}
                 closeOnBackPressed={true}
+                autoScroll={true}
                 ArrowDownIconComponent={({ style }) => <View style={style}><ArrowIcon width={15} /></View>}
                 ArrowUpIconComponent={({ style }) => <View style={style}><ArrowIcon direction="up" fill="#FF7465" width={15} /></View>}
                 style={
-                    open?myStyle.styleActive:myStyle.style
+                    props.open?myStyle.styleActive:myStyle.style
                 }
                 {...styles}
                 props={{activeOpacity:1}}
                 itemProps={{activeOpacity:1}}
+                disabled={props.disabled}
+                zIndex={zIndex}
             />
         </View>
     );

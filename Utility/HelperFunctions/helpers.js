@@ -13,4 +13,16 @@ function diff_minutes(t2, t1)
    }
     return (false)
  }
-export {diff_minutes,ValidateEmail}
+ function getCities(provinces,provincesId)
+ {
+    if(provincesId==null || provinces==null)
+      return null
+    const province=provinces.find(province=>{
+      if(province.id==provincesId)
+      {
+        return province
+      }
+    })
+    return province.cities
+}
+export {diff_minutes,ValidateEmail,getCities}

@@ -13,6 +13,7 @@ export {
 // Exporting Validate Data functions
 export {
     diff_minutes,
-    ValidateEmail
+    ValidateEmail,
+    getCities
 }
 from './helpers'
