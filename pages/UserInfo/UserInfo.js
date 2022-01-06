@@ -87,7 +87,7 @@ const UserInfo = (props) => {
         setLoading(false)
     }, [])
     return (
-        <PageContainer navigation={props.navigation}>
+        <PageContainer hasPadding={true} navigation={props.navigation}>
             <Loader loading={loading} />
             <View style={{ marginTop: 60 }}></View>
             {/* Title */}

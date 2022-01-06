@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Text, View, Image, StyleSheet,TouchableOpacity } from 'react-native';
+import { Text, View, Image, StyleSheet, TouchableOpacity } from 'react-native';
 // Axios
-import {resetPasswordHandler} from '../../Utility/APIS/index';
+import { resetPasswordHandler } from '../../Utility/APIS/index';
 // Container
 import PageContainer from '../../components/container/PageContainer'
 // Importing Components
@@ -19,73 +19,66 @@ const LoginReset = (props) => {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const [globalError, setGlobalError] = useState("")
-    const Validate=async ()=>{
-        if(code=="")
-        {
+    const Validate = async () => {
+        if (code == "") {
             setGlobalError("Please enter code that is sent to your email")
             return;
         }
-        if(password=="")
-        {
+        if (password == "") {
             setGlobalError("Please enter your new password")
             return;
         }
-        if(confirmPassword=="")
-        {
+        if (confirmPassword == "") {
             setGlobalError("Please retype your password to confirm")
         }
-        if(password!=confirmPassword)
-        {
+        if (password != confirmPassword) {
             setGlobalError("Password Does Not Match");
             return;
         }
 
         setLoading(true);
-        const response=await resetPasswordHandler(code,password);
-        if(response.status==200)
-        {
+        const response = await resetPasswordHandler(code, password);
+        if (response.status == 200) {
             setLoading(false);
             props.navigation.navigate("Login")
         }
-        else
-        {
+        else {
             setGlobalError(response.data)
             setLoading(false);
             return;
         }
     }
 
-   
+
     return (
-        <PageContainer navigation={props.navigation}>
+        <PageContainer hasPadding={true} navigation={props.navigation}>
             <Loader loading={loading} />
-            <View style={styles.contentContainer}>
-                {/* Profile Image */}
-                <View style={styles.profileContainer}>
-                    <Image
-                        source={Profile}
-                        style={{marginBottom:0}}
-                    />
-                    <Text style={{fontSize:20,fontWeight:'bold',marginTop:0}}>Reset Password</Text>
-                </View>
-                {/* Errors */}
-                <View>
-                    <Text style={styles.errorColor}>{globalError}</Text>
-                </View>
-                {/* Text Inputs */}
-                <View>
-                    <InputField  title="Code" onChange={setCode} placeholder="Enter The Code Sent To Your Email" value={code}></InputField>
-                    <InputField  secure={true} icon="lock" title="New Password" onChange={setPassword} placeholder="Enter Your New Password" value={password}></InputField>
-                    <InputField  secure={true} icon="lock" title="Confirm Password" onChange={setConfirmPassword} placeholder="Enter Your Password Again" value={confirmPassword}></InputField>
-                </View>
-                {/* Buttons */}
-                <MyButton  style={{marginTop:10}}  onPress={Validate} title="Search" />
-                {/* Login */}
-                <View>
-                    <TouchableOpacity activeOpacity={0.8} onPress={()=>props.navigation.navigate("Login")}>
-                        <Text style={{color:'#FF7465',fontWeight:'bold',textAlign:'right'}}>Reset Password</Text>
-                    </TouchableOpacity>
-                </View>
+
+            {/* Profile Image */}
+            <View style={styles.profileContainer}>
+                <Image
+                    source={Profile}
+                    style={{ marginBottom: 0 }}
+                />
+                <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 0 }}>Reset Password</Text>
+            </View>
+            {/* Errors */}
+            <View>
+                <Text style={styles.errorColor}>{globalError}</Text>
+            </View>
+            {/* Text Inputs */}
+            <View>
+                <InputField title="Code" onChange={setCode} placeholder="Enter The Code Sent To Your Email" value={code}></InputField>
+                <InputField secure={true} icon="lock" title="New Password" onChange={setPassword} placeholder="Enter Your New Password" value={password}></InputField>
+                <InputField secure={true} icon="lock" title="Confirm Password" onChange={setConfirmPassword} placeholder="Enter Your Password Again" value={confirmPassword}></InputField>
+            </View>
+            {/* Buttons */}
+            <MyButton style={{ marginTop: 10 }} onPress={Validate} title="Search" />
+            {/* Login */}
+            <View>
+                <TouchableOpacity activeOpacity={0.8} onPress={() => props.navigation.navigate("Login")}>
+                    <Text style={{ color: '#FF7465', fontWeight: 'bold', textAlign: 'right' }}>Reset Password</Text>
+                </TouchableOpacity>
             </View>
         </PageContainer>
     )
@@ -100,7 +93,7 @@ const styles = StyleSheet.create({
         color: '#FF7465',
         textAlign: 'center',
         fontSize: 10,
-        fontWeight:'bold'
+        fontWeight: 'bold'
     },
     profileContainer: {
         display: 'flex',

@@ -43,9 +43,8 @@ const LoginForget = (props) => {
 
    
     return (
-        <PageContainer navigation={props.navigation}>
+        <PageContainer hasPadding={true} navigation={props.navigation}>
             <Loader loading={loading} />
-            <View style={styles.contentContainer}>
                 {/* Profile Image */}
                 <View style={styles.profileContainer}>
                     <Image
@@ -70,7 +69,6 @@ const LoginForget = (props) => {
                         <Text style={{color:'#FF7465',fontWeight:'bold',textAlign:'right'}}>Login Here</Text>
                     </TouchableOpacity>
                 </View>
-            </View>
         </PageContainer>
     )
 }

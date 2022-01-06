@@ -8,6 +8,7 @@ import {useRoute} from '@react-navigation/native';
 
 export default function PageContainer(props) {
     const route = useRoute();
+    const {hasPadding=false}=props;
     return (
         <SafeAreaView style={[styles.saveArea]}>
             <View style={styles.mainContainer}>
@@ -34,7 +35,7 @@ export default function PageContainer(props) {
                     }
                 </View>
                 {/* ====== All Childerens =====*/}
-                <View>
+                <View style={hasPadding?styles.paddings:null}>
                     {props.children}
                 </View>
             </View>
@@ -71,5 +72,10 @@ const styles = StyleSheet.create({
         display:"flex",
         justifyContent:"center",
         alignItems:"center"
+    },
+    paddings:{
+        paddingLeft: 40,
+        paddingRight: 40,
+        paddingTop: 50
     }
 })
