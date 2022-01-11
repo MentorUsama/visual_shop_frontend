@@ -40,6 +40,14 @@ const setProfile=(state,action)=>{
         profile:action.profile
     })
 }
+const updateProfile=(state,action)=>{
+    return updateObject(state,{
+        profile:{
+            ...state.profile,
+            ...action.profile
+        }
+    })
+}
 
 // Reducer
 const reducer = ( state = initialState, action ) => {
@@ -48,6 +56,7 @@ const reducer = ( state = initialState, action ) => {
         case actionTypes.LOGOUT: return Logout(state, action);
         case actionTypes.SET_PROVINCES_AND_CITIES: return setProvincesAndCities(state,action)
         case actionTypes.SET_PROFILE: return setProfile(state,action)
+        case actionTypes.UPDATE_PROFILE: return updateProfile(state,action)
         default:
             return state;
     }

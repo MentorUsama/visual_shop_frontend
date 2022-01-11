@@ -15,3 +15,4 @@ export const CUSTOMER_FORGET_PASSWORD=`${CUSTOMER_BASE_URL}auth/password_reset/`
 export const CUSTOMER_RESET_PASSWORD=`${CUSTOMER_BASE_URL}auth/password_reset/confirm/`
 export const CUSTOMER_GET_PROVINCES_AND_CITIES=`${CUSTOMER_BASE_URL}getProvinceAndCities`
 export const CUSTOMER_GET_PROFILE=`${CUSTOMER_BASE_URL}profile/customerProfile`
+export const CUSTOMER_UPDATE_PROFILE=`${CUSTOMER_BASE_URL}profile/customerProfile`

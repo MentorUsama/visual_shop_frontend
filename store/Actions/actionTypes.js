@@ -2,3 +2,4 @@ export const LOGIN = 'LOGIN';
 export const LOGOUT = 'LOGOUT';
 export const SET_PROVINCES_AND_CITIES='SET_PROVINCES_AND_CITIES'
 export const SET_PROFILE='SET_PROFILE'
+export const UPDATE_PROFILE='UPDATE_PROFILE'

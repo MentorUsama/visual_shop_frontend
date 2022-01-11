@@ -13,6 +13,17 @@ function diff_minutes(t2, t1)
    }
     return (false)
  }
+ function validateContact(contact)
+ {
+   if(/^\d{11}$/.test(contact))
+   {
+     return true
+   }
+   else
+   {
+     return false
+   }
+ }
  function getCities(provinces,provincesId)
  {
     if(provincesId==null || provinces==null)
@@ -25,4 +36,24 @@ function diff_minutes(t2, t1)
     })
     return province.cities
 }
-export {diff_minutes,ValidateEmail,getCities}
+function getCityDetail(provinces,provinceId,cityId)
+{
+  const province=provinces.find(province=>{
+    if(province.id==provinceId)
+      return province
+  })
+  const city=province.cities.find(city=>{
+      if(city.id==cityId)
+        return city
+  })
+
+  return {
+    id:city.id,
+    name:city.name,
+    provinceId:{
+      id:province.id,
+      name:province.name
+    }
+  }
+}
+export {diff_minutes,ValidateEmail,getCities,getCityDetail,validateContact}

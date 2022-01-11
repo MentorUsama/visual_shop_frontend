@@ -6,7 +6,8 @@ import {
     forgetPasswordHandler,
     resetPasswordHandler,
     getProvincesAndCities,
-    getProfileHandler
+    getProfileHandler,
+    updateProfile
 } 
 from './Customer/customerHandler'
 
@@ -19,5 +20,6 @@ export {
     forgetPasswordHandler,
     resetPasswordHandler,
     getProvincesAndCities,
-    getProfileHandler
+    getProfileHandler,
+    updateProfile
 }

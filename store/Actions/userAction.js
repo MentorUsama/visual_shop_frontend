@@ -26,3 +26,9 @@ export const setProfile=(profile)=>{
         profile:profile
     }
 }
+export const updateProfile=(profile)=>{
+    return{
+        type:actionTypes.UPDATE_PROFILE,
+        profile:profile
+    }
+}

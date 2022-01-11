@@ -2,9 +2,12 @@ import React,{useState,useRef} from 'react'
 import { View, Text, TextInput, StyleSheet,TouchableOpacity } from 'react-native'
 import Lock from '../../../assets/icons/lock';
 import Email from '../../../assets/icons/email'
+import Person from '../../../assets/icons/person'
+import Address from '../../../assets/icons/address'
+import Phone from '../../../assets/icons/phone'
 
 export default function Input(props) {
-    const { secure = false } = props;
+    const { secure = false,isNumeric=false } = props;
     var textInput = useRef(null);
     const [color,setColor]=useState({iconColor:'#464646',textColor:'#828181',borderColor:'#828181'});
     const onFocus=()=>{
@@ -27,8 +30,11 @@ export default function Input(props) {
             <View style={styles.inputContainer}>
                 {props.icon=="lock"?<Lock fill={color.iconColor} />:
                  props.icon=="email"?<Email width={22} fill={color.iconColor} />:
-                 null}
-                <TextInput ref={(ref)=>{textInput=ref}} focus={true} onBlur={onBlur} onFocus={onFocus} style={styles.textFieldStyle} secureTextEntry={secure} onChangeText={(val) => props.onChange(val)} placeholder={props.placeholder} value={props.value} />
+                 props.icon=="person"?<Person fill={color.iconColor}/>:
+                 props.icon=="address"?<Address fill={color.iconColor}/>:
+                 props.icon=="phone"?<Phone fill={color.iconColor}/>:null
+                }
+                <TextInput keyboardType = {isNumeric?'number-pad':'default'} ref={(ref)=>{textInput=ref}} focus={true} onBlur={onBlur} onFocus={onFocus} style={styles.textFieldStyle} secureTextEntry={secure} onChangeText={(val) => props.onChange(val)} placeholder={props.placeholder} value={props.value} />
             </View>
         </TouchableOpacity>
     )

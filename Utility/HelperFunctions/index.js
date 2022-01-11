@@ -14,6 +14,8 @@ export {
 export {
     diff_minutes,
     ValidateEmail,
-    getCities
+    validateContact,
+    getCities,
+    getCityDetail
 }
 from './helpers'

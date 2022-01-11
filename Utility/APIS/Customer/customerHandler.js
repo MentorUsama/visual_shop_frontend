@@ -1,193 +1,194 @@
 import {
-    CUSTOMER_GOOGLE_AUTH, 
+    CUSTOMER_GOOGLE_AUTH,
     CUSTOMER_LOGIN,
     CUSTOMER_REGISTER,
     CUSTOMER_FORGET_PASSWORD,
     CUSTOMER_RESET_PASSWORD,
     CUSTOMER_GET_PROVINCES_AND_CITIES,
-    CUSTOMER_GET_PROFILE
+    CUSTOMER_GET_PROFILE,
+    CUSTOMER_UPDATE_PROFILE
 } from '../Constants/apiConstants';
 import axios from 'axios';
 import * as Google from 'expo-google-app-auth';
-import {KEY_ANDROID_CLIENT_ID,KEY_IOS_CLIENT_ID} from '../../../config'
+import { KEY_ANDROID_CLIENT_ID, KEY_IOS_CLIENT_ID } from '../../../config'
 
 
-const customerLoginHandler=async (email,password)=>{
-    try
-    {
-        const response=await axios.post(CUSTOMER_LOGIN,{username:email,password:password});
-        return {data:response.data,status:response.status}
+const customerLoginHandler = async (email, password) => {
+    try {
+        const response = await axios.post(CUSTOMER_LOGIN, { username: email, password: password });
+        return { data: response.data, status: response.status }
     }
-    catch(error)
-    {
-        if(error.response.status==400) // Data is Incorect
+    catch (error) {
+        if (error.response.status == 400) // Data is Incorect
         {
-            return {data:error.response.data,status:error.response.status}
+            return { data: error.response.data, status: error.response.status }
         }
-        else if(error.response.status==401) // Unauthorize
+        else if (error.response.status == 401) // Unauthorize
         {
-            return {data:error.response.data.detail,status:error.response.status}
+            return { data: error.response.data.detail, status: error.response.status }
         }
         else // Ahh Someunknown error occured
         {
-            return {data:"Something Went Wrong Please Try Again!!",status:error.response.status}
+            return { data: "Something Went Wrong Please Try Again!!", status: error.response.status }
         }
     }
 }
-const customerGoogleAuthHandler=async (token)=>{
-    try{
-        const response=await axios.post(CUSTOMER_GOOGLE_AUTH,{token:token});
-        return {data:response.data,status:response.status}
+const customerGoogleAuthHandler = async (token) => {
+    try {
+        const response = await axios.post(CUSTOMER_GOOGLE_AUTH, { token: token });
+        return { data: response.data, status: response.status }
     }
-    catch(error){
-        return {data:"Something Went Wrong Please Try Again!!",status:error.response.status}
+    catch (error) {
+        return { data: "Something Went Wrong Please Try Again!!", status: error.response.status }
     }
 }
 const continueWithGoogle = async () => {
-    try 
-    {
+    try {
         const result = await Google.logInAsync({
             androidClientId: KEY_ANDROID_CLIENT_ID,
             iosClientId: KEY_IOS_CLIENT_ID,
             scopes: ["profile", "email"]
         })
-        if (result.type == "success") 
-        {
+        if (result.type == "success") {
             const response = await customerGoogleAuthHandler(result.accessToken)
-            if (response.status == 200) 
-            {
-                return {status:response.status,data:response.data}
+            if (response.status == 200) {
+                return { status: response.status, data: response.data }
             }
-            else 
-            {
-                return {status:null,data:"Something Went Wrong Please Try Again"}
+            else {
+                return { status: null, data: "Something Went Wrong Please Try Again" }
             }
         }
-        else 
-        {
-            return {status:null,data:"Something Went Wrong Please Try Again"}
+        else {
+            return { status: null, data: "Something Went Wrong Please Try Again" }
         }
 
     }
     catch (e) {
-        return {status:null,data:"Something Went Wrong Please Try Again"}
+        return { status: null, data: "Something Went Wrong Please Try Again" }
     }
 }
-const customerRegister=async (email,password)=>{
-    try
-    {
-        const response=await axios.post(CUSTOMER_REGISTER,{email:email,password:password});
-        return {status:response.status,data:response.data}
-    }   
-    catch(e)
-    {
-        if(e.response.status==400) // Usernme or password is incorrect
+const customerRegister = async (email, password) => {
+    try {
+        const response = await axios.post(CUSTOMER_REGISTER, { email: email, password: password });
+        return { status: response.status, data: response.data }
+    }
+    catch (e) {
+        if (e.response.status == 400) // Usernme or password is incorrect
         {
-            const keys=Object.keys(e.response.data)
-            if(keys.includes("username"))
-            {
-                return {status:e.response.status,data:e.response.data.username[0]}
+            const keys = Object.keys(e.response.data)
+            if (keys.includes("username")) {
+                return { status: e.response.status, data: e.response.data.username[0] }
             }
-            else if(keys.includes("password"))
-            {
-                return {status:e.response.status,data:e.response.data.password[0]}
+            else if (keys.includes("password")) {
+                return { status: e.response.status, data: e.response.data.password[0] }
             }
         }
-        return {status:null,data:"Something Went Wrong Please Try Again"} // Unknown error occured
+        return { status: null, data: "Something Went Wrong Please Try Again" } // Unknown error occured
     }
 }
-const forgetPasswordHandler=async (email)=>{
-    try
-    {
+const forgetPasswordHandler = async (email) => {
+    try {
         var bodyFormData = new FormData();
-        bodyFormData.append('email',email);
-        const response=await axios({
+        bodyFormData.append('email', email);
+        const response = await axios({
             method: "POST",
             url: CUSTOMER_FORGET_PASSWORD,
             data: bodyFormData,
         });
-        return {status:response.status,data:response.data}
+        return { status: response.status, data: response.data }
     }
-    catch(e)
-    {
-        if(e.response.status==400)
-        {
-            const keys=Object.keys(e.response.data)
-            if(keys.includes("email"))
-            {
-                return {status:e.response.status,data:e.response.data.email[0]}
+    catch (e) {
+        if (e.response.status == 400) {
+            const keys = Object.keys(e.response.data)
+            if (keys.includes("email")) {
+                return { status: e.response.status, data: e.response.data.email[0] }
             }
         }
-        return {status:null,data:"Something Went Wrong Please Try Again"} // Unknown error occured
+        return { status: null, data: "Something Went Wrong Please Try Again" } // Unknown error occured
     }
 }
-const resetPasswordHandler=async (code,password)=>{
-    try
-    {
+const resetPasswordHandler = async (code, password) => {
+    try {
         var bodyFormData = new FormData();
-        bodyFormData.append('token',code);
-        bodyFormData.append('password',password);
-        const response=await axios({
+        bodyFormData.append('token', code);
+        bodyFormData.append('password', password);
+        const response = await axios({
             method: "POST",
             url: CUSTOMER_RESET_PASSWORD,
             data: bodyFormData,
         });
-        return {status:response.status,data:response.data}
+        return { status: response.status, data: response.data }
     }
-    catch(e)
-    {
-        if(e.response.status==400)
-        {
-            const keys=Object.keys(e.response.data)
-            if(keys.includes("password"))
-            {
-                return {status:e.response.status,data:e.response.data.password[0]}
+    catch (e) {
+        if (e.response.status == 400) {
+            const keys = Object.keys(e.response.data)
+            if (keys.includes("password")) {
+                return { status: e.response.status, data: e.response.data.password[0] }
             }
         }
-        if(e.response.status==404) // Not Found
+        if (e.response.status == 404) // Not Found
         {
-            return {status:e.response.status,data:"Invalid Code Please Try Again"}
+            return { status: e.response.status, data: "Invalid Code Please Try Again" }
         }
     }
-    return {status:null,data:"Something Went Wrong Please Try Again"} // Unknown error occured
+    return { status: null, data: "Something Went Wrong Please Try Again" } // Unknown error occured
 }
-const getProvincesAndCities=async()=>{
-    try
-    {
-        const response=await axios.get(CUSTOMER_GET_PROVINCES_AND_CITIES);
-        return {status:response.status,data:response.data}
+const getProvincesAndCities = async () => {
+    try {
+        const response = await axios.get(CUSTOMER_GET_PROVINCES_AND_CITIES);
+        return { status: response.status, data: response.data }
     }
-    catch(e)
-    {
-        return {status:null,data:'An Unknown Error Occured While Fetching Data For Cities'}
+    catch (e) {
+        return { status: null, data: 'An Unknown Error Occured While Fetching Data For Cities' }
     }
 }
-const getProfileHandler=async (token)=>{
-    try
-    {
-        const response=await axios({
+const getProfileHandler = async (token) => {
+    try {
+        const response = await axios({
             method: "GET",
             url: CUSTOMER_GET_PROFILE,
-            headers:{
-                Authorization:"Bearer "+token
+            headers: {
+                Authorization: "Bearer " + token
             }
         });
-        return {status:response.status,data:response.data}
+        return { status: response.status, data: response.data }
     }
-    catch(e)
-    {
+    catch (e) {
         console.log(e.response)
-        if(e.response.status==401)
-        {
-            return {status:e.response.status,data:e.response.data.detail}
+        if (e.response.status == 401) {
+            return { status: e.response.status, data: e.response.data.detail }
         }
-        else
-        {
-            return {status:null,data:"An Unknown Error Occured While Fetching Data For Cities"}
+        else {
+            return { status: null, data: "An Unknown Error Occured While Fetching Data For Cities" }
         }
     }
 }
-export {customerLoginHandler,customerGoogleAuthHandler,continueWithGoogle,customerRegister,forgetPasswordHandler,resetPasswordHandler,getProvincesAndCities,getProfileHandler};
+const updateProfile = async (profile, access) => {
+    try {
+        const response = await axios.put(CUSTOMER_UPDATE_PROFILE, profile, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + access
+            }
+        });
+        return { status: response.status, data: response.data }
+    }
+    catch (e) {
+        console.log(e.response)
+        return { status: null, data: 'An Unknown Error Occured While Updating Profile' }
+    }
+}
+export {
+    customerLoginHandler,
+    customerGoogleAuthHandler,
+    continueWithGoogle,
+    customerRegister,
+    forgetPasswordHandler,
+    resetPasswordHandler,
+    getProvincesAndCities,
+    getProfileHandler,
+    updateProfile
+};
 
 
 
