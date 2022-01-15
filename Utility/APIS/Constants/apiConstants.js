@@ -7,7 +7,7 @@ export const ORDER_BASE_URL=`${BASE_URL}api/order/`;
 
 
 
-// =============== FULL API's  ===============
+// =============== FULL API's  Customer ===============
 export const CUSTOMER_LOGIN=`${CUSTOMER_BASE_URL}auth/login`
 export const CUSTOMER_GOOGLE_AUTH=`${CUSTOMER_BASE_URL}auth/google`
 export const CUSTOMER_REGISTER=`${CUSTOMER_BASE_URL}auth/register`
@@ -16,3 +16,7 @@ export const CUSTOMER_RESET_PASSWORD=`${CUSTOMER_BASE_URL}auth/password_reset/co
 export const CUSTOMER_GET_PROVINCES_AND_CITIES=`${CUSTOMER_BASE_URL}getProvinceAndCities`
 export const CUSTOMER_GET_PROFILE=`${CUSTOMER_BASE_URL}profile/customerProfile`
 export const CUSTOMER_UPDATE_PROFILE=`${CUSTOMER_BASE_URL}profile/customerProfile`
+
+
+// =============== FULL API's  Shop ===============
+export const SHOP_GET_PRODUCTS=`${SHOP_BASE_URL}products/?page=`

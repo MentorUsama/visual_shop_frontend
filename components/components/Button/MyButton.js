@@ -2,12 +2,12 @@ import React from 'react'
 import {StyleSheet,Button,View,TouchableOpacity,Text} from 'react-native'
 
 export default function MyButton(props) {
-    const {isSecondary=false,isDisabled=false}=props
+    const {isSecondary=false,isDisabled=false,style={}}=props
     return (
         <TouchableOpacity 
             disabled={props.isDisabled} 
             activeOpacity={0.8} 
-            style={[styles.buttonStyle,isDisabled?{backgroundColor:'#828181'}:isSecondary?{backgroundColor:'#828181'}:null,props.style]} 
+            style={[styles.buttonStyle,style,isDisabled?{backgroundColor:'#828181'}:isSecondary?{backgroundColor:'#828181'}:null,props.style]} 
             color={"#FF7465"} 
             onPress={props.onPress} 
             title={props.title}>

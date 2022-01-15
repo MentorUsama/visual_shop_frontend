@@ -5,3 +5,8 @@ export {
     setProfile,
     updateProfile
 } from './userAction'
+
+
+export {
+    updateStoreProducts
+} from './shopAction'
