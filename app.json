@@ -30,7 +30,12 @@
     },
     "packagerOpts": {
       "config": "metro.config.js",
-      "sourceExts": ["js", "jsx", "css"]
-    }
+      "sourceExts": [
+        "js",
+        "jsx",
+        "css"
+      ]
+    },
+    "description": ""
   }
 }

@@ -58,6 +58,7 @@ const styles = StyleSheet.create({
     },
     mainContainer: {
         marginTop: 50,
+        flex:1
     },
     navigationContainer: {
         paddingBottom: 10,
@@ -73,12 +74,14 @@ const styles = StyleSheet.create({
     normalWindow: {
         paddingLeft: 40,
         paddingRight: 40,
-        paddingTop: 50
+        paddingTop: 50,
+        flex:1
     },
     mediumWindow: {
         paddingLeft: 20,
         paddingRight: 20,
-        paddingTop: 50
+        paddingTop: 50,
+        flex:1
     },
     iconContainer: {
         width: 40,
