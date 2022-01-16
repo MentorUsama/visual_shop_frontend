@@ -1,8 +1,8 @@
 import React from 'react'
 import { View, StyleSheet, TextInput, TouchableOpacity } from 'react-native'
-import MyButton from '../Button/MyButton'
-import File from '../../../assets/icons/file'
-import Camera from '../../../assets/icons/camera'
+import MyButton from '../../Button/MyButton'
+import File from '../../../../assets/icons/file'
+import Camera from '../../../../assets/icons/camera'
 
 export default function InputSearch(props) {
     return (

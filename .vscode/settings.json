@@ -3,7 +3,6 @@
     ".expo-shared": true,
     ".expo": true,
     "README.md": true,
-    "package.json": true,
     "package-lock.json": true,
     "app.json": true,
     "node_modules": true,
@@ -12,6 +11,7 @@
     "assets\\icon.png": true,
     "assets\\favicon.png": true,
     "assets\\adaptive-icon.png": true,
-    "babel.config.js": true
+    "babel.config.js": true,
+    "package.json": true
   }
 }
