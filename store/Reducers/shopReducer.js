@@ -14,7 +14,6 @@ const updateStoreProducts = (state, action) => {
     {
         var newProducts = state.storeProducts.products.concat(products.products)
         products.products = newProducts
-        console.log(newProducts)
         return updateObject(state, {
             storeProducts: products
         })

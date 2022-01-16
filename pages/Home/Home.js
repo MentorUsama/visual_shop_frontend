@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, Button, StyleSheet, TextInput, ScrollView, TouchableOpacity, FlatList } from 'react-native';
+import { Text, View, Button, StyleSheet, TextInput, ScrollView, TouchableOpacity, FlatList,Touchable } from 'react-native';
 // Redux
 import { connect } from 'react-redux';
 import * as actions from '../../store/Actions/index'
@@ -10,23 +10,27 @@ import Toast from 'react-native-toast-message';
 import InputSearch from '../../components/components/InputSearch/InputSearch';
 import FilterProduct from '../../components/components/FilterProduct/FilterProduct';
 import Product from '../../components/components/Product/Product';
+import Loader from '../../components/components/Loader/Loader';
 // Importing API's
 import { getAllProducts } from '../../Utility/APIS/index'
 
 
-const SeeMore=(props)=>{
-    return(
-            props.storeProducts == null ?
+const SeeMore = (props) => {
+    return (
+        <View style={{ paddingTop: 10, paddingBottom: 10 }}>
+            {props.storeProducts == null ?
                 null :
                 props.storeProducts.nextPageNumber == -1 ?
                     null :
-                    <TouchableOpacity onPress={props.loadProducts}><Text style={styles.seeMore}>See More</Text></TouchableOpacity>
+                    <TouchableOpacity onPress={props.loadProducts}><Text style={styles.seeMore}>See More</Text></TouchableOpacity>}
+        </View>
     )
 }
 
 const Home = (props) => {
     const { navigation, route } = props
     const [searchText, searchTextChange] = useState("");
+    const [pageLoading, setPageLoading] = useState(false);
     // ====== Checking Any Global Error ======
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
@@ -44,6 +48,7 @@ const Home = (props) => {
     useEffect(async () => {
         if (props.storeProducts != null)
             return
+        setPageLoading(true)
         const response = await getAllProducts(1) // Page is one as all
         if (response.status == 200) {
             props.updateStoreProducts(response.data)
@@ -51,6 +56,7 @@ const Home = (props) => {
         else {
 
         }
+        setPageLoading(false)
     }, [])
     // Loading More Products
     const loadProducts = async () => {
@@ -63,50 +69,45 @@ const Home = (props) => {
     }
     return (
         <PageContainer hasPadding={true} navigation={props.navigation}>
-            {/* Hero Container */}
-            <View style={styles.heroContainer}>
-                <Text style={styles.heroText}>Search Your Favorite Dresses</Text>
-                <View style={styles.heroDetailContainer}>
-                    <Text style={styles.heroTextDetail}>Ready to wear dresses tailored for you online. Hurry up while stock lasts.</Text>
+                {/* Loading */}
+                <Loader loading={pageLoading} />
+                {/* Hero Container */}
+                <View style={styles.heroContainer}>
+                    <Text style={styles.heroText}>Search Your Favorite Dresses</Text>
+                    <View style={styles.heroDetailContainer}>
+                        <Text style={styles.heroTextDetail}>Ready to wear dresses tailored for you online. Hurry up while stock lasts.</Text>
+                    </View>
                 </View>
-            </View>
-            {/* Search Bar */}
-            <View style={styles.searchContainer}>
-                <InputSearch
-                    value={searchText}
-                    onChangeText={searchTextChange}
-                />
-                <View style={{ marginTop: 5 }}>
-                    <FilterProduct
+                {/* Search Bar */}
+                <View style={styles.searchContainer}>
+                    <InputSearch
+                        value={searchText}
+                        onChangeText={searchTextChange}
+                    />
+                    <View style={{ marginTop: 5 }}>
+                        <FilterProduct
 
-                    />
+                        />
+                    </View>
                 </View>
-            </View>
-            {/* Products */}
-            <View style={{flex:1}}>
-                <Text style={styles.title}>Products</Text>
-                {/* Products Container */}
-                <View style={styles.productContainer}>
-                    <FlatList
-                        data={props.storeProducts == null ? null : props.storeProducts.products}
-                        renderItem={({ item }) => <Product item={item} />}
-                        keyExtractor={(item) => item.id}
-                        numColumns={2}
-                        ListEmptyComponent={<Text>Loading...</Text>}
-                        columnWrapperStyle={styles.columnContainer}
-                        showsVerticalScrollIndicator={false}
-                        ListFooterComponent={<SeeMore loadProducts={loadProducts} storeProducts={props.storeProducts}/>}
-                    />
+                {/* Products */}
+                <View style={{ flex: 1 }}>
+                    <Text style={styles.title}>Products</Text>
+                    {/* Products Container */}
+                    <View style={styles.productContainer}>
+                        <FlatList
+                            data={props.storeProducts == null ? null : props.storeProducts.products}
+                            renderItem={({ item }) => <Product onPress={() => props.navigation.navigate("ProductDetail")} item={item} />}
+                            keyExtractor={(item) => item.id}
+                            numColumns={2}
+                            ListEmptyComponent={<Text>No Product Found</Text>}
+                            columnWrapperStyle={styles.columnContainer}
+                            showsVerticalScrollIndicator={false}
+                            columnWrapperStyle={styles.columnWrapperStyle}
+                            ListFooterComponent={<SeeMore loadProducts={loadProducts} storeProducts={props.storeProducts} />}
+                        />
+                    </View>
                 </View>
-                {/* Next Product */}
-                {/* {
-                    props.storeProducts == null ?
-                        null :
-                        props.storeProducts.nextPageNumber == -1 ?
-                            null :
-                            <TouchableOpacity onPress={loadProducts}><Text style={styles.seeMore}>See More</Text></TouchableOpacity>
-                } */}
-            </View>
         </PageContainer>
     )
 }
@@ -145,18 +146,15 @@ const styles = StyleSheet.create({
         marginTop: 25,
         marginBottom: 25
     },
-    columnContainer: {
-        justifyContent: 'space-between',
-        flexWrap: 'wrap',
+    columnWrapperStyle: {
+        justifyContent: 'space-between'
     },
     productContainer: {
-        flex:1
+        flex: 1
     },
-    seeMore:{
-        color:'#FF7465',
-        textAlign:'center',
-        marginTop:40,
-        marginBottom:40
+    seeMore: {
+        color: '#FF7465',
+        textAlign: 'center'
     }
 })
 const mapStateToProps = state => {

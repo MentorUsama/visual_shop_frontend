@@ -154,7 +154,6 @@ const getProfileHandler = async (token) => {
         return { status: response.status, data: response.data }
     }
     catch (e) {
-        console.log(e.response)
         if (e.response.status == 401) {
             return { status: e.response.status, data: e.response.data.detail }
         }
@@ -174,7 +173,6 @@ const updateProfile = async (profile, access) => {
         return { status: response.status, data: response.data }
     }
     catch (e) {
-        console.log(e.response)
         return { status: null, data: 'An Unknown Error Occured While Updating Profile' }
     }
 }
