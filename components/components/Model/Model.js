@@ -24,7 +24,7 @@ const Model = (props) => {
                         <Cross fill="#FFFFFF" />
                     </View>
                 </TouchableOpacity>
-                <View>
+                <View style={{height:'90%'}}>
                     {props.children}
                 </View>
             </View>
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     mainContainer: {
         backgroundColor: "#FFFFFF",
         width: '80%',
-        height: '80%',
+        height:'80%',
         position: 'absolute',
         top: 0,
         marginTop: 75,

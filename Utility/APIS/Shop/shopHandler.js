@@ -1,4 +1,6 @@
 import {
+    SHOP_GET_ALL_CATEGORIES,
+    SHOP_GET_ALL_TAGS,
     SHOP_GET_PRODUCTS
 } from '../Constants/apiConstants';
 import axios from 'axios';
@@ -23,4 +25,24 @@ const getAllProducts = async (page) => {
         return { status: null, data: 'Unable To Get Products!!' }
     }
 }
-export {getAllProducts}
+const getAllTags=async ()=>{
+    try 
+    {
+        const response = await axios.get(`${SHOP_GET_ALL_TAGS}`);
+        return { status: response.status, data: response.data }
+    }
+    catch (e) {
+        return { status: null, data: 'Unable To Get Tags!!' }
+    }
+}
+const getAllCategories=async ()=>{
+    try 
+    {
+        const response = await axios.get(`${SHOP_GET_ALL_CATEGORIES}`);
+        return { status: response.status, data: response.data }
+    }
+    catch (e) {
+        return { status: null, data: 'Unable To Get Categories!!' }
+    }
+}
+export {getAllProducts,getAllTags,getAllCategories}

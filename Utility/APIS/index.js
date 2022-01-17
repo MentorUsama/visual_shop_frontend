@@ -12,5 +12,7 @@ export {
 from './Customer/customerHandler'
 
 export {
-    getAllProducts
+    getAllProducts,
+    getAllTags,
+    getAllCategories
 } from './Shop/shopHandler'

@@ -20,3 +20,5 @@ export const CUSTOMER_UPDATE_PROFILE=`${CUSTOMER_BASE_URL}profile/customerProfil
 
 // =============== FULL API's  Shop ===============
 export const SHOP_GET_PRODUCTS=`${SHOP_BASE_URL}products/?page=`
+export const SHOP_GET_ALL_TAGS=`${SHOP_BASE_URL}getAllTags/`
+export const SHOP_GET_ALL_CATEGORIES=`${SHOP_BASE_URL}getAllCategories/`

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, Button, StyleSheet, ActivityIndicator, TextInput, ScrollView, TouchableOpacity, FlatList, Touchable } from 'react-native';
+import { Text, View, StyleSheet, ActivityIndicator, TouchableOpacity, FlatList } from 'react-native';
 // Redux
 import { connect } from 'react-redux';
 import * as actions from '../../store/Actions/index'
@@ -8,34 +8,20 @@ import PageContainer from '../../components/container/PageContainer'
 // Importing Component
 import Toast from 'react-native-toast-message';
 import InputSearch from '../../components/components/Home/InputSearch/InputSearch';
-import FilterProduct from '../../components/components/Home/FilterProduct/FilterProduct';
+import MyButton from '../../components/components/Button/MyButton'
+import FilterModel from '../../components/components/Home/FilterModel/FilterModel';
 import Product from '../../components/components/Home/Product/Product';
 import Loader from '../../components/components/Loader/Loader';
+import TextWithLoader from '../../components/components/TextWithLoader/TextWithLoader';
 // Importing API's
-import { getAllProducts } from '../../Utility/APIS/index'
-
-
-const SeeMore = (props) => {
-    return (
-        <View style={{ paddingBottom: '10%' }}>
-            {
-                props.miniLoading ?
-                    <ActivityIndicator size="large" color="#0000ff" />
-                    :
-                    props.storeProducts == null ?
-                        null :
-                        props.storeProducts.nextPageNumber == -1 ?
-                            null :
-                            <TouchableOpacity onPress={props.loadProducts}><Text style={styles.seeMore}>See More</Text></TouchableOpacity>}
-        </View>
-    )
-}
+import { getAllProducts, getAllTags, getAllCategories } from '../../Utility/APIS/index'
 
 const Home = (props) => {
     const { navigation, route } = props
     const [searchText, searchTextChange] = useState("");
     const [pageLoading, setPageLoading] = useState(false);
     const [miniLoading, setMiniLoading] = useState(false)
+    const [filterModel, setFilterModel] = useState(true)
     // ====== Checking Any Global Error ======
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
@@ -51,19 +37,54 @@ const Home = (props) => {
     }, [route.params?.error])
     // Getting Products when first time screen load
     useEffect(async () => {
-        if (props.storeProducts != null)
-            return
         setPageLoading(true)
-        const response = await getAllProducts(1) // Page is one as all
-        if (response.status == 200) {
-            props.updateStoreProducts(response.data)
+        // Getting All The Products If not Stored
+        if (props.storeProducts == null) {
+            const response = await getAllProducts(1) // Page is one as all
+            if (response.status == 200) {
+                props.updateStoreProducts(response.data)
+            }
+            else {
+                Toast.show({
+                    type: 'error',
+                    text1: 'Oops',
+                    text2: "An Error Occured While Fetching Data"
+                });
+                setPageLoading(false)
+                return
+            }
         }
-        else {
-            Toast.show({
-                type: 'error',
-                text1: 'Oops',
-                text2: "An Error Occured While Fetching Data"
-            });
+        // Getting All The Tags
+        if (props.tags == null) {
+            const response = await getAllTags()
+            if (response.status == 200) {
+                props.addTags(response.data)
+            }
+            else {
+                Toast.show({
+                    type: 'error',
+                    text1: 'Oops',
+                    text2: "An Error Occured While Fetching Some Data"
+                });
+                setPageLoading(false)
+                return
+            }
+        }
+        // Getting All The Categories
+        if (props.categories == null) {
+            const response = await getAllCategories()
+            if (response.status == 200) {
+                props.addCategories(response.data)
+            }
+            else {
+                Toast.show({
+                    type: 'error',
+                    text1: 'Oops',
+                    text2: "An Error Occured While Fetching Some Data"
+                });
+                setPageLoading(false)
+                return
+            }
         }
         setPageLoading(false)
     }, [])
@@ -103,7 +124,16 @@ const Home = (props) => {
                     onChangeText={searchTextChange}
                 />
                 <View style={{ marginTop: 5 }}>
-                    <FilterProduct />
+                    <MyButton
+                        title="Filter Products"
+                        onPress={() => setFilterModel(true)}
+                    />
+                    {filterModel ? <FilterModel
+                        show={filterModel}
+                        close={setFilterModel}
+                        tags={props.tags}
+                        categories={props.categories}
+                    /> : null}
                 </View>
             </View>
             {/* Products */}
@@ -120,7 +150,11 @@ const Home = (props) => {
                         columnWrapperStyle={styles.columnContainer}
                         showsVerticalScrollIndicator={false}
                         columnWrapperStyle={styles.columnWrapperStyle}
-                        ListFooterComponent={<SeeMore loadProducts={loadProducts} miniLoading={miniLoading} storeProducts={props.storeProducts} />}
+                        ListFooterComponent={<TextWithLoader
+                            shouldLoad={miniLoading}
+                            shouldShow={props.storeProducts != null && props.storeProducts.nextPageNumber != -1}
+                            onPress={loadProducts}
+                        />}
                     />
                 </View>
             </View>
@@ -179,11 +213,15 @@ const mapStateToProps = state => {
         email: state.userReducer.email,
         isLoggedIn: state.userReducer.isLoggedIn,
         storeProducts: state.shopReducer.storeProducts,
+        tags: state.shopReducer.tags,
+        categories: state.shopReducer.categories
     };
 };
 const mapDispatchToProps = dispatch => {
     return {
-        updateStoreProducts: (products) => dispatch(actions.updateStoreProducts(products))
+        updateStoreProducts: (products) => dispatch(actions.updateStoreProducts(products)),
+        addTags: (tags) => dispatch(actions.addTags(tags)),
+        addCategories: (categories) => dispatch(actions.addCategories(categories))
     };
 };
 export default connect(

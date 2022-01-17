@@ -8,5 +8,7 @@ export {
 
 
 export {
-    updateStoreProducts
+    updateStoreProducts,
+    addTags,
+    addCategories
 } from './shopAction'

@@ -4,7 +4,9 @@ import { updateObject } from '../StoreUtility/utility';
 
 // States
 const initialState = {
-    storeProducts: null
+    storeProducts: null,
+    tags:null,
+    categories:null
 };
 
 
@@ -24,10 +26,24 @@ const updateStoreProducts = (state, action) => {
         })
     }
 }
+const addTags=(state,action)=>{
+    var tags=action.tags
+    return updateObject(state, {
+        tags: tags
+    })
+}
+const addCategories=(state,action)=>{
+    var categories=action.categories
+    return updateObject(state, {
+        categories: categories
+    })
+}
 // Reducer
 const reducer = (state = initialState, action) => {
     switch (action.type) {
         case actionTypes.UPDATE_STORE_PRODUCTS: return updateStoreProducts(state, action);
+        case actionTypes.ADD_ALL_TAGS: return addTags(state, action);
+        case actionTypes.ADD_CATEGORIES_SUBCATEGORIES: return addCategories(state, action);
         default:
             return state;
     }
