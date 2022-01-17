@@ -58,6 +58,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginTop: 10,
         marginRight: 10,
+        paddingBottom:20
     },
     iconBackground: {
         backgroundColor: '#FF7465',

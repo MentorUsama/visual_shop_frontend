@@ -11,19 +11,19 @@ export default function DropDownList(props) {
             props.setSelected([props.data.id, -1])
     }
     return (
-        <View key={props.data.id}>
+        <View>
             <TouchableOpacity onPress={setCategoryHandler} activeOpacity={0.7}><Text style={[styles.categoryTextStyle, isCategorySelected ? styles.categoryTextStyleActive : null]}>{props.data.name}</Text></TouchableOpacity>
             <Collapsible collapsed={!isCategorySelected}>
                 {
                     props.data.Subcategories.map((subcategory) => {
-                        return <TouchableOpacity
+                        return <View  key={subcategory.id}><TouchableOpacity
                             onPress={() => props.setSelected([props.data.id, subcategory.id])}
                             activeOpacity={0.7} style={styles.subCategoryStyle}
-                            key={subcategory.id}>
+                           >
                             <Text style={[styles.subCategoryTextStyle, isCategorySelected && props.selected[1] == subcategory.id ? styles.subCategoryTextStyleActive : null]}>
                                 {subcategory.name}
                             </Text>
-                        </TouchableOpacity>
+                        </TouchableOpacity></View>
                     })
                 }
             </Collapsible>

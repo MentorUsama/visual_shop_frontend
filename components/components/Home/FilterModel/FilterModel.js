@@ -80,11 +80,11 @@ export default function FilterProduct(props) {
                         <View>
                             {props.categories ?
                                 props.categories.map(category => {
-                                    return <DropDownList
+                                    return <View key={category.id}><DropDownList
                                         data={category}
                                         selected={selectedCategory}
                                         setSelected={setSelectedCategory}
-                                    />
+                                    /></View>
                                 })
                                 :
                                 null
