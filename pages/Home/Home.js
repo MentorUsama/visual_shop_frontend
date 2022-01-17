@@ -106,6 +106,11 @@ const Home = (props) => {
             setMiniLoading(false)
         }
     }
+    // Filter Handler
+    const filterHandler = (data) => {
+        // const filteredData = { ...data, searchText: searchText == "" ? null : searchText }
+        console.log(data)
+    }
     return (
         <PageContainer hasPadding={true} navigation={props.navigation}>
             {/* Loading */}
@@ -133,6 +138,7 @@ const Home = (props) => {
                         close={setFilterModel}
                         tags={props.tags}
                         categories={props.categories}
+                        filterHandler={filterHandler}
                     /> : null}
                 </View>
             </View>

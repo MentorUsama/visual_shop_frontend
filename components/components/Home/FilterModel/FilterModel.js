@@ -5,12 +5,19 @@ import { Slider } from '@miblanchard/react-native-slider';
 import Modal from '../../Model/Model'
 import Tag from '../../TagCheckBox/Tag';
 import DropDownList from '../../DropDownList/DropDownList';
+import MyButton from '../../Button/MyButton'
+import { textDecorationColor } from 'react-native/Libraries/Components/View/ReactNativeStyleAttributes';
 
 export default function FilterProduct(props) {
     const [price, setPrice] = useState([0, 1000])
     const [tags, setTags] = useState([])
     const [tagsToShow, setTagsToShow] = useState(5)
     const [selectedCategory, setSelectedCategory] = useState([-1, -1])
+    const [isPriceChanges, setIsPriceChanges] = useState(false)
+    const changePriceHandler = (data) => {
+        setPrice(data)
+        setIsPriceChanges(true)
+    }
     const tagsHandler = (isSelected, id) => {
         if (isSelected) {
             var filteredAry = [...tags]
@@ -21,6 +28,25 @@ export default function FilterProduct(props) {
             var filteredAry = tags.filter((val) => val != id)
             setTags(filteredAry)
         }
+    }
+    const isFilterApplied = () => {
+        if (isPriceChanges)
+            return true
+        if (tags.length != 0)
+            return true
+        if (selectedCategory[0] != -1)
+            return true
+        if (selectedCategory[1] != -1)
+            return true
+        return false
+    }
+    const applyFilterHandler = () => {
+        props.filterHandler({
+            price: isPriceChanges ? price : null,
+            tags: tags.length == 0 ? null : tags,
+            categoryId: selectedCategory[0] == -1 ? null : selectedCategory[0],
+            subcategoryId: selectedCategory[1] == -1 ? null : selectedCategory[1]
+        })
     }
     return (
         <Modal show={props.show} close={props.close}>
@@ -33,20 +59,29 @@ export default function FilterProduct(props) {
                             animateTransitions
                             maximumTrackTintColor="#d3d3d3"
                             maximumValue={1000}
-                            minimumTrackTintColor="#1fb28a"
                             minimumValue={0}
                             step={10}
                             thumbTintColor="#1a9274"
-                            onSlidingComplete={(data) => setPrice(data)}
+                            onSlidingComplete={(data) => changePriceHandler(data)}
                             value={price}
                             maximumTrackTintColor="#EBEBEB"
-                            minimumTrackTintColor="#FF7465"
+                            minimumTrackTintColor={isPriceChanges ? "#FF7465" : "#EBEBEB"}
                             trackStyle={{ height: 10, borderRadius: 20 }}
                             thumbTintColor="#FFFFFF"
                             thumbStyle={{ borderColor: '#BEBBBB', borderWidth: 2 }}
                         />
                         <View style={styles.priceContainer}>
-                            <Text style={styles.priceText}>From {price[0]} To {price[1]} RS</Text>
+                            {
+                                isPriceChanges ?
+                                    <Text style={styles.priceText}>Price: {price[0]} - {price[1]} RS</Text>
+                                    :
+                                    <Text style={styles.priceText}>Price: Any</Text>}
+                            {
+                                isPriceChanges ?
+                                    <TouchableOpacity onPress={() => setIsPriceChanges(false)}><Text style={[styles.priceText, styles.priceTextDecoration]}>Reset</Text></TouchableOpacity>
+                                    :
+                                    null
+                            }
                         </View>
                     </View>
 
@@ -91,10 +126,21 @@ export default function FilterProduct(props) {
                             }
                         </View>
                     </View>
-
-
-
                 </ScrollView>
+                <View style={{ paddingTop: 20, display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <MyButton
+                        title="Apply Filter"
+                        style={{ width: '48%' }}
+                        onPress={() => applyFilterHandler()}
+                        isDisabled={!isFilterApplied()}
+                    />
+                    <MyButton
+                        title="Cancel"
+                        style={{ width: '48%' }}
+                        isSecondary={true}
+                        onPress={() => props.close(false)}
+                    />
+                </View>
             </View>
         </Modal>
     )
@@ -108,7 +154,8 @@ const styles = StyleSheet.create({
     priceContainer: {
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'flex-end',
+        justifyContent: 'space-between',
+        marginTop: -7
     },
     price: {
         fontWeight: 'bold',
@@ -119,11 +166,17 @@ const styles = StyleSheet.create({
         fontSize: 12,
         color: '#FF7465'
     },
+    priceTextDecoration: {
+        textDecorationColor: 'red',
+        textDecorationStyle: 'solid',
+        textDecorationLine: 'underline',
+        fontWeight: 'bold'
+    },
     tagsContainer: {
         display: 'flex',
         flexDirection: 'row',
         flexWrap: 'wrap',
-        marginTop: 10,
+        marginTop: 10
     },
     filterGap: {
         marginTop: 10
