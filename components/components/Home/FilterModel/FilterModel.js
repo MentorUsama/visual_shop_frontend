@@ -4,11 +4,13 @@ import TextWithLoader from '../../TextWithLoader/TextWithLoader';
 import { Slider } from '@miblanchard/react-native-slider';
 import Modal from '../../Model/Model'
 import Tag from '../../TagCheckBox/Tag';
+import DropDownList from '../../DropDownList/DropDownList';
 
 export default function FilterProduct(props) {
     const [price, setPrice] = useState([0, 1000])
     const [tags, setTags] = useState([])
     const [tagsToShow, setTagsToShow] = useState(5)
+    const [selectedCategory, setSelectedCategory] = useState([-1, -1])
     const tagsHandler = (isSelected, id) => {
         if (isSelected) {
             var filteredAry = [...tags]
@@ -28,21 +30,21 @@ export default function FilterProduct(props) {
                     <View style={styles.filterGap}>
                         <Text style={styles.title}>Price</Text>
                         <Slider
-                                animateTransitions
-                                maximumTrackTintColor="#d3d3d3"
-                                maximumValue={1000}
-                                minimumTrackTintColor="#1fb28a"
-                                minimumValue={0}
-                                step={10}
-                                thumbTintColor="#1a9274"
-                                onSlidingComplete={(data) => setPrice(data)}
-                                value={price}
-                                maximumTrackTintColor="#EBEBEB"
-                                minimumTrackTintColor="#FF7465"
-                                trackStyle={{ height: 10, borderRadius: 20 }}
-                                thumbTintColor="#FFFFFF"
-                                thumbStyle={{ borderColor: '#BEBBBB', borderWidth: 2 }}
-                            />
+                            animateTransitions
+                            maximumTrackTintColor="#d3d3d3"
+                            maximumValue={1000}
+                            minimumTrackTintColor="#1fb28a"
+                            minimumValue={0}
+                            step={10}
+                            thumbTintColor="#1a9274"
+                            onSlidingComplete={(data) => setPrice(data)}
+                            value={price}
+                            maximumTrackTintColor="#EBEBEB"
+                            minimumTrackTintColor="#FF7465"
+                            trackStyle={{ height: 10, borderRadius: 20 }}
+                            thumbTintColor="#FFFFFF"
+                            thumbStyle={{ borderColor: '#BEBBBB', borderWidth: 2 }}
+                        />
                         <View style={styles.priceContainer}>
                             <Text style={styles.priceText}>From {price[0]} To {price[1]} RS</Text>
                         </View>
@@ -71,6 +73,27 @@ export default function FilterProduct(props) {
                             onPress={() => setTagsToShow(tagsToShow + 5)}
                         />
                     </View>
+
+                    {/* Categories */}
+                    <View>
+                        <Text style={[styles.title, { marginBottom: 10 }]}>Categories</Text>
+                        <View>
+                            {props.categories ?
+                                props.categories.map(category => {
+                                    return <DropDownList
+                                        data={category}
+                                        selected={selectedCategory}
+                                        setSelected={setSelectedCategory}
+                                    />
+                                })
+                                :
+                                null
+                            }
+                        </View>
+                    </View>
+
+
+
                 </ScrollView>
             </View>
         </Modal>
