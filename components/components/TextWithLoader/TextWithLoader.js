@@ -2,7 +2,7 @@ import React from 'react'
 import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native'
 
 export default function TextWithLoader(props) {
-    const { shouldLoad = false, shouldShow } = props
+    const { shouldLoad = false, shouldShow,title="See More" } = props
     return (
         <View style={{ paddingBottom: '10%' }}>
             {
@@ -10,7 +10,7 @@ export default function TextWithLoader(props) {
                     <ActivityIndicator size="large" color="#0000ff" />
                     :
                     shouldShow ?
-                        <TouchableOpacity onPress={props.onPress}><Text style={styles.seeMore}>See More</Text></TouchableOpacity>
+                        <TouchableOpacity onPress={props.onPress}><Text style={styles.seeMore}>{title}</Text></TouchableOpacity>
                         : null
             }
         </View>

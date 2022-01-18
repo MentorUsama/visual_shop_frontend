@@ -6,11 +6,31 @@ import Product from '../../../components/components/Home/Product/Product'
 export default function AllProducts(props) {
     return (
         <View style={{ flex: 1 }}>
-            <Text style={styles.title}>Products</Text>
+            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', paddingBottom: 8 }}>
+                <Text style={styles.title}>Products</Text>
+                <View>
+                    {/* Clear Filter */}
+                    <TextWithLoader
+                        shouldLoad={false}
+                        shouldShow={props.isFilteredApplied}
+                        onPress={props.clearFilter}
+                        title="Clear Filter"
+                    />
+                </View>
+            </View>
             {/* Products Container */}
             <View style={styles.productContainer}>
                 <FlatList
-                    data={props.storeProducts == null ? null : props.storeProducts.products}
+                    data=
+                    {
+                        props.filteredProducts == null ?
+                            props.storeProducts == null ?
+                                null
+                                :
+                                props.storeProducts.products
+                            :
+                            props.filteredProducts
+                    }
                     renderItem={({ item }) => <Product onPress={() => props.navigation.navigate("ProductDetail")} item={item} />}
                     keyExtractor={(item) => item.id}
                     numColumns={2}
@@ -20,7 +40,7 @@ export default function AllProducts(props) {
                     columnWrapperStyle={styles.columnWrapperStyle}
                     ListFooterComponent={<TextWithLoader
                         shouldLoad={props.miniLoading}
-                        shouldShow={props.storeProducts != null && props.storeProducts.nextPageNumber != -1}
+                        shouldShow={props.filteredProducts != null ? false : props.storeProducts != null && props.storeProducts.nextPageNumber != -1}
                         onPress={props.loadProducts}
                     />}
                 />

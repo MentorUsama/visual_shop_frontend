@@ -10,7 +10,7 @@ import Toast from 'react-native-toast-message';
 import Loader from '../../components/components/Loader/Loader';
 import HeroContainer from './Parts/HeroContainer';
 import SearchBarFilter from './Parts/SearchBarFilter';
-import { shouldFilterIncludeSearchText } from './homeUtility'
+import { isFilteredApplied } from './homeUtility'
 // Importing API's
 import { getAllProducts, getAllTags, getAllCategories, getFilteredProducts } from '../../Utility/APIS/index'
 import AllProducts from './Parts/AllProducts';
@@ -20,7 +20,7 @@ const Home = (props) => {
     const [searchText, searchTextChange] = useState("");
     const [pageLoading, setPageLoading] = useState(false);
     const [miniLoading, setMiniLoading] = useState(false)
-    const [filterModel, setFilterModel] = useState(true)
+    const [filterModel, setFilterModel] = useState(false)
     // ====== Checking Any Global Error ======
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
@@ -119,6 +119,10 @@ const Home = (props) => {
         }
         setPageLoading(false)
     }
+    // Clear Filter
+    const clearFilter=()=>{
+        props.addFilteredProducts(null,null)
+    }
     return (
         <PageContainer hasPadding={true} navigation={props.navigation}>
             <Loader loading={pageLoading} />
@@ -137,6 +141,9 @@ const Home = (props) => {
                 navigation={props.navigation}
                 miniLoading={miniLoading}
                 loadProducts={loadProducts}
+                filteredProducts={props.filteredProducts}
+                isFilteredApplied={isFilteredApplied(props.filters)}
+                clearFilter={clearFilter}
             />
         </PageContainer>
     )
