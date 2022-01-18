@@ -8,15 +8,6 @@ export default function AllProducts(props) {
         <View style={{ flex: 1 }}>
             <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', paddingBottom: 8 }}>
                 <Text style={styles.title}>Products</Text>
-                <View>
-                    {/* Clear Filter */}
-                    <TextWithLoader
-                        shouldLoad={false}
-                        shouldShow={props.isFilteredApplied}
-                        onPress={props.clearFilter}
-                        title="Clear Filter"
-                    />
-                </View>
             </View>
             {/* Products Container */}
             <View style={styles.productContainer}>

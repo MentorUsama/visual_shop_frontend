@@ -120,8 +120,8 @@ const Home = (props) => {
         setPageLoading(false)
     }
     // Clear Filter
-    const clearFilter=()=>{
-        props.addFilteredProducts(null,null)
+    const clearFilter = () => {
+        props.addFilteredProducts(null, null)
     }
     return (
         <PageContainer hasPadding={true} navigation={props.navigation}>
@@ -135,6 +135,9 @@ const Home = (props) => {
                 tags={props.tags}
                 categories={props.categories}
                 filterHandler={filterHandler}
+                isFilteredApplied={isFilteredApplied(props.filters)}
+                clearFilter={clearFilter}
+                filters={props.filters}
             />
             <AllProducts
                 storeProducts={props.storeProducts}
