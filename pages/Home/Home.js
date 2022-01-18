@@ -10,11 +10,14 @@ import Toast from 'react-native-toast-message';
 import InputSearch from '../../components/components/Home/InputSearch/InputSearch';
 import MyButton from '../../components/components/Button/MyButton'
 import FilterModel from '../../components/components/Home/FilterModel/FilterModel';
-import Product from '../../components/components/Home/Product/Product';
 import Loader from '../../components/components/Loader/Loader';
 import TextWithLoader from '../../components/components/TextWithLoader/TextWithLoader';
+import HeroContainer from './Parts/HeroContainer';
+import SearchBarFilter from './Parts/SearchBarFilter';
+import Product from '../../components/components/Home/Product/Product';
 // Importing API's
 import { getAllProducts, getAllTags, getAllCategories } from '../../Utility/APIS/index'
+import AllProducts from './Parts/AllProducts';
 
 const Home = (props) => {
     const { navigation, route } = props
@@ -22,6 +25,7 @@ const Home = (props) => {
     const [pageLoading, setPageLoading] = useState(false);
     const [miniLoading, setMiniLoading] = useState(false)
     const [filterModel, setFilterModel] = useState(true)
+    const [filteredProduct, setFilterProducts] = useState(null)
     // ====== Checking Any Global Error ======
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
@@ -108,62 +112,31 @@ const Home = (props) => {
     }
     // Filter Handler
     const filterHandler = (data) => {
-        // const filteredData = { ...data, searchText: searchText == "" ? null : searchText }
+        const filteredData = {
+            ...data,
+            searchText: searchText == "" || filteredProduct == null ? null : searchText // Checking If Search By Text Is applied or not
+        }
         console.log(data)
     }
     return (
         <PageContainer hasPadding={true} navigation={props.navigation}>
-            {/* Loading */}
             <Loader loading={pageLoading} />
-            {/* Hero Container */}
-            <View style={styles.heroContainer}>
-                <Text style={styles.heroText}>Search Your Favorite Dresses</Text>
-                <View style={styles.heroDetailContainer}>
-                    <Text style={styles.heroTextDetail}>Ready to wear dresses tailored for you online. Hurry up while stock lasts.</Text>
-                </View>
-            </View>
-            {/* Search Bar */}
-            <View style={styles.searchContainer}>
-                <InputSearch
-                    value={searchText}
-                    onChangeText={searchTextChange}
-                />
-                <View style={{ marginTop: 5 }}>
-                    <MyButton
-                        title="Filter Products"
-                        onPress={() => setFilterModel(true)}
-                    />
-                    {filterModel ? <FilterModel
-                        show={filterModel}
-                        close={setFilterModel}
-                        tags={props.tags}
-                        categories={props.categories}
-                        filterHandler={filterHandler}
-                    /> : null}
-                </View>
-            </View>
-            {/* Products */}
-            <View style={{ flex: 1 }}>
-                <Text style={styles.title}>Products</Text>
-                {/* Products Container */}
-                <View style={styles.productContainer}>
-                    <FlatList
-                        data={props.storeProducts == null ? null : props.storeProducts.products}
-                        renderItem={({ item }) => <Product onPress={() => props.navigation.navigate("ProductDetail")} item={item} />}
-                        keyExtractor={(item) => item.id}
-                        numColumns={2}
-                        ListEmptyComponent={<Text>No Product Found</Text>}
-                        columnWrapperStyle={styles.columnContainer}
-                        showsVerticalScrollIndicator={false}
-                        columnWrapperStyle={styles.columnWrapperStyle}
-                        ListFooterComponent={<TextWithLoader
-                            shouldLoad={miniLoading}
-                            shouldShow={props.storeProducts != null && props.storeProducts.nextPageNumber != -1}
-                            onPress={loadProducts}
-                        />}
-                    />
-                </View>
-            </View>
+            <HeroContainer />
+            <SearchBarFilter
+                searchText={searchText}
+                searchTextChange={searchTextChange}
+                setFilterModel={setFilterModel}
+                filterModel={filterModel}
+                tags={props.tags}
+                categories={props.categories}
+                filterHandler={filterHandler}
+            />
+            <AllProducts
+                storeProducts={props.storeProducts}
+                navigation={props.navigation}
+                miniLoading={miniLoading}
+                loadProducts={loadProducts}
+            />
         </PageContainer>
     )
 }
