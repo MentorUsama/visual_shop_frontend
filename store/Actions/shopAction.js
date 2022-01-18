@@ -18,3 +18,10 @@ export const addCategories=(categories)=>{
         categories:categories
     }
 }
+export const addFilteredProduct=(filteredProducts,filters)=>{
+    return{
+        type:actionTypes.ADD_FILTERED_PRODUCT,
+        filteredProducts:filteredProducts,
+        filters:filters
+    }
+}

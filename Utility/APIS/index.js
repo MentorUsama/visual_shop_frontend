@@ -14,5 +14,6 @@ from './Customer/customerHandler'
 export {
     getAllProducts,
     getAllTags,
-    getAllCategories
+    getAllCategories,
+    getFilteredProducts
 } from './Shop/shopHandler'

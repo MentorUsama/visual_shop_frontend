@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, StyleSheet, ActivityIndicator, TouchableOpacity, FlatList } from 'react-native';
+import { StyleSheet } from 'react-native';
 // Redux
 import { connect } from 'react-redux';
 import * as actions from '../../store/Actions/index'
@@ -7,16 +7,12 @@ import * as actions from '../../store/Actions/index'
 import PageContainer from '../../components/container/PageContainer'
 // Importing Component
 import Toast from 'react-native-toast-message';
-import InputSearch from '../../components/components/Home/InputSearch/InputSearch';
-import MyButton from '../../components/components/Button/MyButton'
-import FilterModel from '../../components/components/Home/FilterModel/FilterModel';
 import Loader from '../../components/components/Loader/Loader';
-import TextWithLoader from '../../components/components/TextWithLoader/TextWithLoader';
 import HeroContainer from './Parts/HeroContainer';
 import SearchBarFilter from './Parts/SearchBarFilter';
-import Product from '../../components/components/Home/Product/Product';
+import { shouldFilterIncludeSearchText } from './homeUtility'
 // Importing API's
-import { getAllProducts, getAllTags, getAllCategories } from '../../Utility/APIS/index'
+import { getAllProducts, getAllTags, getAllCategories, getFilteredProducts } from '../../Utility/APIS/index'
 import AllProducts from './Parts/AllProducts';
 
 const Home = (props) => {
@@ -25,7 +21,6 @@ const Home = (props) => {
     const [pageLoading, setPageLoading] = useState(false);
     const [miniLoading, setMiniLoading] = useState(false)
     const [filterModel, setFilterModel] = useState(true)
-    const [filteredProduct, setFilterProducts] = useState(null)
     // ====== Checking Any Global Error ======
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
@@ -111,12 +106,18 @@ const Home = (props) => {
         }
     }
     // Filter Handler
-    const filterHandler = (data) => {
+    const filterHandler = async (data) => {
+        setFilterModel(false)
+        setPageLoading(true)
         const filteredData = {
             ...data,
-            searchText: searchText == "" || filteredProduct == null ? null : searchText // Checking If Search By Text Is applied or not
+            searchText: props.filters != null ? props.filters.searchText : null
         }
-        console.log(data)
+        const response = await getFilteredProducts(filteredData)
+        if (response.status == 200) {
+            props.addFilteredProducts(response.data, filteredData)
+        }
+        setPageLoading(false)
     }
     return (
         <PageContainer hasPadding={true} navigation={props.navigation}>
@@ -193,14 +194,17 @@ const mapStateToProps = state => {
         isLoggedIn: state.userReducer.isLoggedIn,
         storeProducts: state.shopReducer.storeProducts,
         tags: state.shopReducer.tags,
-        categories: state.shopReducer.categories
+        categories: state.shopReducer.categories,
+        filteredProducts: state.shopReducer.filteredProducts,
+        filters: state.shopReducer.filters
     };
 };
 const mapDispatchToProps = dispatch => {
     return {
         updateStoreProducts: (products) => dispatch(actions.updateStoreProducts(products)),
         addTags: (tags) => dispatch(actions.addTags(tags)),
-        addCategories: (categories) => dispatch(actions.addCategories(categories))
+        addCategories: (categories) => dispatch(actions.addCategories(categories)),
+        addFilteredProducts: (filteredProducts, filterData) => dispatch(actions.addFilteredProduct(filteredProducts, filterData))
     };
 };
 export default connect(

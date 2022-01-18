@@ -10,5 +10,6 @@ export {
 export {
     updateStoreProducts,
     addTags,
-    addCategories
+    addCategories,
+    addFilteredProduct
 } from './shopAction'
