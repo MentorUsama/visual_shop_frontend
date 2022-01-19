@@ -15,7 +15,7 @@ export default function InputSearch(props) {
                 placeholder=' Search product'
             />
             <View style={styles.iconContainer}>
-                <File style={styles.iconStyle} onPress={true} />
+                <File onPress={props.pickImage} style={styles.iconStyle} />
                 <Camera style={styles.iconStyle} onPress={true} />
             </View>
             <MyButton

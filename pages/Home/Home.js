@@ -13,6 +13,7 @@ import SearchBarFilter from './Parts/SearchBarFilter';
 import { isFilteredApplied,findCategoryName,findSubcategoryName,findTagName,isFilterChanged } from './homeUtility'
 // Importing API's
 import { getAllProducts, getAllTags, getAllCategories, getFilteredProducts } from '../../Utility/APIS/index'
+import * as ImagePicker from 'expo-image-picker';
 import AllProducts from './Parts/AllProducts';
 
 const Home = (props) => {
@@ -169,6 +170,22 @@ const Home = (props) => {
             props.addFilteredProducts(null, null)
         }
     }
+    const pickImage = async () => {
+        // No permissions request is necessary for launching the image library
+        let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.All,
+          allowsEditing: true,
+          aspect: [4, 3],
+          quality: 1,
+        });
+        if (!result.cancelled) {
+            console.log("Completed")
+        }
+        else
+        {
+            console.log("Success")
+        }
+    }
     return (
         <PageContainer hasPadding={true} navigation={props.navigation}>
             <Loader loading={pageLoading} />
@@ -189,6 +206,7 @@ const Home = (props) => {
                 findSubcategoryName={findSubcategoryName}
                 findTagName={findTagName}
                 isFilterChanged={isFilterChanged}
+                pickImage={pickImage}
             />
             <AllProducts
                 storeProducts={props.storeProducts}

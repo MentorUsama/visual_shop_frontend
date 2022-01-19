@@ -4,8 +4,6 @@
     ".expo": true,
     "README.md": true,
     "package-lock.json": true,
-    "app.json": true,
-    "node_modules": true,
     ".vscode": true,
     "assets\\splash.png": true,
     "assets\\icon.png": true,

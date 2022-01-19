@@ -6,7 +6,7 @@ function SvgComponent(props) {
   const { width = 17.513, height = 14.259, fill = "#040606", style = {},onPress=false } = props
   return (
     <View style={style}>
-      <TouchableOpacity activeOpacity={onPress?0.6:1}>
+      <TouchableOpacity activeOpacity={onPress?0.6:1} onPress={onPress}>
         <Svg
           xmlns="http://www.w3.org/2000/svg"
           width={width}

@@ -12,6 +12,7 @@ export default function SearchBarFilter(props) {
                 value={props.searchText}
                 onChangeText={props.searchTextChange}
                 searchByTextHandler={props.searchByTextHandler}
+                pickImage={props.pickImage}
             />
             <View style={{ marginTop: 5 }}>
                 <MyButton
