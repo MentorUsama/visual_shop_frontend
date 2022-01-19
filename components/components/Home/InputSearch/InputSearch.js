@@ -16,7 +16,7 @@ export default function InputSearch(props) {
             />
             <View style={styles.iconContainer}>
                 <File onPress={props.pickImage} style={styles.iconStyle} />
-                <Camera style={styles.iconStyle} onPress={true} />
+                <Camera onPress={props.takePicture} style={styles.iconStyle} />
             </View>
             <MyButton
                 title="Search"

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Alert } from 'react-native';
 // Redux
 import { connect } from 'react-redux';
 import * as actions from '../../store/Actions/index'
@@ -10,10 +10,11 @@ import Toast from 'react-native-toast-message';
 import Loader from '../../components/components/Loader/Loader';
 import HeroContainer from './Parts/HeroContainer';
 import SearchBarFilter from './Parts/SearchBarFilter';
-import { isFilteredApplied,findCategoryName,findSubcategoryName,findTagName,isFilterChanged } from './homeUtility'
+import { isFilteredApplied, findCategoryName, findSubcategoryName, findTagName, isFilterChanged } from './homeUtility'
 // Importing API's
 import { getAllProducts, getAllTags, getAllCategories, getFilteredProducts } from '../../Utility/APIS/index'
 import * as ImagePicker from 'expo-image-picker';
+import * as Permissions from 'expo-permissions'
 import AllProducts from './Parts/AllProducts';
 
 const Home = (props) => {
@@ -173,17 +174,52 @@ const Home = (props) => {
     const pickImage = async () => {
         // No permissions request is necessary for launching the image library
         let result = await ImagePicker.launchImageLibraryAsync({
-          mediaTypes: ImagePicker.MediaTypeOptions.All,
-          allowsEditing: true,
-          aspect: [4, 3],
-          quality: 1,
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
         });
         if (!result.cancelled) {
             console.log("Completed")
         }
-        else
-        {
+        else {
             console.log("Success")
+        }
+    }
+    const verifyMediaLibrary = async () => {
+        const result = await Permissions.askAsync(Permissions.MEDIA_LIBRARY)
+        if (result.status !== 'granted') {
+            Alert.alert('Camer Permission Required', 'Please Grant Permission to Upload Picture', [{ text: 'Okay' }])
+            return false
+        }
+        else {
+            return true
+        }
+    }
+    const verifyCameraPermissions = async () => {
+        const result = await Permissions.askAsync(Permissions.CAMERA)
+        if (result.status !== 'granted') {
+            Alert.alert('Camer Permission Required', 'Please Grant Permission to take Picture', [{ text: 'Okay' }])
+            return false
+        }
+        else {
+            return true
+        }
+    }
+    const takePicture = async () => {
+        const result = await verifyCameraPermissions()
+        if (!result)
+            return
+        const imageResult = await ImagePicker.launchCameraAsync({
+            allowsEditing: true,
+            aspect: [16, 9],
+            quality: 0.5
+        })
+        if (!imageResult.cancelled) {
+            console.log("Success")
+        }
+        else {
+            console.log("FAil")
         }
     }
     return (
@@ -207,6 +243,7 @@ const Home = (props) => {
                 findTagName={findTagName}
                 isFilterChanged={isFilterChanged}
                 pickImage={pickImage}
+                takePicture={takePicture}
             />
             <AllProducts
                 storeProducts={props.storeProducts}

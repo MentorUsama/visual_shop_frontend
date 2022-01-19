@@ -13,6 +13,7 @@ export default function SearchBarFilter(props) {
                 onChangeText={props.searchTextChange}
                 searchByTextHandler={props.searchByTextHandler}
                 pickImage={props.pickImage}
+                takePicture={props.takePicture}
             />
             <View style={{ marginTop: 5 }}>
                 <MyButton
