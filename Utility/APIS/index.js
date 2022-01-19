@@ -15,5 +15,6 @@ export {
     getAllProducts,
     getAllTags,
     getAllCategories,
-    getFilteredProducts
+    getFilteredProducts,
+    searchByImage
 } from './Shop/shopHandler'

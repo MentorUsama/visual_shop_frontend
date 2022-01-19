@@ -9,6 +9,9 @@
     "assets\\icon.png": true,
     "assets\\favicon.png": true,
     "assets\\adaptive-icon.png": true,
-    "babel.config.js": true
+    "babel.config.js": true,
+    "package.json": true,
+    "config.js": true,
+    "app.json": true
   }
 }

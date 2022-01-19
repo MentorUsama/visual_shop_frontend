@@ -1,26 +1,40 @@
 import React from 'react'
-import { View, Text, StyleSheet, FlatList } from 'react-native'
+import { View, Text, StyleSheet, FlatList, Image } from 'react-native'
 import TextWithLoader from '../../../components/components/TextWithLoader/TextWithLoader'
 import Product from '../../../components/components/Home/Product/Product'
+import SearchedImage from '../../../components/components/Home/SearchedImage/SearchedImage'
 
 export default function AllProducts(props) {
     return (
         <View style={{ flex: 1 }}>
             {
-                props.filters != null && props.filters.searchText != null ?
-                    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                        <Text style={[styles.title, { flex: 1, paddingBottom: 15 }]}>{`${props.filters.searchText}`}</Text>
-                        <TextWithLoader
-                            shouldLoad={false}
-                            shouldShow={true}
-                            onPress={props.clearTextSearch}
-                            title="Clear Search"
-                            textStyle={{ fontWeight: 'bold' }}
-                            containerStyle={{ paddingBottom: 0 }}
-                        />
-                    </View>
+                props.pickedImage != null
+                    ?
+                    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', paddingBottom: 15 }}><Text style={styles.title}>Similar Products</Text></View>
                     :
-                    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', paddingBottom: 15 }}><Text style={styles.title}>Products</Text></View>
+                    props.filters != null && props.filters.searchText != null ?
+                        <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                            <Text style={[styles.title, { flex: 1, paddingBottom: 15 }]}>{`${props.filters.searchText}`}</Text>
+                            <TextWithLoader
+                                shouldLoad={false}
+                                shouldShow={true}
+                                onPress={props.clearTextSearch}
+                                title="Clear Search"
+                                textStyle={{ fontWeight: 'bold' }}
+                                containerStyle={{ paddingBottom: 0 }}
+                            />
+                        </View>
+                        :
+                        <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', paddingBottom: 15 }}><Text style={styles.title}>Products</Text></View>
+            }
+            {/* Showing The Image */}
+            {
+                props.pickedImage ?
+                    <SearchedImage
+                        pickedImage={props.pickedImage}
+                        clearImageSearch={props.clearImageSearch}
+                    />
+                    : null
             }
             {/* Products Container */}
             <View style={styles.productContainer}>

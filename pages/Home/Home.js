@@ -12,9 +12,8 @@ import HeroContainer from './Parts/HeroContainer';
 import SearchBarFilter from './Parts/SearchBarFilter';
 import { isFilteredApplied, findCategoryName, findSubcategoryName, findTagName, isFilterChanged } from './homeUtility'
 // Importing API's
-import { getAllProducts, getAllTags, getAllCategories, getFilteredProducts } from '../../Utility/APIS/index'
+import { getAllProducts, getAllTags, getAllCategories, getFilteredProducts, searchByImage } from '../../Utility/APIS/index'
 import * as ImagePicker from 'expo-image-picker';
-import * as Permissions from 'expo-permissions'
 import AllProducts from './Parts/AllProducts';
 
 const Home = (props) => {
@@ -23,6 +22,7 @@ const Home = (props) => {
     const [pageLoading, setPageLoading] = useState(false);
     const [miniLoading, setMiniLoading] = useState(false)
     const [filterModel, setFilterModel] = useState(false)
+    const [pickedImage, setPickedImage] = useState(null)
     // ====== Checking Any Global Error ======
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
@@ -114,6 +114,7 @@ const Home = (props) => {
         if (response.status == 200) {
             props.addFilteredProducts(response.data, data)
         }
+        setPickedImage(null)
         setPageLoading(false)
     }
     const filterHandler = async (data) => {
@@ -172,45 +173,59 @@ const Home = (props) => {
         }
     }
     const pickImage = async () => {
-        // No permissions request is necessary for launching the image library
-        const response = await ImagePicker.getMediaLibraryPermissionsAsync(true)
-        if (response.status != 'granted') {
+        // ===== Getting The Permission =====
+        const permission = await ImagePicker.getMediaLibraryPermissionsAsync(true)
+        if (permission.status != 'granted') {
             Alert.alert('Camer Permission Required', 'Please Grant Permission to Upload Picture', [{ text: 'Okay' }])
             return
         }
-
-        let result = await ImagePicker.launchImageLibraryAsync({
+        // ===== Getting The Image ======
+        let myImage = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
             allowsEditing: true,
             aspect: [4, 3],
             quality: 1,
         });
-        if (!result.cancelled) {
-            console.log("Completed")
-        }
-        else {
-            console.log("Success")
+        // ===== Gettting The Data From Server ======
+        if (!myImage.cancelled) {
+            setPageLoading(true)
+
+            const searchedResult = await searchByImage("usama")
+            if (searchedResult.status == 200) {
+                props.addFilteredProducts(searchedResult.data, null)
+                setPickedImage(myImage.uri)
+            }
+
+            setPageLoading(false)
         }
     }
     const takePicture = async () => {
-        // const result = await verifyCameraPermissions()
-        const result = await ImagePicker.getCameraPermissionsAsync();
-        console.log("sdsd", result)
-        if (result.status != 'granted') {
+        // Getting Permission
+        const permission = await ImagePicker.getCameraPermissionsAsync();
+        if (permission.status != 'granted') {
             Alert.alert('Camer Permission Required', 'Please Grant Permission to take Picture', [{ text: 'Okay' }])
             return
         }
+        // Getting The Image
         const imageResult = await ImagePicker.launchCameraAsync({
             allowsEditing: true,
             aspect: [16, 9],
             quality: 0.5
         })
+        // Doing Search By Image
         if (!imageResult.cancelled) {
-            console.log("Success")
+            setPageLoading(true)
+            const searchedResult = await searchByImage("usama")
+            if (searchedResult.status == 200) {
+                props.addFilteredProducts(searchedResult.data, null)
+                setPickedImage(imageResult.uri)
+            }
+            setPageLoading(false)
         }
-        else {
-            console.log("FAil")
-        }
+    }
+    const clearImageSearch = () => {
+        setPickedImage(null)
+        props.addFilteredProducts(null, null)
     }
     return (
         <PageContainer hasPadding={true} navigation={props.navigation}>
@@ -237,6 +252,7 @@ const Home = (props) => {
             />
             <AllProducts
                 storeProducts={props.storeProducts}
+                pickedImage={pickedImage}
                 navigation={props.navigation}
                 miniLoading={miniLoading}
                 loadProducts={loadProducts}
@@ -245,6 +261,7 @@ const Home = (props) => {
                 clearFilter={clearFilter}
                 clearTextSearch={clearTextSearch}
                 filters={props.filters}
+                clearImageSearch={clearImageSearch}
             />
         </PageContainer>
     )
