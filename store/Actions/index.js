@@ -13,3 +13,7 @@ export {
     addCategories,
     addFilteredProduct
 } from './shopAction'
+
+export {
+    addOrders
+} from './orderAction'

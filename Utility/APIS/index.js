@@ -18,3 +18,7 @@ export {
     getFilteredProducts,
     searchByImage
 } from './Shop/shopHandler'
+
+export  {
+    addOrders
+} from './Order/order'

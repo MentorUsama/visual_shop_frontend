@@ -8,6 +8,7 @@ import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
 import userReducer from './store/Reducers/userReducer'
 import shopReducer from './store/Reducers/shopReducer'
+import orderReducer from './store/Reducers/orderReducer'
 import * as actions from './store/Actions/index';
 import thunk from 'redux-thunk';
 // Importing Navigation
@@ -38,12 +39,12 @@ var rootReducer = null;
 
 if (Platform.OS != 'web') {
   // Setting Store For Mobile
-  rootReducer = combineReducers({ userReducer: userReducer,shopReducer:shopReducer });
+  rootReducer = combineReducers({ userReducer: userReducer,shopReducer:shopReducer,orderReducer:orderReducer });
   store = createStore(rootReducer);
 }
 else {
   const composeEnhancers = process.env.NODE_ENV === 'development' ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : null || compose;
-  rootReducer = combineReducers({ userReducer: userReducer,shopReducer:shopReducer });
+  rootReducer = combineReducers({ userReducer: userReducer,shopReducer:shopReducer,orderReducer:orderReducer });
   store = createStore(rootReducer, composeEnhancers(
     applyMiddleware(thunk)
   ));

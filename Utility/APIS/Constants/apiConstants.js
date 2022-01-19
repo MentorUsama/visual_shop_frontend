@@ -23,3 +23,7 @@ export const SHOP_GET_PRODUCTS=`${SHOP_BASE_URL}products/?page=`
 export const SHOP_GET_ALL_TAGS=`${SHOP_BASE_URL}getAllTags/`
 export const SHOP_GET_ALL_CATEGORIES=`${SHOP_BASE_URL}getAllCategories/`
 export const GET_FILTERED_PRODUCT=`${SHOP_BASE_URL}filterProducts`
+
+
+// =============== Full API's Orders===============
+export const ORDER_GET_ORDERS=`${ORDER_BASE_URL}getAllOrders/`
