@@ -16,6 +16,9 @@ export {
     ValidateEmail,
     validateContact,
     getCities,
-    getCityDetail
+    getCityDetail,
+    findCategoryName,
+    findSubcategoryName,
+    findTagName
 }
 from './helpers'

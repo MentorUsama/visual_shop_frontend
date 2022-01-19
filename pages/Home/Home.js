@@ -3,14 +3,22 @@ import { StyleSheet, Alert } from 'react-native';
 // Redux
 import { connect } from 'react-redux';
 import * as actions from '../../store/Actions/index'
-// Containers
+// Components And Containers
 import PageContainer from '../../components/container/PageContainer'
-// Importing Component
 import Toast from 'react-native-toast-message';
 import Loader from '../../components/components/Loader/Loader';
 import HeroContainer from './Parts/HeroContainer';
 import SearchBarFilter from './Parts/SearchBarFilter';
-import { isFilteredApplied, findCategoryName, findSubcategoryName, findTagName, isFilterChanged } from './homeUtility'
+// Importing Helpers
+import { 
+    isFilteredApplied, 
+    isFilterChanged
+} from './homeUtility'
+import {
+    findCategoryName, 
+    findSubcategoryName, 
+    findTagName 
+} from '../../Utility/HelperFunctions/index'
 // Importing API's
 import { getAllProducts, getAllTags, getAllCategories, getFilteredProducts, searchByImage } from '../../Utility/APIS/index'
 import * as ImagePicker from 'expo-image-picker';

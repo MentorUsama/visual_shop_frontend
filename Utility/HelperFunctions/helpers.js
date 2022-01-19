@@ -56,4 +56,31 @@ function getCityDetail(provinces,provinceId,cityId)
     }
   }
 }
-export {diff_minutes,ValidateEmail,getCities,getCityDetail,validateContact}
+const findCategoryName = (categories, categoryId) => {
+  return categories.find(category => category.id == categoryId).name
+}
+const findSubcategoryName = (categories, categoryId, subcategoryId) => {
+  var name = null;
+  const data = categories.find(category => {
+      if (category.id == categoryId) {
+          return category.Subcategories.find(subcategory => {
+              if (subcategory.id == subcategoryId) {
+                  name = subcategory.name
+                  return true
+              }
+              else {
+                  return false
+              }
+          })
+      }
+      else {
+          return false
+      }
+  })
+  return name
+}
+const findTagName = (tags, tagId) => {
+  const result = tags.find(tag => tag.id == tagId)
+  return result.name
+}
+export {diff_minutes,ValidateEmail,getCities,getCityDetail,validateContact,findCategoryName,findSubcategoryName,findTagName}
