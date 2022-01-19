@@ -21,6 +21,8 @@ export default function InputSearch(props) {
             <MyButton
                 title="Search"
                 style={styles.myButton}
+                isDisabled={props.value==""}
+                onPress={props.searchByTextHandler}
             />
         </View>
     )

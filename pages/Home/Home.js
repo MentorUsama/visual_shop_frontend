@@ -10,7 +10,7 @@ import Toast from 'react-native-toast-message';
 import Loader from '../../components/components/Loader/Loader';
 import HeroContainer from './Parts/HeroContainer';
 import SearchBarFilter from './Parts/SearchBarFilter';
-import { isFilteredApplied } from './homeUtility'
+import { isFilteredApplied,findCategoryName,findSubcategoryName,findTagName } from './homeUtility'
 // Importing API's
 import { getAllProducts, getAllTags, getAllCategories, getFilteredProducts } from '../../Utility/APIS/index'
 import AllProducts from './Parts/AllProducts';
@@ -106,22 +106,68 @@ const Home = (props) => {
         }
     }
     // Filter Handler
+    const getFilteredProduct = async (data) => {
+        setPageLoading(true)
+        const response = await getFilteredProducts(data)
+        if (response.status == 200) {
+            props.addFilteredProducts(response.data, data)
+        }
+        setPageLoading(false)
+    }
     const filterHandler = async (data) => {
         setFilterModel(false)
-        setPageLoading(true)
         const filteredData = {
             ...data,
             searchText: props.filters != null ? props.filters.searchText : null
         }
-        const response = await getFilteredProducts(filteredData)
-        if (response.status == 200) {
-            props.addFilteredProducts(response.data, filteredData)
+        await getFilteredProduct(filteredData)
+    }
+    const searchByTextHandler = async () => {
+        var filteredData;
+        if (props.filters != null) {
+            filteredData =
+            {
+                ...props.filters,
+                searchText: searchText
+            }
         }
-        setPageLoading(false)
+        else {
+            filteredData = {
+                price: null,
+                tags: null,
+                categoryId: null,
+                subcategoryId: null,
+                searchText: searchText
+            }
+        }
+        searchTextChange("")
+        await getFilteredProduct(filteredData)
     }
     // Clear Filter
-    const clearFilter = () => {
-        props.addFilteredProducts(null, null)
+    const clearFilter = async () => {
+        var filteredData = {
+            price: null,
+            tags: null,
+            categoryId: null,
+            subcategoryId: null,
+            searchText: props.filters.searchText
+        }
+        if (filteredData.searchText != null) {
+            await getFilteredProduct(filteredData)
+        }
+        else {
+            props.addFilteredProducts(null, null)
+        }
+    }
+    const clearTextSearch = async () => {
+        var filteredData;
+        if (isFilteredApplied(props.filters)) {
+            filteredData = { ...props.filters, searchText: null }
+            await getFilteredProduct(filteredData)
+        }
+        else {
+            props.addFilteredProducts(null, null)
+        }
     }
     return (
         <PageContainer hasPadding={true} navigation={props.navigation}>
@@ -130,6 +176,7 @@ const Home = (props) => {
             <SearchBarFilter
                 searchText={searchText}
                 searchTextChange={searchTextChange}
+                searchByTextHandler={searchByTextHandler}
                 setFilterModel={setFilterModel}
                 filterModel={filterModel}
                 tags={props.tags}
@@ -138,6 +185,9 @@ const Home = (props) => {
                 isFilteredApplied={isFilteredApplied(props.filters)}
                 clearFilter={clearFilter}
                 filters={props.filters}
+                findCategoryName={findCategoryName}
+                findSubcategoryName={findSubcategoryName}
+                findTagName={findTagName}
             />
             <AllProducts
                 storeProducts={props.storeProducts}
@@ -147,6 +197,8 @@ const Home = (props) => {
                 filteredProducts={props.filteredProducts}
                 isFilteredApplied={isFilteredApplied(props.filters)}
                 clearFilter={clearFilter}
+                clearTextSearch={clearTextSearch}
+                filters={props.filters}
             />
         </PageContainer>
     )

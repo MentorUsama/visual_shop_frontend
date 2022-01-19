@@ -6,9 +6,22 @@ import Product from '../../../components/components/Home/Product/Product'
 export default function AllProducts(props) {
     return (
         <View style={{ flex: 1 }}>
-            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', paddingBottom: 8 }}>
-                <Text style={styles.title}>Products</Text>
-            </View>
+            {
+                props.filters != null && props.filters.searchText != null ?
+                    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                        <Text style={[styles.title, { flex: 1, paddingBottom: 15 }]}>{`${props.filters.searchText}`}</Text>
+                        <TextWithLoader
+                            shouldLoad={false}
+                            shouldShow={true}
+                            onPress={props.clearTextSearch}
+                            title="Clear Search"
+                            textStyle={{ fontWeight: 'bold' }}
+                            containerStyle={{ paddingBottom: 0 }}
+                        />
+                    </View>
+                    :
+                    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', paddingBottom: 15 }}><Text style={styles.title}>Products</Text></View>
+            }
             {/* Products Container */}
             <View style={styles.productContainer}>
                 <FlatList
