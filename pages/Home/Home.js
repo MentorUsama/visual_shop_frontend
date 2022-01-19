@@ -173,6 +173,12 @@ const Home = (props) => {
     }
     const pickImage = async () => {
         // No permissions request is necessary for launching the image library
+        const response = await ImagePicker.getMediaLibraryPermissionsAsync(true)
+        if (response.status != 'granted') {
+            Alert.alert('Camer Permission Required', 'Please Grant Permission to Upload Picture', [{ text: 'Okay' }])
+            return
+        }
+
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
             allowsEditing: true,
@@ -186,30 +192,14 @@ const Home = (props) => {
             console.log("Success")
         }
     }
-    const verifyMediaLibrary = async () => {
-        const result = await Permissions.askAsync(Permissions.MEDIA_LIBRARY)
-        if (result.status !== 'granted') {
-            Alert.alert('Camer Permission Required', 'Please Grant Permission to Upload Picture', [{ text: 'Okay' }])
-            return false
-        }
-        else {
-            return true
-        }
-    }
-    const verifyCameraPermissions = async () => {
-        const result = await Permissions.askAsync(Permissions.CAMERA)
-        if (result.status !== 'granted') {
-            Alert.alert('Camer Permission Required', 'Please Grant Permission to take Picture', [{ text: 'Okay' }])
-            return false
-        }
-        else {
-            return true
-        }
-    }
     const takePicture = async () => {
-        const result = await verifyCameraPermissions()
-        if (!result)
+        // const result = await verifyCameraPermissions()
+        const result = await ImagePicker.getCameraPermissionsAsync();
+        console.log("sdsd", result)
+        if (result.status != 'granted') {
+            Alert.alert('Camer Permission Required', 'Please Grant Permission to take Picture', [{ text: 'Okay' }])
             return
+        }
         const imageResult = await ImagePicker.launchCameraAsync({
             allowsEditing: true,
             aspect: [16, 9],
