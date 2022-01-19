@@ -6,14 +6,22 @@ import Modal from '../../Model/Model'
 import Tag from '../../TagCheckBox/Tag';
 import DropDownList from '../../DropDownList/DropDownList';
 import MyButton from '../../Button/MyButton'
-import { textDecorationColor } from 'react-native/Libraries/Components/View/ReactNativeStyleAttributes';
 
 export default function FilterProduct(props) {
-    const [price, setPrice] = useState([0, 1000])
-    const [tags, setTags] = useState([])
+    const [price, setPrice] = useState(props.filters == null ? [0, 1000] : props.filters.price == null ? [0, 1000] : props.filters.price)
+    const [tags, setTags] = useState(props.filters == null ? [] : props.filters.tags == null ? [] : props.filters.tags)
     const [tagsToShow, setTagsToShow] = useState(5)
-    const [selectedCategory, setSelectedCategory] = useState([-1, -1])
+    const [selectedCategory, setSelectedCategory] = useState([
+        props.filters == null ? -1 : props.filters.categoryId == null ? -1 : props.filters.categoryId,
+        props.filters == null ? -1 : props.filters.subcategoryId == null ? -1 : props.filters.subcategoryId
+    ])
     const [isPriceChanges, setIsPriceChanges] = useState(false)
+    var isFilterChanged = props.isFilterChanged(props.filters, {
+        price: isPriceChanges ? price : null,
+        tags: tags,
+        categoryId: selectedCategory[0] == -1 ? null : selectedCategory[0],
+        subcategoryId: selectedCategory[1] == -1 ? null : selectedCategory[1]
+    })
     const changePriceHandler = (data) => {
         setPrice(data)
         setIsPriceChanges(true)
@@ -28,17 +36,6 @@ export default function FilterProduct(props) {
             var filteredAry = tags.filter((val) => val != id)
             setTags(filteredAry)
         }
-    }
-    const isFilterApplied = () => {
-        if (isPriceChanges)
-            return true
-        if (tags.length != 0)
-            return true
-        if (selectedCategory[0] != -1)
-            return true
-        if (selectedCategory[1] != -1)
-            return true
-        return false
     }
     const applyFilterHandler = () => {
         props.filterHandler({
@@ -72,10 +69,15 @@ export default function FilterProduct(props) {
                         />
                         <View style={styles.priceContainer}>
                             {
-                                isPriceChanges ?
+                                isPriceChanges
+                                    ?
                                     <Text style={styles.priceText}>Price: {price[0]} - {price[1]} RS</Text>
                                     :
-                                    <Text style={styles.priceText}>Price: Any</Text>}
+                                    props.filters != null && props.filters.price != null ?
+                                        <Text style={styles.priceText}>Price: {props.filters.price[0]} - {props.filters.price[1]}</Text>
+                                        :
+                                        <Text style={styles.priceText}>Price: Any</Text>
+                            }
                             {
                                 isPriceChanges ?
                                     <TouchableOpacity onPress={() => setIsPriceChanges(false)}><Text style={[styles.priceText, styles.priceTextDecoration]}>Reset</Text></TouchableOpacity>
@@ -89,11 +91,21 @@ export default function FilterProduct(props) {
                     <View style={[styles.filterGap]}>
                         <Text style={[styles.title, { marginBottom: 10 }]}>Tags</Text>
                         <View style={styles.tagsContainer}>
+
                             {
                                 props.tags ? props.tags.map((tag, index) => {
                                     return (
                                         index < tagsToShow ?
-                                            <View key={tag.id}><Tag title={tag.name} id={tag.id} onChange={tagsHandler} /></View>
+                                            <View key={tag.id}><Tag
+                                                title={tag.name} id={tag.id}
+                                                onChange={tagsHandler}
+                                                isDefaulSelected={
+                                                    props.filters != null && props.filters.tags != null
+                                                        ? props.filters.tags.includes(tag.id) ? true : false :
+                                                        false
+                                                }
+                                            />
+                                            </View>
                                             :
                                             null
                                     )
@@ -132,7 +144,7 @@ export default function FilterProduct(props) {
                         title="Apply Filter"
                         style={{ width: '48%' }}
                         onPress={() => applyFilterHandler()}
-                        isDisabled={!isFilterApplied()}
+                        isDisabled={!isFilterChanged}
                     />
                     <MyButton
                         title="Cancel"

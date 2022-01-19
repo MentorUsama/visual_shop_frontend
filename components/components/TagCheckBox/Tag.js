@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import { StyleSheet, Text, TouchableOpacity } from 'react-native'
 
 export default function Tag(props) {
-    const { id = -1, isStatic = false, containerStyle = {}, textStyle = {},numberOfLines=10 } = props
-    const [selected, setSelected] = useState(false);
+    const { id = -1, isStatic = false, containerStyle = {}, textStyle = {},numberOfLines=10,isDefaulSelected=false } = props
+    const [selected, setSelected] = useState(isDefaulSelected);
     const tagsHandler = () => {
         if (isStatic)
             return

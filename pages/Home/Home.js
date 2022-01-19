@@ -10,7 +10,7 @@ import Toast from 'react-native-toast-message';
 import Loader from '../../components/components/Loader/Loader';
 import HeroContainer from './Parts/HeroContainer';
 import SearchBarFilter from './Parts/SearchBarFilter';
-import { isFilteredApplied,findCategoryName,findSubcategoryName,findTagName } from './homeUtility'
+import { isFilteredApplied,findCategoryName,findSubcategoryName,findTagName,isFilterChanged } from './homeUtility'
 // Importing API's
 import { getAllProducts, getAllTags, getAllCategories, getFilteredProducts } from '../../Utility/APIS/index'
 import AllProducts from './Parts/AllProducts';
@@ -188,6 +188,7 @@ const Home = (props) => {
                 findCategoryName={findCategoryName}
                 findSubcategoryName={findSubcategoryName}
                 findTagName={findTagName}
+                isFilterChanged={isFilterChanged}
             />
             <AllProducts
                 storeProducts={props.storeProducts}

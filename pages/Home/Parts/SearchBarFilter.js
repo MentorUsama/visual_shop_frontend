@@ -24,6 +24,8 @@ export default function SearchBarFilter(props) {
                     tags={props.tags}
                     categories={props.categories}
                     filterHandler={props.filterHandler}
+                    isFilterChanged={props.isFilterChanged}
+                    filters={props.filters}
                 /> : null}
                 {/* Clearing All Filters */}
                 <TextWithLoader
@@ -42,7 +44,7 @@ export default function SearchBarFilter(props) {
                                 title={`${props.filters.price[0]} - ${props.filters.price[1]} RS`}
                                 isBackground={true}
                                 isStatic={true}
-                                containerStyle={{ padding: 10, backgroundColor: '#FFFFFF', borderColor: '#C3C3C3', width: 100,display:'flex',flexDirection:'row',justifyContent:'center' }}
+                                containerStyle={{ padding: 10, backgroundColor: '#FFFFFF', borderColor: '#C3C3C3', width: 100, display: 'flex', flexDirection: 'row', justifyContent: 'center' }}
                                 textStyle={{ color: '#FF7465' }}
                                 numberOfLines={1}
                             />
@@ -57,15 +59,15 @@ export default function SearchBarFilter(props) {
                                 <Tag
                                     title={props.findCategoryName(props.categories, props.filters.categoryId)}
                                     isStatic={true}
-                                    containerStyle={{ padding: 10, backgroundColor: '#FFFFFF', borderColor: '#C3C3C3', width: 100,display:'flex',flexDirection:'row',justifyContent:'center' }}
+                                    containerStyle={{ padding: 10, backgroundColor: '#FFFFFF', borderColor: '#C3C3C3', width: 100, display: 'flex', flexDirection: 'row', justifyContent: 'center' }}
                                     textStyle={{ color: '#FF7465' }}
                                     numberOfLines={1}
                                 /> :
                                 <Tag
                                     title={props.findSubcategoryName(props.categories, props.filters.categoryId, props.filters.subcategoryId)}
                                     isStatic={true}
-                                    containerStyle={{ padding: 10, backgroundColor: '#FFFFFF', borderColor: '#C3C3C3', width: 100,display:'flex',flexDirection:'row',justifyContent:'center' }}
-                                    textStyle={{ color: '#FF7465'}}
+                                    containerStyle={{ padding: 10, backgroundColor: '#FFFFFF', borderColor: '#C3C3C3', width: 100, display: 'flex', flexDirection: 'row', justifyContent: 'center' }}
+                                    textStyle={{ color: '#FF7465' }}
                                     numberOfLines={1}
                                 />
                     }
@@ -73,9 +75,9 @@ export default function SearchBarFilter(props) {
                         props.filters != null && props.filters.tags != null ?
                             props.filters.tags.map(tag => {
                                 return <View key={tag}><Tag
-                                    title={props.findTagName(props.tags,tag)}
+                                    title={props.findTagName(props.tags, tag)}
                                     isStatic={true}
-                                    containerStyle={{ padding: 10, backgroundColor: '#FFFFFF', borderColor: '#C3C3C3', width: 100,display:'flex',flexDirection:'row',justifyContent:'center' }}
+                                    containerStyle={{ padding: 10, backgroundColor: '#FFFFFF', borderColor: '#C3C3C3', width: 100, display: 'flex', flexDirection: 'row', justifyContent: 'center' }}
                                     textStyle={{ color: '#FF7465' }}
                                     numberOfLines={1}
                                 /></View>
