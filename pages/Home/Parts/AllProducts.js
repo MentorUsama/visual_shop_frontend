@@ -1,10 +1,11 @@
 import React from 'react'
-import { View, Text, StyleSheet, FlatList, Image } from 'react-native'
+import { View, Text, StyleSheet, FlatList, Image, Dimensions } from 'react-native'
 import TextWithLoader from '../../../components/components/TextWithLoader/TextWithLoader'
 import Product from '../../../components/components/Home/Product/Product'
 import SearchedImage from '../../../components/components/Home/SearchedImage/SearchedImage'
 
 export default function AllProducts(props) {
+    const { width, height } = Dimensions.get('window');
     return (
         <View style={{ flex: 1 }}>
             {
@@ -49,13 +50,13 @@ export default function AllProducts(props) {
                             :
                             props.filteredProducts
                     }
-                    renderItem={({ item }) => <Product onPress={() => props.navigation.navigate("ProductDetail")} item={item} />}
+                    renderItem={({ item }) => <Product onPress={() => props.navigation.navigate("ProductDetail")} item={item} containerStyle={width < 300?{width:'100%'}:{}}/>}
                     keyExtractor={(item) => item.id}
-                    numColumns={2}
+                    numColumns={width < 300 ? 1 : 2}
                     ListEmptyComponent={<Text>No Product Found</Text>}
                     columnWrapperStyle={styles.columnContainer}
                     showsVerticalScrollIndicator={false}
-                    columnWrapperStyle={styles.columnWrapperStyle}
+                    columnWrapperStyle={width < 300 ? null : styles.columnWrapperStyle}
                     ListFooterComponent={<TextWithLoader
                         shouldLoad={props.miniLoading}
                         shouldShow={props.filteredProducts != null ? false : props.storeProducts != null && props.storeProducts.nextPageNumber != -1}

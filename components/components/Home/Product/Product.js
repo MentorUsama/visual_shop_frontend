@@ -2,8 +2,9 @@ import React from 'react'
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
 
 export default function Product(props) {
+    const { containerStyle = {} } = props
     return (
-        <TouchableOpacity onPress={props.onPress} activeOpacity={0.8} key={props.item.id} style={styles.productContainer}>
+        <TouchableOpacity onPress={props.onPress} activeOpacity={0.8} key={props.item.id} style={[styles.productContainer, containerStyle]}>
             {
                 props.item.images == null ?
                     null :
@@ -29,8 +30,7 @@ export default function Product(props) {
 const styles = StyleSheet.create({
     productContainer: {
         backgroundColor: '#FFFFFF',
-        maxWidth: '45%',
-        width: '100%',
+        width: '45%',
         marginBottom: '10%',
         shadowColor: "#000",
         shadowOffset: {
@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.23,
         shadowRadius: 2.62,
         elevation: 4,
+        paddingBottom: 10
     },
     imageStyle: {
         width: '100%',

@@ -14,7 +14,11 @@ export default function PageContainer(props) {
         <SafeAreaView style={[styles.saveArea]}>
             <View style={styles.mainContainer}>
                 {/* ====== Navigations =====*/}
-                <View style={styles.navigationContainer}>
+                <View style={[styles.navigationContainer,hasPadding ?
+                        width > 380 ?
+                            styles.headerNormalPading
+                            : styles.headerMediumPading
+                        : null]}>
                     <TouchableOpacity
                         underlayColor="white"
                         activeOpacity={0.5}
@@ -37,12 +41,12 @@ export default function PageContainer(props) {
                 </View>
                 {/* ====== All Childerens =====*/}
                 <View style={
-                    hasPadding?
-                        width > 380? 
+                    hasPadding ?
+                        width > 380 ?
                             styles.normalWindow
-                            :styles.mediumWindow 
-                    :null
-                    }>
+                            : styles.mediumWindow
+                        : null
+                }>
                     {props.children}
                 </View>
             </View>
@@ -58,7 +62,7 @@ const styles = StyleSheet.create({
     },
     mainContainer: {
         marginTop: 50,
-        flex:1
+        flex: 1
     },
     navigationContainer: {
         paddingBottom: 10,
@@ -75,13 +79,21 @@ const styles = StyleSheet.create({
         paddingLeft: 40,
         paddingRight: 40,
         paddingTop: 50,
-        flex:1
+        flex: 1
     },
     mediumWindow: {
         paddingLeft: 20,
         paddingRight: 20,
         paddingTop: 50,
-        flex:1
+        flex: 1
+    },
+    headerNormalPading:{
+        paddingLeft: 40,
+        paddingRight: 40,
+    },
+    headerMediumPading:{
+        paddingLeft: 20,
+        paddingRight: 20,
     },
     iconContainer: {
         width: 40,

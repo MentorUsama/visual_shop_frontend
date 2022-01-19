@@ -7,13 +7,15 @@ import Camera from '../../../../assets/icons/camera'
 export default function InputSearch(props) {
     return (
         <View style={styles.inputContainer}>
-            <TextInput
-                value={props.value}
-                onChangeText={props.onChangeText}
-                style={styles.textIputStyle}
-                placeholderTextColor="#EEEEEE"
-                placeholder=' Search product'
-            />
+            <View style={{flex:1}}>
+                <TextInput
+                    value={props.value}
+                    onChangeText={props.onChangeText}
+                    style={styles.textIputStyle}
+                    placeholderTextColor="#EEEEEE"
+                    placeholder=' Search product'
+                />
+            </View>
             <View style={styles.iconContainer}>
                 <File onPress={props.pickImage} style={styles.iconStyle} />
                 <Camera onPress={props.takePicture} style={styles.iconStyle} />
@@ -21,7 +23,7 @@ export default function InputSearch(props) {
             <MyButton
                 title="Search"
                 style={styles.myButton}
-                isDisabled={props.value==""}
+                isDisabled={props.value == ""}
                 onPress={props.searchByTextHandler}
             />
         </View>
@@ -31,6 +33,9 @@ const styles = StyleSheet.create({
     inputContainer: {
         display: 'flex',
         flexDirection: 'row',
+        width: '100%',
+        height: 40,
+        marginBottom:10
     },
     textIputStyle: {
         height: 40,
