@@ -6,13 +6,15 @@ import BackArrow from '../../assets/icons/back-arrow'
 import Basket from '../../assets/icons/basket'
 import ContentPadding from './ContentPadding'
 import { useRoute } from '@react-navigation/native';
+import Loader from '../components/Loader/Loader'
 
 export default function PageContainer(props) {
     const route = useRoute();
-    const { hasPadding = false } = props;
+    const { hasPadding = false,pageLoading=false } = props;
     const { width, height } = Dimensions.get('window');
     return (
         <SafeAreaView style={[styles.saveArea]}>
+            <Loader loading={pageLoading} />
             <View style={styles.mainContainer}>
                 {/* ====== Navigations =====*/}
                 <View style={[styles.navigationContainer, width > 380 ? styles.headerNormalPading : styles.headerMediumPading]}>

@@ -8,7 +8,7 @@ import axios from 'axios';
 
 
 
-export const addOrders = async (token) => {
+export const getOrders = async (token) => {
     try {
         const response = await axios({
             method: "GET",
@@ -21,7 +21,6 @@ export const addOrders = async (token) => {
     }
     catch(e)
     {
-        console.log(e.response)
         if (e.response.status == 401) 
         {
             return { status: e.response.status, data: e.response.data.detail }

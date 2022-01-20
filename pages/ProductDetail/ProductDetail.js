@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { Text, View, Button, ScrollView, useWindowDimensions, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import { Text, View, Button, ScrollView, useWindowDimensions, TouchableOpacity, StyleSheet,TextInput } from 'react-native';
 import PageContainer from '../../components/container/PageContainer'
 import Swiper from 'react-native-web-swiper';
 import CarouselItem from '../../components/components/ProductDetail/CarouselItem/CarouselItem';
@@ -9,6 +9,21 @@ import { getSize, doesProductHasColors, findAverageRating } from '../../Utility/
 import TagRadio from '../../components/components/TagRadio/TagRadio'
 import ColorSelector from '../../components/components/ProductDetail/ColorSelector/ColorSelector';
 import TextLoader from '../../components/components/TextWithLoader/TextWithLoader'
+import QuantitySelector from '../../components/components/ProductDetail/QuantitySelector/QuantitySelector';
+import Cart from '../../assets/icons/cart'
+import MyButton from '../../components/components/Button/MyButton';
+// APIS
+import { getOrders } from '../../Utility/APIS/Order/order'
+// Redux
+import { connect } from 'react-redux';
+import * as actions from '../../store/Actions/index'
+// Importing Icon
+import Smiley1 from '../../assets/icons/smiley1'
+import Smiley2 from '../../assets/icons/smiley2'
+import Smiley3 from '../../assets/icons/smiley3'
+import Smiley4 from '../../assets/icons/smiley4'
+import Smiley5 from '../../assets/icons/smiley5'
+import Feedback from '../../components/components/ProductDetail/Feedback/Feedback';
 
 
 const ProductDetail = (props) => {
@@ -23,10 +38,21 @@ const ProductDetail = (props) => {
     const [selectedSize, changeSelectedSize] = useState(sizes && sizes[0])
     const [selectedImage, setSelectedImage] = useState(firstIndexColor ? product.images[firstIndexColor] : null)
     const [showDetail, setShowDetail] = useState(false)
+    const [quantity, setQuantity] = useState(1)
+    const [pageLoading, setPageLoading] = useState(false)
+    const [feedback, setFeedback] = useState(5)
+    // Getting Some Data if not present
+    useEffect(async () => {
+        if (props.orders == null) {
+            setPageLoading(true)
+            const response = await getOrders(props.access)
+            if (response.status == 200) {
+                props.addOrders(response.data)
+            }
+            setPageLoading(false)
+        }
+    }, [])
     // Handlers
-    const onIndexChange = (index) => {
-        // console.log("No we are at: ", index)
-    }
     const changeSelectedSizeHandler = (size) => {
         changeSelectedSize(size)
     }
@@ -37,13 +63,13 @@ const ProductDetail = (props) => {
         }
     }
     return (
-        <PageContainer hasPadding={false} navigation={navigation} >
+        <PageContainer pageLoading={pageLoading} hasPadding={false} navigation={navigation} >
             <View style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                 {/* Slider */}
                 <View style={[styles.sliderContainer]}>
                     {
                         product.images ?
-                            <Swiper ref={swiperRef} controlsEnabled={false} onIndexChanged={onIndexChange}>
+                            <Swiper ref={swiperRef} controlsEnabled={false}>
                                 {product.images.map(item => <CarouselItem key={item.id} item={item} />)}
                             </Swiper> :
                             <Text>No Image Found</Text>
@@ -52,7 +78,7 @@ const ProductDetail = (props) => {
                 {/* Content */}
                 <View style={{ flex: 1 }}>
                     <ScrollView>
-                        <ContentPadding style={{ paddingTop: 10 }} hasPadding={true}>
+                        <ContentPadding style={{ paddingTop: 10, paddingBottom: 20 }} hasPadding={true}>
                             {/* Product Title Container */}
                             <View style={styles.titleContainer}>
                                 <View style={{ flex: 1 }}>
@@ -138,6 +164,59 @@ const ProductDetail = (props) => {
                                     </View>
                                     : null
                             }
+                            {/* Selecting Quantity */}
+                            <View style={{ marginTop: 20 }}>
+                                <QuantitySelector onPress={setQuantity} quantity={product.quantity} value={quantity} />
+                            </View>
+                            {/* Icon Container */}
+                            <View style={styles.iconContainer}>
+                                <View style={styles.cartButton}>
+                                    <Cart />
+                                </View>
+                                <View style={{ flex: 1 }} >
+                                    <MyButton style={{ paddingTop: 15, paddingBottom: 15, borderRadius: 10 }} title="Buy Now" />
+                                </View>
+                            </View>
+                            {/* Give Review */}
+                            <View style={styles.containersSpace}>
+                                <Text style={styles.title}>Review</Text>
+                                {
+                                    props.access ?
+                                        <View>
+                                            {
+                                                props.orders ?
+                                                    <View>
+                                                        <View style={styles.iconContainer}>
+                                                            <Smiley1 onPress={() => setFeedback(1)} fill={feedback == 1 ? '#FF7465' : "rgba(46,45,45,0.4)"} />
+                                                            <Smiley2 onPress={() => setFeedback(2)} fill={feedback == 2 ? '#FF7465' : "rgba(46,45,45,0.4)"} />
+                                                            <Smiley3 onPress={() => setFeedback(3)} fill={feedback == 3 ? '#FF7465' : "rgba(46,45,45,0.4)"} />
+                                                            <Smiley4 onPress={() => setFeedback(4)} fill={feedback == 4 ? '#FF7465' : "rgba(46,45,45,0.4)"} />
+                                                            <Smiley5 onPress={() => setFeedback(5)} fill={feedback == 5 ? '#FF7465' : "rgba(46,45,45,0.4)"} />
+                                                        </View>
+                                                        <View style={styles.textAreaContainer}>
+                                                            <TextInput
+                                                                multiline={true}
+                                                                numberOfLines={3}
+                                                                style={{ textAlignVertical: 'top', }}
+                                                                placeholder='Please Provide Your Previous Feedback'
+                                                            />
+                                                        </View>
+                                                        <MyButton title="Submit" style={{ marginTop: 10, borderRadius: 10 }} />
+                                                    </View>
+                                                    :
+                                                    <Text style={styles.subTitle}>Unable To Get Orders</Text>
+                                            }
+                                        </View>
+                                        :
+                                        <View>
+                                            <Text style={styles.subTitle}>Please Login To Give Review</Text>
+                                        </View>
+                                }
+                            </View>
+                            {/* Previous Feedbacks */}
+                            <View>
+                                <Feedback />
+                            </View>
                         </ContentPadding>
                     </ScrollView>
                 </View>
@@ -194,6 +273,42 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginTop: 10
+    },
+    iconContainer: {
+        display: 'flex',
+        flexWrap: 'wrap',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 20
+    },
+    cartButton: {
+        backgroundColor: '#FFFFFF',
+        borderRadius: 100,
+        width: 50,
+        height: 50,
+        marginRight: 20,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    textAreaContainer: {
+        backgroundColor: '#D0CFCF',
+        marginTop: 10,
+        padding: 10
     }
 })
-export default ProductDetail;
+const mapStateToProps = state => {
+    return {
+        access: state.userReducer.access,
+        orders: state.orderReducer.orders
+    };
+};
+const mapDispatchToProps = dispatch => {
+    return {
+        addOrders: (orders) => dispatch(actions.addOrders(orders)),
+    };
+};
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(ProductDetail);

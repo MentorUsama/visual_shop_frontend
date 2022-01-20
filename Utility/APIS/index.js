@@ -20,5 +20,5 @@ export {
 } from './Shop/shopHandler'
 
 export  {
-    addOrders
+    getOrders
 } from './Order/order'

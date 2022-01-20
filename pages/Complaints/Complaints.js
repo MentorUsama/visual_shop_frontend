@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, ScrollView } from 'react-native';
 import PageContainer from '../../components/container/PageContainer'
 // Importing API's
-import { addOrders } from '../../Utility/APIS/Order/order'
+import { getOrders } from '../../Utility/APIS/Order/order'
 // Redux
 import { connect } from 'react-redux';
 import * as actions from '../../store/Actions/index'
@@ -17,7 +17,7 @@ const Complaints = (props) => {
     useEffect(async () => {
         if (props.orders == null) {
             setPageLoading(true)
-            const response = await addOrders(props.access)
+            const response = await getOrders(props.access)
             props.addOrders(response.data)
             setPageLoading(false)
         }
@@ -31,7 +31,7 @@ const Complaints = (props) => {
                     {
                         props.orders && props.orders.map(order => {
                             if (order.complaints != null) {
-                                return <Box id={order.id} status={order.orderStatus} />
+                                return <Box key={order.id} id={order.id} status={order.orderStatus} />
                             }
                         })
                     }

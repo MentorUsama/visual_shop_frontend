@@ -11,7 +11,7 @@ export default function MyButton(props) {
             color={"#FF7465"} 
             onPress={props.onPress} 
             title={props.title}>
-            <Text style={[styles.textCotainer,isDisabled?styles.disableColor:null]}>{props.title}</Text>
+            <Text style={[styles.textCotainer,isDisabled?styles.disableColor:null,props.textStyle]}>{props.title}</Text>
         </TouchableOpacity>
     )
 }
