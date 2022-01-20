@@ -19,6 +19,9 @@ export {
     getCityDetail,
     findCategoryName,
     findSubcategoryName,
-    findTagName
+    findTagName,
+    getSize,
+    doesProductHasColors,
+    findAverageRating
 }
 from './helpers'

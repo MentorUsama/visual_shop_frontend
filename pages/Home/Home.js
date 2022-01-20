@@ -10,14 +10,14 @@ import Loader from '../../components/components/Loader/Loader';
 import HeroContainer from './Parts/HeroContainer';
 import SearchBarFilter from './Parts/SearchBarFilter';
 // Importing Helpers
-import { 
-    isFilteredApplied, 
+import {
+    isFilteredApplied,
     isFilterChanged
 } from './homeUtility'
 import {
-    findCategoryName, 
-    findSubcategoryName, 
-    findTagName 
+    findCategoryName,
+    findSubcategoryName,
+    findTagName
 } from '../../Utility/HelperFunctions/index'
 // Importing API's
 import { getAllProducts, getAllTags, getAllCategories, getFilteredProducts, searchByImage } from '../../Utility/APIS/index'

@@ -4,6 +4,7 @@ import { View, StyleSheet, SafeAreaView, TouchableOpacity, Dimensions } from 're
 import MenuBar from '../../assets/icons/menue-bar'
 import BackArrow from '../../assets/icons/back-arrow'
 import Basket from '../../assets/icons/basket'
+import ContentPadding from './ContentPadding'
 import { useRoute } from '@react-navigation/native';
 
 export default function PageContainer(props) {
@@ -14,11 +15,7 @@ export default function PageContainer(props) {
         <SafeAreaView style={[styles.saveArea]}>
             <View style={styles.mainContainer}>
                 {/* ====== Navigations =====*/}
-                <View style={[styles.navigationContainer,hasPadding ?
-                        width > 380 ?
-                            styles.headerNormalPading
-                            : styles.headerMediumPading
-                        : null]}>
+                <View style={[styles.navigationContainer, width > 380 ? styles.headerNormalPading : styles.headerMediumPading]}>
                     <TouchableOpacity
                         underlayColor="white"
                         activeOpacity={0.5}
@@ -40,15 +37,9 @@ export default function PageContainer(props) {
                     }
                 </View>
                 {/* ====== All Childerens =====*/}
-                <View style={
-                    hasPadding ?
-                        width > 380 ?
-                            styles.normalWindow
-                            : styles.mediumWindow
-                        : null
-                }>
+                <ContentPadding hasPadding={hasPadding}>
                     {props.children}
-                </View>
+                </ContentPadding>
             </View>
         </SafeAreaView>
     )
@@ -87,11 +78,11 @@ const styles = StyleSheet.create({
         paddingTop: 50,
         flex: 1
     },
-    headerNormalPading:{
+    headerNormalPading: {
         paddingLeft: 40,
         paddingRight: 40,
     },
-    headerMediumPading:{
+    headerMediumPading: {
         paddingLeft: 20,
         paddingRight: 20,
     },

@@ -83,4 +83,46 @@ const findTagName = (tags, tagId) => {
   const result = tags.find(tag => tag.id == tagId)
   return result.name
 }
-export {diff_minutes,ValidateEmail,getCities,getCityDetail,validateContact,findCategoryName,findSubcategoryName,findTagName}
+const getSize=(string)=>{
+  if(string=="None")
+    return null
+  else
+    return string.split(",")
+}
+const doesProductHasColors=(products)=>{
+  var firstIndex=-1;
+  const data=products.find((product,index)=>{
+    if(product.imageColor!=null)
+    {
+      firstIndex=index
+      return product
+    }
+    
+  })
+  if(data==undefined)
+    return false
+  else
+    return firstIndex
+}
+const findAverageRating=(ratings)=>{
+  if(ratings==null || ratings.length==0)
+    return 0
+
+  var sum=0;
+  ratings.map(rating=>{
+    sum=sum+rating.rating
+  })
+  return parseInt(sum/ratings.length)
+}
+export {
+  diff_minutes,
+  ValidateEmail,
+  getCities,
+  getCityDetail,
+  validateContact,
+  findCategoryName,
+  findSubcategoryName,
+  findTagName,
+  getSize,
+  doesProductHasColors,
+  findAverageRating}
