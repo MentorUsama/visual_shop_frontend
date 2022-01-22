@@ -22,6 +22,7 @@ export {
     findTagName,
     getSize,
     doesProductHasColors,
-    findAverageRating
+    findAverageRating,
+    isUserEligibleForFeedback
 }
 from './helpers'

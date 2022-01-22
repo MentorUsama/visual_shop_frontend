@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Text, View, Button, ScrollView, useWindowDimensions, TouchableOpacity, StyleSheet,TextInput } from 'react-native';
+import { Text, View, Button, ScrollView, useWindowDimensions, TouchableOpacity, StyleSheet, TextInput } from 'react-native';
 import PageContainer from '../../components/container/PageContainer'
 import Swiper from 'react-native-web-swiper';
 import CarouselItem from '../../components/components/ProductDetail/CarouselItem/CarouselItem';
 import ContentPadding from '../../components/container/ContentPadding'
 import Star from '../../assets/icons/star'
-import { getSize, doesProductHasColors, findAverageRating } from '../../Utility/HelperFunctions/index'
+import { getSize, doesProductHasColors, findAverageRating, isUserEligibleForFeedback } from '../../Utility/HelperFunctions/index'
 import TagRadio from '../../components/components/TagRadio/TagRadio'
 import ColorSelector from '../../components/components/ProductDetail/ColorSelector/ColorSelector';
 import TextLoader from '../../components/components/TextWithLoader/TextWithLoader'
@@ -33,6 +33,7 @@ const ProductDetail = (props) => {
     const rating = findAverageRating(product.feedbacks);
     const sizes = getSize(product.sizes)
     const firstIndexColor = doesProductHasColors(product.images)
+    const canFeedback = isUserEligibleForFeedback(props.orders, product.id)
     // My Data
     const swiperRef = useRef(null)
     const [selectedSize, changeSelectedSize] = useState(sizes && sizes[0])
@@ -43,11 +44,15 @@ const ProductDetail = (props) => {
     const [feedback, setFeedback] = useState(5)
     // Getting Some Data if not present
     useEffect(async () => {
-        if (props.orders == null) {
+        if (props.orders == null && props.access != "") {
             setPageLoading(true)
+            console.log("Getting orders")
             const response = await getOrders(props.access)
             if (response.status == 200) {
                 props.addOrders(response.data)
+            }
+            else {
+                console.log(response.data)
             }
             setPageLoading(false)
         }
@@ -179,12 +184,12 @@ const ProductDetail = (props) => {
                             </View>
                             {/* Give Review */}
                             <View style={styles.containersSpace}>
-                                <Text style={styles.title}>Review</Text>
+                                <Text style={styles.title}>Reviews</Text>
                                 {
                                     props.access ?
                                         <View>
                                             {
-                                                props.orders ?
+                                                canFeedback ?
                                                     <View>
                                                         <View style={styles.iconContainer}>
                                                             <Smiley1 onPress={() => setFeedback(1)} fill={feedback == 1 ? '#FF7465' : "rgba(46,45,45,0.4)"} />
@@ -204,18 +209,36 @@ const ProductDetail = (props) => {
                                                         <MyButton title="Submit" style={{ marginTop: 10, borderRadius: 10 }} />
                                                     </View>
                                                     :
-                                                    <Text style={styles.subTitle}>Unable To Get Orders</Text>
+                                                    null
                                             }
                                         </View>
                                         :
                                         <View>
-                                            <Text style={styles.subTitle}>Please Login To Give Review</Text>
+                                            <View style={{ display: 'flex', flexDirection: 'row' }}>
+                                                <Text style={[{ marginRight: 5 }, styles.subTitle]}>Please</Text>
+                                                <TextLoader shouldShow={true} onPress={() => props.navigation.navigate("Login")} containerStyle={{ paddingBottom: 0, marginRight: 5 }} textStyle={{ textAlign: 'left', fontWeight: 'bold', fontSize: 14, marginTop: 2 }} title="Login" />
+                                                <Text style={styles.subTitle}>To Give Review</Text>
+                                            </View>
                                         </View>
                                 }
                             </View>
                             {/* Previous Feedbacks */}
                             <View>
-                                <Feedback />
+                                {
+                                    product.feedbacks ?
+                                        product.feedbacks.map((feedback) => {
+                                            if (!feedback.feedback)
+                                                return null
+                                            return (
+                                                <Feedback
+                                                    key={feedback.feedback.id}
+                                                    description={feedback.feedback.description}
+                                                    activeStars={feedback.feedback.rating}
+                                                    name={feedback.customer.name} />)
+                                        })
+                                        :
+                                        null
+                                }
                             </View>
                         </ContentPadding>
                     </ScrollView>

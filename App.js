@@ -61,6 +61,7 @@ export default function App() {
     const result = await getData(USER_LOGIN_INFO_CONST)
     if (result.isSuccess && result.data != null) {
       if (diff_minutes(d.getTime(), result.data.timeAdded) < 50) {
+        console.log(result.data.access)
         store.dispatch(actions.login(result.data.access, result.data.email, result.data.isLoggedIn, result.data.timeAdded))
       }
     }
