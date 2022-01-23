@@ -20,5 +20,6 @@ export {
 } from './Shop/shopHandler'
 
 export  {
-    getOrders
+    getOrders,
+    submitFeedback
 } from './Order/order'

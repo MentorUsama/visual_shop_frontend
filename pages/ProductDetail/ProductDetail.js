@@ -14,6 +14,7 @@ import Cart from '../../assets/icons/cart'
 import MyButton from '../../components/components/Button/MyButton';
 // APIS
 import { getOrders } from '../../Utility/APIS/Order/order'
+import { submitFeedback } from '../../Utility/APIS/index'
 // Redux
 import { connect } from 'react-redux';
 import * as actions from '../../store/Actions/index'
@@ -42,17 +43,15 @@ const ProductDetail = (props) => {
     const [quantity, setQuantity] = useState(1)
     const [pageLoading, setPageLoading] = useState(false)
     const [feedback, setFeedback] = useState(5)
+    const [feedbackDescription, setFeedbackDescription] = useState("")
+    const [feedbackError, setFeedbackError] = useState("")
     // Getting Some Data if not present
     useEffect(async () => {
         if (props.orders == null && props.access != "") {
             setPageLoading(true)
-            console.log("Getting orders")
             const response = await getOrders(props.access)
             if (response.status == 200) {
                 props.addOrders(response.data)
-            }
-            else {
-                console.log(response.data)
             }
             setPageLoading(false)
         }
@@ -65,6 +64,25 @@ const ProductDetail = (props) => {
         setSelectedImage(selectedItem)
         if (swiperRef) {
             swiperRef.current.goTo(index);
+        }
+    }
+    // Feedback Handler
+    const submitFeedbackHandler = async () => {
+        setPageLoading(true)
+        const response = await submitFeedback({
+            "rating": feedback,
+            "description": feedbackDescription,
+            "orderedProductId": canFeedback
+        }, props.access)
+        if (response.status == 200) {
+            setFeedbackError("")
+            setFeedbackDescription("")
+            setPageLoading(false)
+        }
+        else {
+            setFeedbackError(response.data)
+            setFeedbackDescription("")
+            setPageLoading(false)
         }
     }
     return (
@@ -185,6 +203,7 @@ const ProductDetail = (props) => {
                             {/* Give Review */}
                             <View style={styles.containersSpace}>
                                 <Text style={styles.title}>Reviews</Text>
+                                <Text style={styles.errorColor}>{feedbackError}</Text>
                                 {
                                     props.access ?
                                         <View>
@@ -204,9 +223,16 @@ const ProductDetail = (props) => {
                                                                 numberOfLines={3}
                                                                 style={{ textAlignVertical: 'top', }}
                                                                 placeholder='Please Provide Your Previous Feedback'
+                                                                onChangeText={(val) => setFeedbackDescription(val)}
+                                                                value={feedbackDescription}
                                                             />
                                                         </View>
-                                                        <MyButton title="Submit" style={{ marginTop: 10, borderRadius: 10 }} />
+                                                        <MyButton
+                                                            isDisabled={feedbackDescription == "" ? true : false}
+                                                            title="Submit"
+                                                            style={{ marginTop: 10, borderRadius: 10 }}
+                                                            onPress={() => submitFeedbackHandler()}
+                                                        />
                                                     </View>
                                                     :
                                                     null
@@ -318,7 +344,14 @@ const styles = StyleSheet.create({
         backgroundColor: '#D0CFCF',
         marginTop: 10,
         padding: 10
-    }
+    },
+    errorColor: {
+        color: '#FF7465',
+        fontSize: 10,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        marginTop: 2
+    },
 })
 const mapStateToProps = state => {
     return {
