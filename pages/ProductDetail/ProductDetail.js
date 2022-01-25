@@ -30,13 +30,14 @@ import Feedback from '../../components/components/ProductDetail/Feedback/Feedbac
 const ProductDetail = (props) => {
     // Getting Some Data
     const { navigation } = props;
-    const { product } = props.route.params
+    // My Data
+    const swiperRef = useRef(null)
+    const [product,setProduct]=useState(props.route.params.product)
     const rating = findAverageRating(product.feedbacks);
     const sizes = getSize(product.sizes)
     const firstIndexColor = doesProductHasColors(product.images)
     const canFeedback = isUserEligibleForFeedback(props.orders, product.id)
-    // My Data
-    const swiperRef = useRef(null)
+
     const [selectedSize, changeSelectedSize] = useState(sizes && sizes[0])
     const [selectedImage, setSelectedImage] = useState(firstIndexColor ? product.images[firstIndexColor] : null)
     const [showDetail, setShowDetail] = useState(false)
@@ -72,11 +73,20 @@ const ProductDetail = (props) => {
         const response = await submitFeedback({
             "rating": feedback,
             "description": feedbackDescription,
-            "orderedProductId": canFeedback
+            "orderedProductId": canFeedback,
+            "productId":product.id
         }, props.access)
         if (response.status == 200) {
             setFeedbackError("")
             setFeedbackDescription("")
+            // Updating The Single Product
+            props.updateSingleProduct(response.data)
+            setProduct(response.data)
+            // Updating The Orders to update the feedback
+            const orderResponse = await getOrders(props.access)
+            if (orderResponse.status == 200) {
+                props.addOrders(orderResponse.data)
+            }
             setPageLoading(false)
         }
         else {
@@ -362,6 +372,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         addOrders: (orders) => dispatch(actions.addOrders(orders)),
+        updateSingleProduct:(product)=>dispatch(actions.updateSingleProduct(product))
     };
 };
 export default connect(

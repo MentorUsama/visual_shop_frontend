@@ -25,3 +25,9 @@ export const addFilteredProduct=(filteredProducts,filters)=>{
         filters:filters
     }
 }
+export const updateSingleProduct=(product)=>{
+    return {
+        type:actionTypes.UPDATE_SINGLE_PRODUCT,
+        product:product
+    }
+}

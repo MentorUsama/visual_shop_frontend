@@ -5,6 +5,7 @@ export const SET_PROFILE='SET_PROFILE'
 export const UPDATE_PROFILE='UPDATE_PROFILE'
 
 export const UPDATE_STORE_PRODUCTS='UPDATE_STORE_PRODUCTS'
+export const UPDATE_SINGLE_PRODUCT='UPDATE_SINGLE_PRODUCT' // After submitting the feedback we need to update the product to add the new feedback
 export const ADD_ALL_TAGS='ADD_ALL_TAGS'
 export const ADD_CATEGORIES_SUBCATEGORIES='ADD_CATEGORIES_SUBCATEGORIES'
 export const ADD_FILTERED_PRODUCT='ADD_FILTERED_PRODUCT'
