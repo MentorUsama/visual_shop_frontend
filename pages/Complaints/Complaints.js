@@ -7,7 +7,6 @@ import { getOrders } from '../../Utility/APIS/Order/order'
 import { connect } from 'react-redux';
 import * as actions from '../../store/Actions/index'
 // Importing Components
-import Loader from '../../components/components/Loader/Loader';
 import Box from '../../components/components/Complaints/Box';
 
 
@@ -23,8 +22,7 @@ const Complaints = (props) => {
         }
     }, [])
     return (
-        <PageContainer hasPadding={true} navigation={props.navigation}>
-            <Loader loading={pageLoading} />
+        <PageContainer hasPadding={true} pageLoading={pageLoading} navigation={props.navigation}>
             <Text style={styles.title}>Complaints</Text>
             <ScrollView>
                 <View>

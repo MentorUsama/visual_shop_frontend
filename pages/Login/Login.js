@@ -8,7 +8,6 @@ import { customerLoginHandler, continueWithGoogle } from '../../Utility/APIS/ind
 // Container
 import PageContainer from '../../components/container/PageContainer'
 // Importing Components
-import Loader from '../../components/components/Loader/Loader';
 import InputField from '../../components/components/Input/InputField';
 import MyButton from '../../components/components/Button/MyButton';
 // Importing Assets
@@ -63,8 +62,7 @@ const Login = (props) => {
         }
     }
     return (
-        <PageContainer hasPadding={true} navigation={props.navigation}>
-            <Loader loading={loading} />
+        <PageContainer hasPadding={true} pageLoading={loading} navigation={props.navigation}>
             {/* Profile Image */}
             <View style={styles.profileContainer}>
                 <Image

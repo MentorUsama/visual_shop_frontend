@@ -3,9 +3,10 @@ import React from 'react';
 import Button from '../../Button/MyButton';
 
 export default function QuantitySelector(props) {
+    const {cotnainerStyle=null}=props
     return (
         <View>
-            <View style={styles.container}>
+            <View style={[styles.container,cotnainerStyle]}>
                 <Button
                     onPress={() => props.onPress(props.value - 1)}
                     isDisabled={props.value == 1}

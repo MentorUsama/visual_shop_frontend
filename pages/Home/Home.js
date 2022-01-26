@@ -6,7 +6,6 @@ import * as actions from '../../store/Actions/index'
 // Components And Containers
 import PageContainer from '../../components/container/PageContainer'
 import Toast from 'react-native-toast-message';
-import Loader from '../../components/components/Loader/Loader';
 import HeroContainer from './Parts/HeroContainer';
 import SearchBarFilter from './Parts/SearchBarFilter';
 // Importing Helpers
@@ -236,8 +235,8 @@ const Home = (props) => {
         props.addFilteredProducts(null, null)
     }
     return (
-        <PageContainer hasPadding={true} navigation={props.navigation}>
-            <Loader loading={pageLoading} />
+        <PageContainer hasPadding={true} pageLoading={pageLoading} navigation={props.navigation}>
+            {/* <Loader loading={pageLoading} /> */}
             <HeroContainer />
             <SearchBarFilter
                 searchText={searchText}

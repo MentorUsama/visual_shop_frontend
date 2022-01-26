@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import PageContainer from '../../components/container/PageContainer'
 import DropDrown from '../../components/components/DropDown/DropDrown';
-import Loader from '../../components/components/Loader/Loader';
 import InputField from '../../components/components/Input/InputField';
 import MyButton from '../../components/components/Button/MyButton'
 // Importing APIS
@@ -155,8 +154,7 @@ const UserInfo = (props) => {
 
 
     return (
-        <PageContainer hasPadding={true} navigation={props.navigation}>
-            <Loader loading={loading} />
+        <PageContainer hasPadding={true} navigation={props.navigation} pageLoading={loading}>
             <View style={{ marginTop: 60 }}></View>
             {/* Title */}
             <Text style={styles.titleColor}>Personal Information</Text>

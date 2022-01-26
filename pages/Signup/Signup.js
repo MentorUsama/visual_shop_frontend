@@ -6,7 +6,6 @@ import * as actions from '../../store/Actions/index';
 // Container
 import PageContainer from '../../components/container/PageContainer'
 // Importing Components
-import Loader from '../../components/components/Loader/Loader';
 import InputField from '../../components/components/Input/InputField';
 import MyButton from '../../components/components/Button/MyButton';
 // Importing Assets
@@ -71,8 +70,7 @@ const Signup = (props) => {
         }
     }
     return (
-        <PageContainer hasPadding={true} navigation={props.navigation}>
-            <Loader loading={loading} />
+        <PageContainer hasPadding={true} navigation={props.navigation} pageLoading={loading}>
 
             {/* Profile Image */}
             <View style={styles.profileContainer}>
