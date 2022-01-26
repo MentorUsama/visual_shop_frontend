@@ -86,7 +86,7 @@ const updateSingleProduct=(state,action)=>{
         storeProducts:storeProducts
     })
 }
-export const addProductToCart=async (state,action)=>{
+export const addProductToCart=(state,action)=>{
     var newCartData;
     var newCartProducts;
     if(state.cartData)
@@ -101,7 +101,7 @@ export const addProductToCart=async (state,action)=>{
         newCartData=[action.cartData]
         newCartProducts=[action.product]
     }
-    const result=await storeData(CART_DATA,newCartData)
+    // const result=await storeData(CART_DATA,newCartData)
     return updateObject(state,{
         cartData:newCartData,
         cartProductsDetail:newCartProducts

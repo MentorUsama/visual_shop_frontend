@@ -21,20 +21,21 @@ import * as actions from '../../store/Actions/index'
 
 
 const ProductDetail = (props) => {
-    // My Data
+    // Representaion Related Data
     const swiperRef = useRef(null)
-    const [product, setProduct] = useState(props.route.params.product)
-    const sizes = getSize(product.sizes)
-    const firstIndexColor = doesProductHasColors(product.images)
-    const canFeedback = isUserEligibleForFeedback(props.orders, product.id)
-
-    const [selectedSize, changeSelectedSize] = useState(sizes && sizes[0])
-    const [selectedImage, setSelectedImage] = useState(firstIndexColor ? product.images[firstIndexColor] : null)
-    const [quantity, setQuantity] = useState(1)
     const [pageLoading, setPageLoading] = useState(false)
     const [feedback, setFeedback] = useState(5)
     const [feedbackDescription, setFeedbackDescription] = useState("")
     const [feedbackError, setFeedbackError] = useState("")
+    const [isAddedToCart, setIsAddedToCart] = useState(false)
+    // Main Data
+    const [product, setProduct] = useState(props.route.params.product)
+    const sizes = getSize(product.sizes)
+    const firstIndexColor = doesProductHasColors(product.images)
+    const canFeedback = isUserEligibleForFeedback(props.orders, product.id)
+    const [selectedSize, changeSelectedSize] = useState(sizes && sizes[0])
+    const [selectedImage, setSelectedImage] = useState(firstIndexColor ? product.images[firstIndexColor] : null)
+    const [quantity, setQuantity] = useState(1)
     // Getting Some Data if not present
     useEffect(async () => {
         if (props.orders == null && props.access != "") {
@@ -84,6 +85,43 @@ const ProductDetail = (props) => {
             setPageLoading(false)
         }
     }
+    const getCartData=()=>{
+        return {
+            productId:product.id,
+            quantity:quantity,
+            selectedSize:selectedSize,
+            selectedColor:selectedImage?selectedImage.imageColor:null
+        }
+    }
+    const addToCart = () => {
+        props.addToCart(getCartData(),product)
+        setIsAddedToCart(true)
+    }
+    const removeFromCart = () => {
+        setIsAddedToCart(false)
+    }
+    const updateCart = () => {
+        setIsAddedToCart(true)
+    }
+    const buyNowHandler =() => {
+        if (isAddedToCart) {
+            if (props.access) {
+                props.navigation.navigate("Checkout")
+            }
+            else {
+                props.navigation.navigate("Login")
+            }
+        }
+        else {
+            if (props.access) {
+                setIsAddedToCart(true)
+                props.navigation.navigate("Checkout")
+            }
+            else {
+                props.navigation.navigate("Login")
+            }
+        }
+    }
     return (
         <PageContainer pageLoading={pageLoading} hasPadding={false} navigation={props.navigation} >
             <View style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
@@ -121,7 +159,13 @@ const ProductDetail = (props) => {
                                 value={quantity}
                             />
                             <AddToCartButtons
-
+                                addToCart={addToCart}
+                                buyNowHandler={buyNowHandler}
+                                removeFromCart={removeFromCart}
+                                updateCart={updateCart}
+                                isProductAddedToCart={isAddedToCart}
+                                access={props.access}
+                                isUpdated={true}
                             />
                             <ReviewForm
                                 feedbackError={feedbackError}
@@ -158,7 +202,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         addOrders: (orders) => dispatch(actions.addOrders(orders)),
-        updateSingleProduct: (product) => dispatch(actions.updateSingleProduct(product))
+        updateSingleProduct: (product) => dispatch(actions.updateSingleProduct(product)),
+        addToCart:(cartData,product)=>dispatch(actions.addProductToCart(cartData,product))
     };
 };
 export default connect(
