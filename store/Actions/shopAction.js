@@ -31,3 +31,22 @@ export const updateSingleProduct=(product)=>{
         product:product
     }
 }
+export const addProductToCart=(cartData,product)=>{
+    return {
+        type:actionTypes.ADD_PRODUCT_TO_CART,
+        cartData:cartData,
+        product:product
+    }
+}   
+export const updateProductFromCart=(cartData)=>{
+    return {
+        type:actionTypes.UPDATE_PRODUCT_FROM_CART,
+        cartData:cartData
+    }
+}
+export const removeProductFromCart=(productId)=>{
+    return {
+        type:actionTypes.REMOVE_PRODUCT_FROM_CART,
+        productId:productId
+    }
+}

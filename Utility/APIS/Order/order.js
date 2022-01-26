@@ -35,7 +35,6 @@ export const getOrders = async (token) => {
 
 
 export const submitFeedback=async (feedback,access)=>{
-    console.log(feedback,access)
     try {
         const response = await axios({
             method: "POST",
@@ -55,7 +54,6 @@ export const submitFeedback=async (feedback,access)=>{
         }
         else 
         {
-            console.log(e.response)
             return { status: null, data: "An Unknown Error Occured While Submitting Feedback" }
         }
     }
