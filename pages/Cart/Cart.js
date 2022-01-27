@@ -1,19 +1,34 @@
 import React, { useState } from 'react';
-import { Text, View, Button, StyleSheet,ScrollView } from 'react-native';
+import { Text, View, Button, StyleSheet, ScrollView } from 'react-native';
 // Redux
 import { connect } from 'react-redux';
 // Helpers
-import {getTotalPrice,findProductInCart} from '../../Utility/HelperFunctions/index'
+import { getTotalPrice, findProductInCart } from '../../Utility/HelperFunctions/index'
 // Cotainer
 import PageContainer from '../../components/container/PageContainer'
 import MyButton from '../../components/components/Button/MyButton'
 import CartProduct from '../../components/components/Cart/CartProduct/CartProduct';
+import { RemoveProductFromCart } from '../../Utility/HelperFunctions/index'
 
 
 const Cart = (props) => {
     // Extra Data
     const [pageLoading, setPageLoading] = useState(false)
-    const totalPrice=getTotalPrice(props.cartData,props.cartProductsDetail)
+    const totalPrice = getTotalPrice(props.cartData, props.cartProductsDetail)
+    const removeHandler = (productId) => {
+        console.log(productId)
+        // const data = RemoveProductFromCart(productId, props.cartData, props.cartProductsDetail)
+        // props.addToCart(data.cartData, data.cartProductsDetail)
+        // if (updatedCartData.cartData) {
+        //     const result = await storeData(CART_DATA, updatedCartData.cartData)
+        // }
+        // else {
+        //     const result = await clearData(CART_DATA)
+        // }
+    }
+    const editHandler = (productDetail) => {
+        console.log(productDetail)
+    }
     return (
         <PageContainer pageLoading={pageLoading} hasPadding={true} navigation={props.navigation} >
             <View style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
@@ -22,13 +37,20 @@ const Cart = (props) => {
                     <Text style={styles.title}>Selected Product</Text>
                 </View>
                 {/* Selected Product Container */}
-                <View style={{flex:1,paddingTop:10,paddingBottom:10}}>
-                    <ScrollView>
-                        <View>
-                            <CartProduct 
-                                cart={props.cartData[0]}
-                                productDetail={findProductInCart(props.cartProductsDetail,props.cartData[0].productId)}
-                            />
+                <View style={{ flex: 1, paddingTop: 10, paddingBottom: 10 }}>
+                    <ScrollView showsVerticalScrollIndicator={false}>
+                        <View style={styles.cartContainer}>
+                            {
+                                props.cartData.map((cart) => (
+                                    <CartProduct
+                                        key={cart.productId}
+                                        cart={cart}
+                                        removeHandler={removeHandler}
+                                        editHandler={editHandler}
+                                        productDetail={findProductInCart(props.cartProductsDetail, cart.productId)}
+                                    />
+                                ))
+                            }
                         </View>
                     </ScrollView>
                 </View>
@@ -61,7 +83,13 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginBottom:20
+        marginBottom: 20
+    },
+    cartContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap'
     }
 })
 const mapStateToProps = state => {
@@ -74,7 +102,7 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = dispatch => {
     return {
-
+        addToCart: (cartData, product) => dispatch(actions.addToCart(cartData, product))
     };
 };
 export default connect(
