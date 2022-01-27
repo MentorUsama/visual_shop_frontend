@@ -74,6 +74,11 @@ const findTagName = (tags, tagId) => {
   const result = tags.find(tag => tag.id == tagId)
   return result.name
 }
+
+
+
+
+// Product Detail Related Funtion
 const getSize = (string) => {
   if (string == null)
     return null
@@ -179,6 +184,82 @@ const updateProductFromCart=(cartData, oldCartData)=>{
     })
     return newCartData
 }
+const isProductAddedIntoCart = (carts, productId) => {
+  if (!carts)
+      return false
+  var result = carts.find(cart => {
+      if (cart.productId == productId)
+          return cart
+  })
+  if (result)
+      return result
+  else
+      return null
+}
+const getSelectedImage = (images, cartData) => {
+  if(images==null)
+      return null
+
+  var filteredData;
+  if (cartData && cartData.colourSelected) {
+      filteredData = images.find((image, index) => {
+          if (image.imageColor && image.imageColor==cartData.colourSelected) {
+              return image
+          }
+
+      })
+      if(filteredData)
+      {
+          return filteredData   
+      }
+      else
+          return null
+  }
+  else {
+      filteredData = images.find((image, index) => {
+          if (image.imageColor != null) {
+              return image
+          }
+      })
+      if (filteredData)
+          return filteredData
+      else
+          return null
+  }
+}
+const isCartDataChanged=(orignalCartData,newCartData)=>{
+  if(!orignalCartData || !newCartData)
+      return false
+  if(
+      orignalCartData.totalQuantity==newCartData.totalQuantity &&
+      orignalCartData.sizeSelected==newCartData.sizeSelected &&
+      orignalCartData.colourSelected==newCartData.colourSelected
+  )
+      return false
+  return true
+}
+
+
+// Cart Helper Function
+const getTotalPrice=(cartsData,productDetail)=>{
+  var totalPrice=0;
+  if(cartsData)
+  {
+      cartsData.map(cart=>{
+          var product=productDetail.find(product=>cart.productId==product.id)
+          totalPrice=(parseFloat(product.price)*cart.totalQuantity)+totalPrice
+      })
+      return totalPrice
+  }
+  return 0
+}
+const findProductInCart=(products,productId)=>{
+  return products.find((product)=>product.id==productId)
+}
+
+
+
+
   export {
     diff_minutes,
     ValidateEmail,
@@ -188,11 +269,19 @@ const updateProductFromCart=(cartData, oldCartData)=>{
     findCategoryName,
     findSubcategoryName,
     findTagName,
+    // Product Detail Related Function
     getSize,
     doesProductHasColors,
     findAverageRating,
     isUserEligibleForFeedback, 
     AddProductToCart,
     RemoveProductFromCart,
-    updateProductFromCart
+    updateProductFromCart,
+    isProductAddedIntoCart,
+    getSelectedImage,
+    isCartDataChanged,
+
+    // Cart Helper Function
+    getTotalPrice,
+    findProductInCart
   }

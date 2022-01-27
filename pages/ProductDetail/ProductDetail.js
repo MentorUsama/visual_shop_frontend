@@ -28,67 +28,17 @@ import {
     CART_DATA,
     AddProductToCart,
     RemoveProductFromCart,
-    updateProductFromCart
+    updateProductFromCart,
+    isProductAddedIntoCart,
+    getSelectedImage,
+    isCartDataChanged,
 } from '../../Utility/HelperFunctions/index'
 // Redux
 import { connect } from 'react-redux';
 import * as actions from '../../store/Actions/index'
 
 
-const isProductAddedIntoCart = (carts, productId) => {
-    if (!carts)
-        return false
-    var result = carts.find(cart => {
-        if (cart.productId == productId)
-            return cart
-    })
-    if (result)
-        return result
-    else
-        return null
-}
-const getSelectedImage = (images, cartData) => {
-    if(images==null)
-        return null
 
-    var filteredData;
-    if (cartData && cartData.colourSelected) {
-        filteredData = images.find((image, index) => {
-            if (image.imageColor && image.imageColor==cartData.colourSelected) {
-                return image
-            }
-
-        })
-        if(filteredData)
-        {
-            return filteredData   
-        }
-        else
-            return null
-    }
-    else {
-        filteredData = images.find((image, index) => {
-            if (image.imageColor != null) {
-                return image
-            }
-        })
-        if (filteredData)
-            return filteredData
-        else
-            return null
-    }
-}
-const isCartDataChanged=(orignalCartData,newCartData)=>{
-    if(!orignalCartData || !newCartData)
-        return false
-    if(
-        orignalCartData.totalQuantity==newCartData.totalQuantity &&
-        orignalCartData.sizeSelected==newCartData.sizeSelected &&
-        orignalCartData.colourSelected==newCartData.colourSelected
-    )
-        return false
-    return true
-}
 const ProductDetail = (props) => {
     // Representaion Related Data
     const swiperRef = useRef(null)

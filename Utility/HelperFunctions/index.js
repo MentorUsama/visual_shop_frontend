@@ -27,6 +27,11 @@ export {
     isUserEligibleForFeedback,
     AddProductToCart,
     RemoveProductFromCart,
-    updateProductFromCart
+    updateProductFromCart,
+    getTotalPrice,
+    findProductInCart,
+    isProductAddedIntoCart,
+    getSelectedImage,
+    isCartDataChanged,
 }
 from './helpers'
