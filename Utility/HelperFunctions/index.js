@@ -16,22 +16,25 @@ export {
     diff_minutes,
     ValidateEmail,
     validateContact,
+
     getCities,
     getCityDetail,
     findCategoryName,
     findSubcategoryName,
     findTagName,
     getSize,
+
     doesProductHasColors,
     findAverageRating,
     isUserEligibleForFeedback,
     AddProductToCart,
     RemoveProductFromCart,
     updateProductFromCart,
-    getTotalPrice,
-    findProductInCart,
     isProductAddedIntoCart,
     getSelectedImage,
     isCartDataChanged,
+
+    getTotalPrice,
+    findProductInCart,
 }
 from './helpers'
