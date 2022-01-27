@@ -30,7 +30,7 @@ export default function AddToCartButtons(props) {
                             <MyButton isDisabled={!isUpdated} style={{ flex: 1, paddingTop: 15, paddingBottom: 15, marginBottom: 0 }} onPress={updateCart} title="Update Cart" />
                         </View>
                         <View style={{ flex: 1 }} >
-                            <MyButton onPress={buyNowHandler} isSecondary={true} style={{ paddingTop: 15, paddingBottom: 15 }} title={access ? "Buy Now" : "Login To Buy"} />
+                            <MyButton onPress={buyNowHandler} isSecondary={true} style={{ paddingTop: 15, paddingBottom: 15 }} title={"Buy Now"} />
                         </View>
                     </View>
                     :
@@ -39,7 +39,7 @@ export default function AddToCartButtons(props) {
                             <Cart onPress={addToCart} />
                         </View>
                         <View style={{ flex: 1 }} >
-                            <MyButton onPress={buyNowHandler} style={{ flex: 1, paddingTop: 15, paddingBottom: 15, marginBottom: 0, height: 55 }} title={access ? "Buy Now" : "Login To Buy"} />
+                            <MyButton onPress={buyNowHandler} style={{ flex: 1, paddingTop: 15, paddingBottom: 15, marginBottom: 0, height: 55 }} title={"Buy Now"} />
                         </View>
                     </View>
             }

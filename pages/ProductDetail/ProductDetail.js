@@ -193,22 +193,12 @@ const ProductDetail = (props) => {
     }
     const buyNowHandler = async () => {
         if (isAddedToCart) {
-            if (props.access) {
-                props.navigation.navigate("Checkout")
-            }
-            else {
-                props.navigation.navigate("Login")
-            }
+            props.navigation.navigate("Cart")
         }
         else {
             await addToCart()
             setIsAddedToCart(true)
-            if (props.access) {
-                props.navigation.navigate("Checkout")
-            }
-            else {
-                props.navigation.navigate("Login")
-            }
+            props.navigation.navigate("Cart")
         }
     }
     return (
