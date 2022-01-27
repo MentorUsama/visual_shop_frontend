@@ -12,47 +12,49 @@ export default function CartProduct(props) {
     editHandler
   } = props
   return (
-    <View style={[styles.productContainer, containerStyle]}>
-      {/* Image Container */}
-      <View style={styles.imageContainer}>
-        {/* Image */}
-        <View>
-          {
-            productDetail.images == null ?
-              null :
-              productDetail.images.length == 0 ?
+    <TouchableOpacity activeOpacity={0.8} onPress={() => editHandler(productDetail)}>
+      <View style={[styles.productContainer, containerStyle]}>
+        {/* Image Container */}
+        <View style={styles.imageContainer}>
+          {/* Image */}
+          <View>
+            {
+              productDetail.images == null ?
                 null :
-                <Image
-                  source={{
-                    uri: productDetail.images[0].image,
-                  }}
-                  style={styles.imageStyle}
-                />
-          }
+                productDetail.images.length == 0 ?
+                  null :
+                  <Image
+                    source={{
+                      uri: productDetail.images[0].image,
+                    }}
+                    style={styles.imageStyle}
+                  />
+            }
+          </View>
+          {/* Icon Container */}
+          <View style={styles.iconCotainer}>
+            <Cross
+              onPress={() => removeHandler(cart.productId)}
+              style={[styles.circleContainer, { backgroundColor: '#FF7465', paddingLeft: 8, paddingTop: 7, }]}
+              fill="#FFFFFF"
+            />
+            <Edit
+              onPress={() => editHandler(productDetail)}
+              style={[styles.circleContainer, { backgroundColor: '#FFFFFF', paddingTop: 9, paddingLeft: 9 }]}
+              fill="#FF7465"
+            />
+          </View>
         </View>
-        {/* Icon Container */}
-        <View style={styles.iconCotainer}>
-          <Cross
-            onPress={() => removeHandler(cart.productId)}
-            style={[styles.circleContainer, { backgroundColor: '#FF7465' }]}
-            fill="#FFFFFF"
-          />
-          <Edit
-            onPress={() => editHandler(productDetail)}
-            style={[styles.circleContainer, { backgroundColor: '#FFFFFF', paddingTop: 7,paddingLeft:6 }]}
-            fill="#FF7465"
-          />
+        {/* Detail Container */}
+        <View style={styles.textContainer}>
+          <Text style={styles.title} numberOfLines={1}>{productDetail.name}</Text>
+          <View style={styles.priceContainer}>
+            <Text>Price</Text>
+            <Text>{productDetail.price * cart.totalQuantity}</Text>
+          </View>
         </View>
       </View>
-      {/* Detail Container */}
-      <View style={styles.textContainer}>
-        <Text style={styles.title} numberOfLines={1}>{productDetail.name}</Text>
-        <View style={styles.priceContainer}>
-          <Text>Price</Text>
-          <Text>{productDetail.price*cart.totalQuantity}</Text>
-        </View>
-      </View>
-    </View>
+    </TouchableOpacity>
   )
 }
 const styles = StyleSheet.create({
@@ -101,13 +103,11 @@ const styles = StyleSheet.create({
     marginRight: 5
   },
   circleContainer: {
-    width: 20,
-    height: 20,
+    width: 25,
+    height: 25,
     borderRadius: 20,
-    marginTop: 3,
+    marginTop: 8,
     display: 'flex',
-    paddingLeft: 5,
-    paddingTop: 4,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -115,7 +115,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.20,
     shadowRadius: 1.41,
-
     elevation: 2,
   }
 })
