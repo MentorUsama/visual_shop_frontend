@@ -17,7 +17,8 @@ import Navigation from './navigations/Navigation';
 import Toast from 'react-native-toast-message';
 import {toastConfig} from './components/components/CustomToast/CustomToast'
 // Importing Helper Function
-import { getData, USER_LOGIN_INFO_CONST, diff_minutes } from './Utility/HelperFunctions/index'
+import { getData, USER_LOGIN_INFO_CONST, diff_minutes,CART_DATA } from './Utility/HelperFunctions/index'
+import {getListOfProducts} from './Utility/APIS/index'
 const d = new Date();
 // Importing Fonts
 const fetchFonts = () => {
@@ -58,11 +59,42 @@ export default function App() {
 
   // Storing Local Data into Redux
   useEffect(async () => {
-    const result = await getData(USER_LOGIN_INFO_CONST)
-    if (result.isSuccess && result.data != null) {
-      if (diff_minutes(d.getTime(), result.data.timeAdded) < 50) {
-        console.log(result.data.access)
-        store.dispatch(actions.login(result.data.access, result.data.email, result.data.isLoggedIn, result.data.timeAdded))
+    // Getting loging info
+    const login_result = await getData(USER_LOGIN_INFO_CONST)
+    if (login_result.isSuccess && login_result.data != null) {
+      if (diff_minutes(d.getTime(), login_result.data.timeAdded) < 50) {
+        store.dispatch(actions.login(login_result.data.access, login_result.data.email, login_result.data.isLoggedIn, login_result.data.timeAdded))
+      }
+    }
+    // Getting cart info
+    const cart_result = await getData(CART_DATA)
+    if(cart_result.isSuccess && cart_result.data != null)
+    {
+      var cartData=cart_result.data
+      var productList=[];
+      cartData.map(cart=>{
+        productList.push(cart.productId)
+      })
+      var productDetail=await getListOfProducts(productList)
+      var newCart=[];
+      var newProductDetail=[];
+      if(productDetail.status==200)
+      {
+          // Pushing the data that is in both cart and product list (To remove any product that is no longer exist)
+          productDetail.data.map(product=>{
+              var cartDetail=cartData.find(cart=>{
+                if(cart.productId==product.id)
+                  return cart
+              })
+              if(cartDetail)
+              {
+                newCart.push(cartDetail)
+                newProductDetail.push(product)
+              }
+              return product
+          })
+        // Loading Cart data
+        store.dispatch(actions.addToCart(newCart,newProductDetail))
       }
     }
   }, [])

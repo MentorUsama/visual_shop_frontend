@@ -75,7 +75,7 @@ const findTagName = (tags, tagId) => {
   return result.name
 }
 const getSize = (string) => {
-  if (string == "None")
+  if (string == null)
     return null
   else
     return string.split(",")
@@ -92,7 +92,7 @@ const doesProductHasColors = (products) => {
   if (data == undefined)
     return false
   else
-    return firstIndex
+    return true
 }
 const findAverageRating = (feedbacks) => {
   if (feedbacks == null || feedbacks.length == 0)
@@ -108,30 +108,91 @@ const findAverageRating = (feedbacks) => {
   return parseInt(sum / feedbacks.length)
 }
 const isUserEligibleForFeedback = (orders, productId) => {
-  var result=false
-  if(orders==null || productId==null)
+  var result = false
+  if (orders == null || productId == null)
     return false
   const data = orders.find(order => {
     return order.orderedProducts.find(orderProduct => {
       if (orderProduct.productId == productId && orderProduct.feedback == null) {
-        result=orderProduct.id
+        result = orderProduct.id
         return orderProduct
       }
     })
   })
   return result
 }
-export {
-  diff_minutes,
-  ValidateEmail,
-  getCities,
-  getCityDetail,
-  validateContact,
-  findCategoryName,
-  findSubcategoryName,
-  findTagName,
-  getSize,
-  doesProductHasColors,
-  findAverageRating,
-  isUserEligibleForFeedback
+const AddProductToCart = (cartData, product, props) => {
+  var newCartData;
+  var newCartProducts;
+  if (props.cartData) {
+    newCartData = [...props.cartData]
+    newCartData.push(cartData)
+    newCartProducts = [...props.cartProductsDetail]
+    newCartProducts.push(product)
+  }
+  else {
+    newCartData = [cartData]
+    newCartProducts = [product]
+  }
+  return {
+    cartData: newCartData,
+    cartProductsDetail: newCartProducts
+  }
 }
+const RemoveProductFromCart = (productId, oldCartData, oldCartProductDetail) => {
+  if (oldCartData.length == 1) {
+    return{
+      cartData: null,
+      cartProductsDetail: null
+    }
+  }
+  else {
+    var newCartData;
+    newCartData = oldCartData.filter(cart => {
+      if (cart.productId != productId) {
+        return cart
+      }
+    })
+    var newCartProducts;
+    newCartProducts = oldCartProductDetail.filter(product => {
+      if (product.id != productId) {
+        return product
+      }
+    })
+    return {
+      cartData: newCartData,
+      cartProductsDetail: newCartProducts
+    }
+  }
+}
+const updateProductFromCart=(cartData, oldCartData)=>{
+    var newCartData;
+    newCartData= oldCartData.map(cart=>{
+        if(cart.productId== cartData.productId)
+        {
+            return cartData
+        }
+        else
+        {
+            return cart
+        }
+    })
+    return newCartData
+}
+  export {
+    diff_minutes,
+    ValidateEmail,
+    getCities,
+    getCityDetail,
+    validateContact,
+    findCategoryName,
+    findSubcategoryName,
+    findTagName,
+    getSize,
+    doesProductHasColors,
+    findAverageRating,
+    isUserEligibleForFeedback, 
+    AddProductToCart,
+    RemoveProductFromCart,
+    updateProductFromCart
+  }

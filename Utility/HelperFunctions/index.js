@@ -7,7 +7,8 @@ export {
 
 // Exporting Storage Keys Constants
 export {
-    USER_LOGIN_INFO_CONST
+    USER_LOGIN_INFO_CONST,
+    CART_DATA
 } from './storageKeys';
 
 // Exporting Validate Data functions
@@ -23,6 +24,9 @@ export {
     getSize,
     doesProductHasColors,
     findAverageRating,
-    isUserEligibleForFeedback
+    isUserEligibleForFeedback,
+    AddProductToCart,
+    RemoveProductFromCart,
+    updateProductFromCart
 }
 from './helpers'

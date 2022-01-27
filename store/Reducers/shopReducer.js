@@ -86,77 +86,12 @@ const updateSingleProduct=(state,action)=>{
         storeProducts:storeProducts
     })
 }
-export const addProductToCart=(state,action)=>{
-    var newCartData;
-    var newCartProducts;
-    if(state.cartData)
-    {
-        newCartData=[...state.cartData]
-        newCartData.push(action.cartData)
-        newCartProducts=[...state.cartProductsDetail]
-        newCartProducts.push(action.product)
-    }
-    else
-    {
-        newCartData=[action.cartData]
-        newCartProducts=[action.product]
-    }
-    // const result=await storeData(CART_DATA,newCartData)
+export const addToCart=(state,action)=>{
     return updateObject(state,{
-        cartData:newCartData,
-        cartProductsDetail:newCartProducts
+        cartData:action.cartData,
+        cartProductsDetail:action.product
     })
 }   
-export const updateProductFromCart=async (state,action)=>{
-    var newCartData;
-    newCartData=state.cartData.map(cart=>{
-        if(cart.productId==action.cartData.productId)
-        {
-            return action.cartData
-        }
-        else
-        {
-            return cart
-        }
-    })
-    const result=await storeData(CART_DATA,newCartData)
-    return updateObject(state,{
-        cartData:newCartData
-    })
-}
-export const removeProductFromCart=async (state,action)=>{
-    if(state.cartData.length==1)
-    {
-        await clearData(CART_DATA)
-        return updateObject(state,{
-            cartData:null,
-            cartProductsDetail:null
-        })
-    }
-    else
-    {
-        var newCartData;
-        newCartData=state.cartData.filter(cart=>{
-            if(cart.productId!=action.productId)
-            {
-                return cart
-            }
-        })
-        var newCartProducts;
-        newCartProducts=state.cartProductsDetail.filter(product=>{
-            if(product.id!=action.productId)
-            {
-                return product
-            }
-        })
-
-        const result=await storeData(CART_DATA,newCartData)
-        return updateObject(state,{
-            cartData:newCartData,
-            cartProductsDetail:newCartProducts
-        })
-    }
-}
 // Reducer
 const reducer = (state = initialState, action) => {
     switch (action.type) {
@@ -165,9 +100,7 @@ const reducer = (state = initialState, action) => {
         case actionTypes.ADD_CATEGORIES_SUBCATEGORIES: return addCategories(state, action);
         case actionTypes.ADD_FILTERED_PRODUCT: return addFilteredProduct(state, action);
         case actionTypes.UPDATE_SINGLE_PRODUCT: return updateSingleProduct(state, action);
-        case actionTypes.ADD_PRODUCT_TO_CART: return addProductToCart(state, action);
-        case actionTypes.UPDATE_PRODUCT_FROM_CART: return updateProductFromCart(state, action);
-        case actionTypes.REMOVE_PRODUCT_FROM_CART: return removeProductFromCart(state, action);
+        case actionTypes.ADD_TO_CART: return addToCart(state, action);
         default:
             return state;
     }

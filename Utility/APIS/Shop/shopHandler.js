@@ -1,5 +1,6 @@
 import {
     GET_FILTERED_PRODUCT,
+    GET_LIST_OF_PRODUCT,
     SHOP_GET_ALL_CATEGORIES,
     SHOP_GET_ALL_TAGS,
     SHOP_GET_PRODUCTS
@@ -85,4 +86,13 @@ const searchByImage = async (image) => {
     }]
     return {status:200,data:fakeProduct}
 }
-export { getAllProducts, getAllTags, getAllCategories, getFilteredProducts,searchByImage }
+const getListOfProducts=async (data)=>{
+    try {
+        const response = await axios.post(`${GET_LIST_OF_PRODUCT}`, {"productIdList":data});
+        return { status: response.status, data: response.data }
+    }
+    catch (e) {
+        return { status: null, data: 'Unable To Get Products!!' }
+    }
+}
+export { getAllProducts, getAllTags, getAllCategories, getFilteredProducts,searchByImage,getListOfProducts }

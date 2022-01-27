@@ -4,7 +4,7 @@ import ColorSelector from '../../../../components/components/ProductDetail/Color
 
 export default function ColorSelectors(props) {
     const {
-        firstIndexColor,
+        doesProductHasColors,
         selectedImage,
         images,
         colorHandler
@@ -12,11 +12,11 @@ export default function ColorSelectors(props) {
     return (
         <View>
             {
-                firstIndexColor ?
+                doesProductHasColors ?
                     <View style={styles.containersSpace}>
                         <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                             <Text style={styles.title}>Color</Text>
-                            <Text style={{ paddingLeft: 20, fontWeight: 'bold', color: '#828181', fontSize: 18 }}>{selectedImage.imageColor.toUpperCase()}</Text>
+                            <Text style={{ paddingLeft: 20, fontWeight: 'bold', color: '#828181', fontSize: 18 }}>{selectedImage ? selectedImage.imageColor.toUpperCase() : ''}</Text>
                         </View>
                         <View style={styles.colorContainer}>
                             {
@@ -24,7 +24,7 @@ export default function ColorSelectors(props) {
                                     return (
                                         image.imageColor != null ?
                                             <ColorSelector
-                                                isSelected={selectedImage && selectedImage.id == image.id}
+                                                isSelected={selectedImage ? selectedImage.id == image.id ? true : false : false}
                                                 onPress={colorHandler}
                                                 index={index}
                                                 item={image}
@@ -41,7 +41,7 @@ export default function ColorSelectors(props) {
         </View>
     );
 }
-const styles=StyleSheet.create({
+const styles = StyleSheet.create({
     containersSpace: {
         marginTop: 20
     },

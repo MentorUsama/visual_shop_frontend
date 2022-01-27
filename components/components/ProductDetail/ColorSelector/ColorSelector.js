@@ -18,14 +18,14 @@ export default function ColorSelector(props) {
 }
 const styles = StyleSheet.create({
     imageStyle: {
-        width: '100%',
-        height: '100%',
+        width: 70,
+        height: 70
     },
     container: {
-        width: 70,
-        height: 70,
         marginBottom:10,
-        marginRight:10
+        marginRight:10,
+        borderWidth: 2,
+        borderColor:'transparent'
     },
     containerActive: {
         borderWidth: 2,

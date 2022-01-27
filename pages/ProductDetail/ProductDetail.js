@@ -12,14 +12,83 @@ import ReviewForm from './Parts/ReviewForm/ReviewForm';
 import TitleContainer from './Parts/TitleContainer/TitleContainer';
 import Carousel from './Parts/Carousel/Carousel';
 // Importing Utilities and API's
-import { submitFeedback, getOrders } from '../../Utility/APIS/index'
-import { getSize, doesProductHasColors, findAverageRating, isUserEligibleForFeedback } from '../../Utility/HelperFunctions/index'
+import {
+    submitFeedback,
+    getOrders
+} from '../../Utility/APIS/index'
+import {
+    getSize,
+    doesProductHasColors,
+    findAverageRating,
+    isUserEligibleForFeedback
+} from '../../Utility/HelperFunctions/index'
+import {
+    storeData,
+    clearData,
+    CART_DATA,
+    AddProductToCart,
+    RemoveProductFromCart,
+    updateProductFromCart
+} from '../../Utility/HelperFunctions/index'
 // Redux
 import { connect } from 'react-redux';
 import * as actions from '../../store/Actions/index'
 
 
+const isProductAddedIntoCart = (carts, productId) => {
+    if (!carts)
+        return false
+    var result = carts.find(cart => {
+        if (cart.productId == productId)
+            return cart
+    })
+    if (result)
+        return result
+    else
+        return null
+}
+const getSelectedImage = (images, cartData) => {
+    if(images==null)
+        return null
 
+    var filteredData;
+    if (cartData && cartData.colourSelected) {
+        filteredData = images.find((image, index) => {
+            if (image.imageColor && image.imageColor==cartData.colourSelected) {
+                return image
+            }
+
+        })
+        if(filteredData)
+        {
+            return filteredData   
+        }
+        else
+            return null
+    }
+    else {
+        filteredData = images.find((image, index) => {
+            if (image.imageColor != null) {
+                return image
+            }
+        })
+        if (filteredData)
+            return filteredData
+        else
+            return null
+    }
+}
+const isCartDataChanged=(orignalCartData,newCartData)=>{
+    if(!orignalCartData || !newCartData)
+        return false
+    if(
+        orignalCartData.totalQuantity==newCartData.totalQuantity &&
+        orignalCartData.sizeSelected==newCartData.sizeSelected &&
+        orignalCartData.colourSelected==newCartData.colourSelected
+    )
+        return false
+    return true
+}
 const ProductDetail = (props) => {
     // Representaion Related Data
     const swiperRef = useRef(null)
@@ -27,17 +96,21 @@ const ProductDetail = (props) => {
     const [feedback, setFeedback] = useState(5)
     const [feedbackDescription, setFeedbackDescription] = useState("")
     const [feedbackError, setFeedbackError] = useState("")
-    const [isAddedToCart, setIsAddedToCart] = useState(false)
-    // Main Data
+    // Product Related Data
     const [product, setProduct] = useState(props.route.params.product)
     const sizes = getSize(product.sizes)
-    const firstIndexColor = doesProductHasColors(product.images)
     const canFeedback = isUserEligibleForFeedback(props.orders, product.id)
-    const [selectedSize, changeSelectedSize] = useState(sizes && sizes[0])
-    const [selectedImage, setSelectedImage] = useState(firstIndexColor ? product.images[firstIndexColor] : null)
-    const [quantity, setQuantity] = useState(1)
+
+    // Cart Related Data
+    const productAddedToCart = isProductAddedIntoCart(props.cartData, props.route.params.product.id)
+    const isProductHasColor = doesProductHasColors(product.images)
+    const [isAddedToCart, setIsAddedToCart] = useState(productAddedToCart ? true : false)
+    const [selectedSize, changeSelectedSize] = useState(productAddedToCart ? productAddedToCart.sizeSelected : sizes?sizes[0]:null)
+    const [selectedImage, setSelectedImage] = useState(isProductHasColor ? getSelectedImage(product.images, productAddedToCart) : null)
+    const [quantity, setQuantity] = useState(productAddedToCart ? productAddedToCart.totalQuantity : 1)
     // Getting Some Data if not present
     useEffect(async () => {
+        // Getting The All Orders (To Check if he need to give any feedback)
         if (props.orders == null && props.access != "") {
             setPageLoading(true)
             const response = await getOrders(props.access)
@@ -61,10 +134,10 @@ const ProductDetail = (props) => {
     const submitFeedbackHandler = async () => {
         setPageLoading(true)
         const response = await submitFeedback({
-            "rating": feedback,
-            "description": feedbackDescription,
-            "orderedProductId": canFeedback,
-            "productId": product.id
+            rating: feedback,
+            description: feedbackDescription,
+            orderedProductId: canFeedback,
+            productId: product.id
         }, props.access)
         if (response.status == 200) {
             setFeedbackError("")
@@ -85,25 +158,40 @@ const ProductDetail = (props) => {
             setPageLoading(false)
         }
     }
-    const getCartData=()=>{
+    const getCartData = () => {
         return {
-            productId:product.id,
-            quantity:quantity,
-            selectedSize:selectedSize,
-            selectedColor:selectedImage?selectedImage.imageColor:null
+            productId: product.id,
+            totalQuantity: quantity,
+            sizeSelected: selectedSize,
+            colourSelected: selectedImage ? selectedImage.imageColor : null
         }
     }
-    const addToCart = () => {
-        props.addToCart(getCartData(),product)
+    const addToCart = async () => {
+        var cartData = getCartData()
+        var updatedCartData = AddProductToCart(cartData, product, { cartData: props.cartData, cartProductsDetail: props.cartProductsDetail })
+        props.addToCart(updatedCartData.cartData, updatedCartData.cartProductsDetail)
+        const result = await storeData(CART_DATA, updatedCartData.cartData)
         setIsAddedToCart(true)
     }
-    const removeFromCart = () => {
+    const removeFromCart = async () => {
+        var updatedCartData = RemoveProductFromCart(product.id, props.cartData, props.cartProductsDetail)
+        props.addToCart(updatedCartData.cartData, updatedCartData.cartProductsDetail)
+        if (updatedCartData.cartData) {
+            const result = await storeData(CART_DATA, updatedCartData.cartData)
+        }
+        else {
+            const result = await clearData(CART_DATA)
+        }
         setIsAddedToCart(false)
     }
-    const updateCart = () => {
+    const updateCart = async () => {
+        var cartData = getCartData()
+        var updatedCartData = updateProductFromCart(cartData, props.cartData)
+        props.addToCart(updatedCartData, props.cartProductsDetail)
+        const result = await storeData(CART_DATA, updatedCartData)
         setIsAddedToCart(true)
     }
-    const buyNowHandler =() => {
+    const buyNowHandler = async () => {
         if (isAddedToCart) {
             if (props.access) {
                 props.navigation.navigate("Checkout")
@@ -113,8 +201,9 @@ const ProductDetail = (props) => {
             }
         }
         else {
+            await addToCart()
+            setIsAddedToCart(true)
             if (props.access) {
-                setIsAddedToCart(true)
                 props.navigation.navigate("Checkout")
             }
             else {
@@ -147,7 +236,7 @@ const ProductDetail = (props) => {
                                 selectedSize={selectedSize}
                             />
                             <ColorSelectors
-                                firstIndexColor={firstIndexColor}
+                                doesProductHasColors={isProductHasColor}
                                 selectedImage={selectedImage}
                                 images={product.images}
                                 colorHandler={colorHandler}
@@ -165,7 +254,7 @@ const ProductDetail = (props) => {
                                 updateCart={updateCart}
                                 isProductAddedToCart={isAddedToCart}
                                 access={props.access}
-                                isUpdated={true}
+                                isUpdated={isAddedToCart?isCartDataChanged(productAddedToCart,getCartData()):false}
                             />
                             <ReviewForm
                                 feedbackError={feedbackError}
@@ -196,14 +285,16 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
     return {
         access: state.userReducer.access,
-        orders: state.orderReducer.orders
+        orders: state.orderReducer.orders,
+        cartData: state.shopReducer.cartData,
+        cartProductsDetail: state.shopReducer.cartProductsDetail
     };
 };
 const mapDispatchToProps = dispatch => {
     return {
         addOrders: (orders) => dispatch(actions.addOrders(orders)),
         updateSingleProduct: (product) => dispatch(actions.updateSingleProduct(product)),
-        addToCart:(cartData,product)=>dispatch(actions.addProductToCart(cartData,product))
+        addToCart: (cartData, product) => dispatch(actions.addToCart(cartData, product))
     };
 };
 export default connect(

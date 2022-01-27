@@ -27,7 +27,7 @@ export default function AddToCartButtons(props) {
                                 containerStyle={{ paddingBottom: 0, marginRight: 10, height: '100%', justifyContent: 'center' }}
                                 onPress={removeFromCart}
                             />
-                            <MyButton isDisabled={isUpdated} style={{ flex: 1, paddingTop: 15, paddingBottom: 15, marginBottom: 0 }} onPress={updateCart} title="Update Cart" />
+                            <MyButton isDisabled={!isUpdated} style={{ flex: 1, paddingTop: 15, paddingBottom: 15, marginBottom: 0 }} onPress={updateCart} title="Update Cart" />
                         </View>
                         <View style={{ flex: 1 }} >
                             <MyButton onPress={buyNowHandler} isSecondary={true} style={{ paddingTop: 15, paddingBottom: 15 }} title={access ? "Buy Now" : "Login To Buy"} />

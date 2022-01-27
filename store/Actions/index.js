@@ -13,9 +13,7 @@ export {
     addCategories,
     addFilteredProduct,
     updateSingleProduct,
-    addProductToCart,
-    updateProductFromCart,
-    removeProductFromCart
+    addToCart
 } from './shopAction'
 
 export {
