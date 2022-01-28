@@ -2,8 +2,8 @@ import React from 'react';
 import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 const Box = (props) => {
     return (
-        <View key={props.id} style={styles.boxStyle}>
-            <TouchableOpacity activeOpacity={0.5}>
+        <View style={styles.boxStyle}>
+            <TouchableOpacity onPress={props.onPress} activeOpacity={0.5}>
                 <View style={styles.boxContentContainer}>
                     <Text style={styles.boxTitle}>Complaint ID</Text>
                     <Text style={styles.boxText}>{props.id}</Text>

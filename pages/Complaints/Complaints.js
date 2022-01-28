@@ -9,10 +9,10 @@ import * as actions from '../../store/Actions/index'
 // Importing Components
 import Box from '../../components/components/Complaints/Box';
 
-
 const Complaints = (props) => {
     // Getting All The Orders
     const [pageLoading, setPageLoading] = useState(false);
+    var hasComplaints=false
     useEffect(async () => {
         if (props.orders == null) {
             setPageLoading(true)
@@ -29,9 +29,16 @@ const Complaints = (props) => {
                     {
                         props.orders && props.orders.map(order => {
                             if (order.complaints != null) {
-                                return <Box key={order.id} id={order.id} status={order.orderStatus} />
+                                hasComplaints=true
+                                return <Box key={order.id} onPress={()=>props.navigation.navigate("ComplaintsDetail",{data:order})} id={order.id} status={order.orderStatus} />
                             }
                         })
+                    }
+                    {
+                        hasComplaints==false?
+                            <Text>No Complaints Found</Text>
+                        :
+                        null
                     }
                 </View>
             </ScrollView>
