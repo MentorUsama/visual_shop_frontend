@@ -44,6 +44,12 @@ export default function DropDrown(props) {
                         closeOnBackPressed={true}
                         autoScroll={true}
 
+                        listMode="SCROLLVIEW"
+                        scrollViewProps={{
+                          nestedScrollEnabled: true,
+                        }}
+                
+
                         ArrowDownIconComponent={({ style }) => <View style={style}><ArrowIcon width={15} /></View>}
                         ArrowUpIconComponent={({ style }) => <View style={style}><ArrowIcon direction="up" fill="#FF7465" width={15} /></View>}
                         style={
@@ -129,6 +135,7 @@ const myStyle = StyleSheet.create({
     textContainer: {
         backgroundColor: '#CACACA',
         paddingLeft: 10,
+        marginBottom:-1,
         borderTopEndRadius: 10,
         borderTopLeftRadius: 10,
         paddingTop: 5

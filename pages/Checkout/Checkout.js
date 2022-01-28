@@ -1,15 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import PageContainer from '../../components/container/PageContainer'
 import DropDrown from '../../components/components/DropDown/DropDrown';
 import InputField from '../../components/components/Input/InputField';
 import MyButton from '../../components/components/Button/MyButton'
+import ImageButton from '../../components/components/ImageButton/ImageButton';
 // Importing APIS
 import { getProvincesAndCities, getProfileHandler, updateProfile } from '../../Utility/APIS/index'
 import { getCities, getCityDetail, validateContact } from '../../Utility/HelperFunctions/index'
 // Redux
 import { connect } from 'react-redux';
+import creditCard from '../../assets/images/creditCard.png'
+import creditCardDark from '../../assets/images/creditCardDark.png'
+import jazzCash from '../../assets/images/JazzCash.png'
+import jazzCashDark from '../../assets/images/jazzCashDark.png'
 import * as actions from '../../store/Actions/index';
+import { withDecay } from 'react-native-reanimated';
 
 
 const Checkout = (props) => {
@@ -21,6 +27,9 @@ const Checkout = (props) => {
     const [name, setName] = useState("")
     const [address, setAddress] = useState("")
     const [contact, setContact] = useState("")
+    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null)
+    const [cuopen, setCoupen] = useState("12")
+    const [discountPrice, setDiscountedPrice] = useState(null)
     // ===== Page Related States =====
     const [loading, setLoading] = useState(false);
     const [globalError, setGlobalError] = useState("")
@@ -118,100 +127,119 @@ const Checkout = (props) => {
             return false
     }
     // Update Information
-    const validate = () => {
-        if (contact != "") {
-            if (!validateContact(contact)) {
-                setGlobalError("Contact number should consist of 11 digits")
-                setSuccess("")
-                return
-            }
-        }
-        updateInformation()
+    const applyDiscount = () => {
+        console.log("Will Apply Discount Here")
     }
-    const updateInformation = async () => {
-        setLoading(true)
-        var data = {
-            name: name,
-            address: address,
-            contact: contact,
-            cityId: city
-        }
-        const cityDetail = getCityDetail(props.provincesAndCities, province, city)
-        const response = await updateProfile(data, props.access)
-        if (response.status == 200) {
-            data.cityId = cityDetail
-            props.updateProfile(data)
-            setSuccess("Profile Updated Successfully")
-            setGlobalError("")
-
-        }
-        else {
-            setGlobalError(response.data)
-            setSuccess("")
-        }
-        setLoading(false)
-    }
-
-
     return (
         <PageContainer hasPadding={true} navigation={props.navigation} pageLoading={loading}>
-            <View style={{ marginTop: 60 }}></View>
-            {/* Title */}
-            <Text style={styles.titleColor}>Personal Information</Text>
-            <View style={{marginTop:5,marginBottom:5}}>
-                <Text style={styles.errorColor}>{globalError}</Text>
-                <Text style={styles.successColor}>{success}</Text>
+            <View>
+                <ScrollView   showsVerticalScrollIndicator={false}>
+                    <View style={{ marginTop: 20 }}></View>
+                    {/* ============ User Personal Information ============ */}
+                    {/* Title */}
+                    <Text style={[styles.titleColor, { marginBottom: 10 }]}>Shipping Information</Text>
+                    {
+                        globalError == "" && success == "" ? null :
+                            <View style={{ marginTop: 5, marginBottom: 5 }}>
+                                <Text style={styles.errorColor}>{globalError}</Text>
+                                <Text style={styles.successColor}>{success}</Text>
+                            </View>
+                    }
+                    <View>
+                        {/* Username */}
+                        <InputField
+                            icon="person"
+                            title="Name"
+                            onChange={setName}
+                            placeholder="Enter Your Name"
+                            value={name}>
+                        </InputField>
+                        <InputField
+                            icon="address"
+                            title="Address"
+                            onChange={setAddress}
+                            placeholder="Enter Your Address"
+                            value={address}>
+                        </InputField>
+                        <InputField
+                            icon="phone"
+                            title="Contact"
+                            onChange={setContact}
+                            placeholder="Enter Your Contact Number"
+                            isNumeric={true}
+                            value={contact}>
+                        </InputField>
+                        <DropDrown
+                            title="State"
+                            data={props.provincesAndCities}
+                            placeholder="Please Select Your Province"
+                            value={province}
+                            setValue={(val) => provinceHandler(val)}
+                            name="provinces"
+                            open={openProvince}
+                            setOpen={openHandler}
+                            zIndex={50001}
+                        />
+                        <DropDrown
+                            title="City"
+                            data={getCities(props.provincesAndCities, province)}
+                            placeholder={province == null ? "Select Your Province First" : "Please Select Your City"}
+                            value={city}
+                            disabled={province == null ? true : false}
+                            setValue={(val) => setCity(val)}
+                            name="cities"
+                            open={openCity}
+                            setOpen={openHandler}
+                        />
+                    </View>
+                    {/* ============ Discount ============= */}
+                    <Text style={[styles.titleColor, { marginTop: 20 }]}>Discount</Text>
+                    <InputField
+                        icon="discount"
+                        title="Discount"
+                        onChange={setCoupen}
+                        placeholder="Enter Your Cuopen Code"
+                        isNumeric={true}
+                        isEditable={discountPrice?false:true}
+                        value={cuopen}>
+                    </InputField>
+                    <MyButton title="Apply" isDisabled={discountPrice?true:cuopen ? false : true} onPress={applyDiscount} />
+                    {/* ============ Showing Total Price ============= */}
+                    <View style={styles.priceContainer}>
+                        <Text style={styles.titleColor}>Total</Text>
+                        <View style={{display:'flex',flexDirection:'row'}}>
+                            <Text style={[styles.subTitle,discountPrice?styles.strike:null,{marginRight:5}]}>100</Text>
+                            {discountPrice?<Text style={[styles.subTitle,{marginRight:5}]}>{discountPrice}</Text>:null}
+                            <Text style={styles.subTitle}>RS</Text>
+                        </View>
+                        
+                    </View>
+                    {/* ============ Selecting Payment Method ============= */}
+                    <Text style={[styles.titleColor, { marginTop: 20 }]}>Payment Information</Text>
+                    <View style={styles.iconContainer}>
+                        <ImageButton
+                            image={creditCard}
+                            greyImage={creditCardDark}
+                            isSelected={selectedPaymentMethod == "credit" ? true : false}
+                            style={{ width: 100, marginRight: 20 }}
+                            onPress={() => setSelectedPaymentMethod("credit")}
+                        />
+                        <ImageButton
+                            image={jazzCash}
+                            greyImage={jazzCashDark}
+                            isSelected={selectedPaymentMethod == "jazz" ? true : false}
+                            style={{ width: 100 }}
+                            onPress={() => setSelectedPaymentMethod("jazz")}
+                        />
+                    </View>
+                    <MyButton
+                        title="Proceed"
+                        style={{ marginTop: 10 }}
+                        isDisabled={selectedPaymentMethod == null ? true : false}
+                        onPress={() => props.navigation.navigate(selectedPaymentMethod == "jazz" ? "JazzCash" : "CreditCard")}
+                    />
+                </ScrollView>
             </View>
-            {/* Username */}
-            <InputField
-                icon="person"
-                title="Name"
-                onChange={setName}
-                placeholder="Enter Your Name"
-                value={name}>
-            </InputField>
-            <InputField
-                icon="address"
-                title="Address"
-                onChange={setAddress}
-                placeholder="Enter Your Address"
-                value={address}>
-            </InputField>
-            <InputField
-                icon="phone"
-                title="Contact"
-                onChange={setContact}
-                placeholder="Enter Your Contact Number"
-                isNumeric={true}
-                value={contact}>
-            </InputField>
-            <DropDrown
-                title="State"
-                data={props.provincesAndCities}
-                placeholder="Please Select Your Province"
-                value={province}
-                setValue={(val) => provinceHandler(val)}
-                name="provinces"
-                open={openProvince}
-                setOpen={openHandler}
-                zIndex={50001}
-            />
-            <DropDrown
-                title="City"
-                data={getCities(props.provincesAndCities, province)}
-                placeholder={province == null ? "Select Your Province First" : "Please Select Your City"}
-                value={city}
-                disabled={province == null ? true : false}
-                setValue={(val) => setCity(val)}
-                name="cities"
-                open={openCity}
-                setOpen={openHandler}
-            />
-            <MyButton
-                onPress={validate}
-                isDisabled={!isProfileUpdate()}
-                title="Update"
-            />
         </PageContainer>
     )
 }
@@ -229,6 +257,24 @@ const styles = StyleSheet.create({
     titleColor: {
         fontSize: 20,
         fontWeight: 'bold',
+    },
+    subTitle: {
+        fontSize: 20,
+    },
+    iconContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        marginTop: 20
+    },
+    priceContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    strike:{
+        textDecorationLine: 'line-through', 
+        textDecorationStyle: 'solid',
+        fontSize:12
     }
 })
 const mapStateToProps = state => {
