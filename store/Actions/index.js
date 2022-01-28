@@ -17,5 +17,6 @@ export {
 } from './shopAction'
 
 export {
-    addOrders
+    addOrders,
+    addCheckoutData
 } from './orderAction'

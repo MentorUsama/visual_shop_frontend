@@ -7,3 +7,9 @@ export const addOrders=(orders)=>{
         orders:orders
     };
 }
+export const addCheckoutData=(checkoutData)=>{
+    return {
+        type: actionTypes.ADD_CECKOUT_DATA,
+        checkoutData:checkoutData
+    };
+}

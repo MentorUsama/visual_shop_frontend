@@ -37,4 +37,4 @@ export const addToCart=(cartData,product)=>{
         cartData:cartData,
         product:product
     }
-}   
+}

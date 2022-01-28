@@ -24,5 +24,7 @@ export default function ImageButton(props) {
 const styles = StyleSheet.create({
     imageStyle: {
         resizeMode: "contain",
+        width:'100%',
+        height:'100%'
     }
 })

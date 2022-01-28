@@ -5,8 +5,9 @@ import DropDrown from '../../components/components/DropDown/DropDrown';
 import InputField from '../../components/components/Input/InputField';
 import MyButton from '../../components/components/Button/MyButton'
 import ImageButton from '../../components/components/ImageButton/ImageButton';
+import CheckBox from '../../components/components/CheckBox/CheckBox';
 // Importing APIS
-import { getProvincesAndCities, getProfileHandler, validateCoupen } from '../../Utility/APIS/index'
+import { getProvincesAndCities, getProfileHandler, validateCoupen,updateProfile } from '../../Utility/APIS/index'
 import { getCities, getCityDetail, validateContact, getTotalPrice } from '../../Utility/HelperFunctions/index'
 // Redux
 import { connect } from 'react-redux';
@@ -31,6 +32,8 @@ const Checkout = (props) => {
     const [cuopen, setCoupen] = useState()
     const [discountPrice, setDiscountedPrice] = useState(null)
     const [totalPrice, setTotalPrice] = useState(getTotalPrice(props.cartData, props.cartProductsDetail))
+    const [cuopenId, setCoupenId] = useState(null)
+    const [saveProfile, setSaveProfile] = useState(false)
     // ===== Page Related States =====
     const [loading, setLoading] = useState(false);
     const [globalError, setGlobalError] = useState("")
@@ -101,9 +104,26 @@ const Checkout = (props) => {
             }
         }
         // Setting Up The data
-        if (profile.cityId != null) {
-            setProvince(profile.cityId.provinceId.id)
-            setCity(profile.cityId.id)
+        if (props.checkoutData) {
+            setProvince(props.checkoutData.profile.provinceId)
+            setCity(props.checkoutData.profile.cityId)
+            setName(props.checkoutData.profile.name)
+            setAddress(props.checkoutData.profile.address)
+            setContact(props.checkoutData.profile.contact)
+            setCoupen(props.checkoutData.coupen)
+            if (props.checkoutData.cuopenId != null) {
+                var newCoupen = props.checkoutData
+                newCoupen.discountPrice = null
+                newCoupen.cuopenId = null
+                newCoupen.orignalPrice = null
+                props.addCheckoutData(newCoupen)
+            }
+        }
+        else {
+            if (profile.cityId != null) {
+                setProvince(profile.cityId.provinceId.id)
+                setCity(profile.cityId.id)
+            }
             setName(profile.name)
             setAddress(profile.address)
             setContact(profile.contact)
@@ -127,9 +147,10 @@ const Checkout = (props) => {
             return false
     }
     // Update Information
-    const clearCoupen=()=>{
+    const clearCoupen = () => {
         setCoupen(null)
         setDiscountedPrice(null)
+        setCoupenId(null)
     }
     const applyDiscount = async () => {
         setLoading(true)
@@ -137,42 +158,82 @@ const Checkout = (props) => {
         if (result.status == 200) {
             setCoupenError("")
             setDiscountedPrice(result.data.discountPrice)
+            setCoupenId(result.data.cuopenId)
         }
         else {
             setCoupenError(result.data)
+            setCoupenId(null)
+            setDiscountedPrice(null)
         }
         setLoading(false)
     }
     const validate = () => {
         if (!validateContact(contact)) {
-            if(globalError=="")
-            {
+            if (globalError == "") {
                 setGlobalError("Contact Is Required")
             }
             return false
         }
         if (name.replace(/\s/g, '') == "") {
-            if(globalError=="")
-            {
+            if (globalError == "") {
                 setGlobalError("Name Is Required")
             }
             return false
         }
         if (address.replace(/\s/g, '') == "") {
-            if(globalError=="")
-            {
+            if (globalError == "") {
                 setGlobalError("Address Is Required")
             }
             return false
         }
-        if(globalError!="")
-        {
+        if (!city) {
+            if (globalError == "") {
+                setGlobalError("City Is Required")
+            }
+            return false
+        }
+        if (!province) {
+            if (globalError == "") {
+                setGlobalError("Province Is Required")
+            }
+            return false
+        }
+        if (globalError != "") {
             setGlobalError("")
         }
         return true
     }
-    const proceedPayment = () => {
-        // Navigation
+    const proceedPayment = async () => {
+        var profileData = {
+            name: name,
+            address: address,
+            contact: contact,
+            cityId: city,
+            provinceId: province
+        }
+        // Saving Data To Server If it is checked
+        if (saveProfile && isProfileUpdate()) {
+            setLoading(true)
+            const cityDetail = getCityDetail(props.provincesAndCities, province, city)
+            const response = await updateProfile(profileData, props.access)
+            if (response.status == 200) {
+                profileData.cityId = cityDetail
+                props.updateProfile(profileData)
+            }
+            else {
+                setGlobalError(response.data)
+            }
+            setLoading(false)
+        }
+        // Saving Data into Redux
+        props.addCheckoutData({
+            profile: profileData,
+            coupen: cuopenId ? cuopen : null,
+            orignalPrice: totalPrice,
+            discountPrice: cuopenId ? discountPrice : null,
+            cuopenId: cuopenId
+        })
+        // Navigating To Another Page
         props.navigation.navigate(selectedPaymentMethod == "jazz" ? "JazzCash" : "CreditCard")
     }
     return (
@@ -236,6 +297,16 @@ const Checkout = (props) => {
                             open={openCity}
                             setOpen={openHandler}
                         />
+                        {
+                            isProfileUpdate() ?
+                                <View style={{ display: 'flex', flexDirection: 'row', marginTop: 20 }}>
+                                    <CheckBox
+                                        value={saveProfile}
+                                        onChange={setSaveProfile}
+                                    />
+                                    <Text style={{ color: '#595959', marginLeft: 10 }}>Save For Latter User</Text>
+                                </View> : null
+                        }
                     </View>
                     {/* ============ Discount ============= */}
                     <Text style={[styles.titleColor, { marginTop: 20 }]}>Discount</Text>
@@ -249,8 +320,8 @@ const Checkout = (props) => {
                         isEditable={discountPrice ? false : true}
                         value={cuopen}>
                     </InputField>
-                    {discountPrice?null:<MyButton  title="Apply" isDisabled={discountPrice ? true : cuopen ? false : true} onPress={applyDiscount} />}
-                    {discountPrice?<MyButton isSecondary={true} title="Clear Coupen" onPress={clearCoupen} />:null}
+                    {discountPrice ? null : <MyButton title="Apply" isDisabled={discountPrice ? true : cuopen ? false : true} onPress={applyDiscount} />}
+                    {discountPrice ? <MyButton isSecondary={true} title="Clear Coupen" onPress={clearCoupen} /> : null}
                     {/* ============ Showing Total Price ============= */}
                     <View style={styles.priceContainer}>
                         <Text style={styles.titleColor}>Total</Text>
@@ -268,14 +339,14 @@ const Checkout = (props) => {
                             image={creditCard}
                             greyImage={creditCardDark}
                             isSelected={selectedPaymentMethod == "credit" ? true : false}
-                            style={{ width: 100, marginRight: 20 }}
+                            style={{ width: 50, height: 40, marginRight: 20 }}
                             onPress={() => setSelectedPaymentMethod("credit")}
                         />
                         <ImageButton
                             image={jazzCash}
                             greyImage={jazzCashDark}
                             isSelected={selectedPaymentMethod == "jazz" ? true : false}
-                            style={{ width: 100 }}
+                            style={{ width: 100, height: 40 }}
                             onPress={() => setSelectedPaymentMethod("jazz")}
                         />
                     </View>
@@ -332,14 +403,16 @@ const mapStateToProps = state => {
         provincesAndCities: state.userReducer.provincesAndCities,
         profile: state.userReducer.profile,
         cartData: state.shopReducer.cartData,
-        cartProductsDetail: state.shopReducer.cartProductsDetail
+        cartProductsDetail: state.shopReducer.cartProductsDetail,
+        checkoutData: state.orderReducer.checkoutData
     };
 };
 const mapDispatchToProps = dispatch => {
     return {
         setProvincesAndCities: (cities) => dispatch(actions.setProvincesAndCities(cities)),
         setProfile: (profile) => dispatch(actions.setProfile(profile)),
-        updateProfile: (profile) => dispatch(actions.updateProfile(profile))
+        updateProfile: (profile) => dispatch(actions.updateProfile(profile)),
+        addCheckoutData: (checkoutData) => dispatch(actions.addCheckoutData(checkoutData))
     };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Checkout);
