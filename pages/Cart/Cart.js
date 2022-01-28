@@ -13,7 +13,8 @@ import {
     RemoveProductFromCart,
     storeData,
     clearData,
-    CART_DATA
+    CART_DATA,
+    getSelectedImage
 } from '../../Utility/HelperFunctions/index'
 
 
@@ -50,6 +51,7 @@ const Cart = (props) => {
                                 props.cartData ? props.cartData.map((cart) => (
                                     <CartProduct
                                         key={cart.productId}
+                                        getSelectedImage={getSelectedImage}
                                         cart={cart}
                                         removeHandler={removeHandler}
                                         editHandler={editHandler}
