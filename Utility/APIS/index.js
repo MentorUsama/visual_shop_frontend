@@ -22,5 +22,6 @@ export {
 
 export  {
     getOrders,
-    submitFeedback
+    submitFeedback,
+    validateCoupen
 } from './Order/order'

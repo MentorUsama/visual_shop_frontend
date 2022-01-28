@@ -28,3 +28,4 @@ export const GET_LIST_OF_PRODUCT=`${SHOP_BASE_URL}getListOfProducts/`
 // =============== Full API's Orders===============
 export const ORDER_GET_ORDERS=`${ORDER_BASE_URL}getAllOrders/`
 export const ORDER_SUBMIT_FEEDBACK=`${ORDER_BASE_URL}giveFeedback/`
+export const ORDER_VALIDATE_COUPEN=`${ORDER_BASE_URL}validateCuopen/`

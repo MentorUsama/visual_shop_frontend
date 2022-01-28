@@ -6,8 +6,8 @@ import InputField from '../../components/components/Input/InputField';
 import MyButton from '../../components/components/Button/MyButton'
 import ImageButton from '../../components/components/ImageButton/ImageButton';
 // Importing APIS
-import { getProvincesAndCities, getProfileHandler, updateProfile } from '../../Utility/APIS/index'
-import { getCities, getCityDetail, validateContact } from '../../Utility/HelperFunctions/index'
+import { getProvincesAndCities, getProfileHandler, validateCoupen } from '../../Utility/APIS/index'
+import { getCities, getCityDetail, validateContact, getTotalPrice } from '../../Utility/HelperFunctions/index'
 // Redux
 import { connect } from 'react-redux';
 import creditCard from '../../assets/images/creditCard.png'
@@ -15,7 +15,6 @@ import creditCardDark from '../../assets/images/creditCardDark.png'
 import jazzCash from '../../assets/images/JazzCash.png'
 import jazzCashDark from '../../assets/images/jazzCashDark.png'
 import * as actions from '../../store/Actions/index';
-import { withDecay } from 'react-native-reanimated';
 
 
 const Checkout = (props) => {
@@ -28,8 +27,10 @@ const Checkout = (props) => {
     const [address, setAddress] = useState("")
     const [contact, setContact] = useState("")
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null)
-    const [cuopen, setCoupen] = useState("12")
+    const [cuopenError, setCoupenError] = useState("")
+    const [cuopen, setCoupen] = useState()
     const [discountPrice, setDiscountedPrice] = useState(null)
+    const [totalPrice, setTotalPrice] = useState(getTotalPrice(props.cartData, props.cartProductsDetail))
     // ===== Page Related States =====
     const [loading, setLoading] = useState(false);
     const [globalError, setGlobalError] = useState("")
@@ -60,7 +61,6 @@ const Checkout = (props) => {
         setProvince(provinceId)
         setCity(null)
     }
-
 
     // ===== Preloading Data =====
     useEffect(async () => {
@@ -127,20 +127,65 @@ const Checkout = (props) => {
             return false
     }
     // Update Information
-    const applyDiscount = () => {
-        console.log("Will Apply Discount Here")
+    const clearCoupen=()=>{
+        setCoupen(null)
+        setDiscountedPrice(null)
+    }
+    const applyDiscount = async () => {
+        setLoading(true)
+        const result = await validateCoupen(cuopen, props.cartData)
+        if (result.status == 200) {
+            setCoupenError("")
+            setDiscountedPrice(result.data.discountPrice)
+        }
+        else {
+            setCoupenError(result.data)
+        }
+        setLoading(false)
+    }
+    const validate = () => {
+        if (!validateContact(contact)) {
+            if(globalError=="")
+            {
+                setGlobalError("Contact Is Required")
+            }
+            return false
+        }
+        if (name.replace(/\s/g, '') == "") {
+            if(globalError=="")
+            {
+                setGlobalError("Name Is Required")
+            }
+            return false
+        }
+        if (address.replace(/\s/g, '') == "") {
+            if(globalError=="")
+            {
+                setGlobalError("Address Is Required")
+            }
+            return false
+        }
+        if(globalError!="")
+        {
+            setGlobalError("")
+        }
+        return true
+    }
+    const proceedPayment = () => {
+        // Navigation
+        props.navigation.navigate(selectedPaymentMethod == "jazz" ? "JazzCash" : "CreditCard")
     }
     return (
         <PageContainer hasPadding={true} navigation={props.navigation} pageLoading={loading}>
             <View>
-                <ScrollView   showsVerticalScrollIndicator={false}>
+                <ScrollView showsVerticalScrollIndicator={false}>
                     <View style={{ marginTop: 20 }}></View>
                     {/* ============ User Personal Information ============ */}
                     {/* Title */}
                     <Text style={[styles.titleColor, { marginBottom: 10 }]}>Shipping Information</Text>
                     {
                         globalError == "" && success == "" ? null :
-                            <View style={{ marginTop: 5, marginBottom: 5 }}>
+                            <View>
                                 <Text style={styles.errorColor}>{globalError}</Text>
                                 <Text style={styles.successColor}>{success}</Text>
                             </View>
@@ -149,28 +194,28 @@ const Checkout = (props) => {
                         {/* Username */}
                         <InputField
                             icon="person"
-                            title="Name"
+                            title="Name*"
                             onChange={setName}
                             placeholder="Enter Your Name"
                             value={name}>
                         </InputField>
                         <InputField
                             icon="address"
-                            title="Address"
+                            title="Address*"
                             onChange={setAddress}
                             placeholder="Enter Your Address"
                             value={address}>
                         </InputField>
                         <InputField
                             icon="phone"
-                            title="Contact"
+                            title="Contact*"
                             onChange={setContact}
                             placeholder="Enter Your Contact Number"
                             isNumeric={true}
                             value={contact}>
                         </InputField>
                         <DropDrown
-                            title="State"
+                            title="State*"
                             data={props.provincesAndCities}
                             placeholder="Please Select Your Province"
                             value={province}
@@ -181,7 +226,7 @@ const Checkout = (props) => {
                             zIndex={50001}
                         />
                         <DropDrown
-                            title="City"
+                            title="City*"
                             data={getCities(props.provincesAndCities, province)}
                             placeholder={province == null ? "Select Your Province First" : "Please Select Your City"}
                             value={city}
@@ -194,25 +239,27 @@ const Checkout = (props) => {
                     </View>
                     {/* ============ Discount ============= */}
                     <Text style={[styles.titleColor, { marginTop: 20 }]}>Discount</Text>
+                    <Text style={styles.errorColor}>{cuopenError}</Text>
                     <InputField
                         icon="discount"
                         title="Discount"
                         onChange={setCoupen}
                         placeholder="Enter Your Cuopen Code"
                         isNumeric={true}
-                        isEditable={discountPrice?false:true}
+                        isEditable={discountPrice ? false : true}
                         value={cuopen}>
                     </InputField>
-                    <MyButton title="Apply" isDisabled={discountPrice?true:cuopen ? false : true} onPress={applyDiscount} />
+                    {discountPrice?null:<MyButton  title="Apply" isDisabled={discountPrice ? true : cuopen ? false : true} onPress={applyDiscount} />}
+                    {discountPrice?<MyButton isSecondary={true} title="Clear Coupen" onPress={clearCoupen} />:null}
                     {/* ============ Showing Total Price ============= */}
                     <View style={styles.priceContainer}>
                         <Text style={styles.titleColor}>Total</Text>
-                        <View style={{display:'flex',flexDirection:'row'}}>
-                            <Text style={[styles.subTitle,discountPrice?styles.strike:null,{marginRight:5}]}>100</Text>
-                            {discountPrice?<Text style={[styles.subTitle,{marginRight:5}]}>{discountPrice}</Text>:null}
+                        <View style={{ display: 'flex', flexDirection: 'row' }}>
+                            <Text style={[styles.subTitle, discountPrice ? styles.strike : null, { marginRight: 5 }]}>{totalPrice}</Text>
+                            {discountPrice ? <Text style={[styles.subTitle, { marginRight: 5 }]}>{discountPrice}</Text> : null}
                             <Text style={styles.subTitle}>RS</Text>
                         </View>
-                        
+
                     </View>
                     {/* ============ Selecting Payment Method ============= */}
                     <Text style={[styles.titleColor, { marginTop: 20 }]}>Payment Information</Text>
@@ -235,8 +282,8 @@ const Checkout = (props) => {
                     <MyButton
                         title="Proceed"
                         style={{ marginTop: 10 }}
-                        isDisabled={selectedPaymentMethod == null ? true : false}
-                        onPress={() => props.navigation.navigate(selectedPaymentMethod == "jazz" ? "JazzCash" : "CreditCard")}
+                        isDisabled={validate() == true ? selectedPaymentMethod == null ? true : false : true}
+                        onPress={proceedPayment}
                     />
                 </ScrollView>
             </View>
@@ -271,10 +318,10 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
     },
-    strike:{
-        textDecorationLine: 'line-through', 
+    strike: {
+        textDecorationLine: 'line-through',
         textDecorationStyle: 'solid',
-        fontSize:12
+        fontSize: 12
     }
 })
 const mapStateToProps = state => {
@@ -283,7 +330,9 @@ const mapStateToProps = state => {
         email: state.userReducer.email,
         isLoggedIn: state.userReducer.isLoggedIn,
         provincesAndCities: state.userReducer.provincesAndCities,
-        profile: state.userReducer.profile
+        profile: state.userReducer.profile,
+        cartData: state.shopReducer.cartData,
+        cartProductsDetail: state.shopReducer.cartProductsDetail
     };
 };
 const mapDispatchToProps = dispatch => {
