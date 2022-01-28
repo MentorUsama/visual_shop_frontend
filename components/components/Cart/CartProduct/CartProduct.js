@@ -12,7 +12,7 @@ export default function CartProduct(props) {
     editHandler,
     getSelectedImage
   } = props
-  const url=getSelectedImage(productDetail.images,cart).image
+  var url=getSelectedImage(productDetail.images,cart)
   return (
     <TouchableOpacity activeOpacity={0.8} onPress={() => editHandler(productDetail)}>
       <View style={[styles.productContainer, containerStyle]}>
@@ -27,7 +27,7 @@ export default function CartProduct(props) {
                   null :
                   <Image
                     source={{
-                      uri: url,
+                      uri: url?url.image:productDetail.images[0].image,
                     }}
                     style={styles.imageStyle}
                   />
