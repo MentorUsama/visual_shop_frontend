@@ -118,7 +118,7 @@ const isUserEligibleForFeedback = (orders, productId) => {
     return false
   const data = orders.find(order => {
     return order.orderedProducts.find(orderProduct => {
-      if (orderProduct.productId == productId && orderProduct.feedback == null) {
+      if (orderProduct.productId.id == productId && orderProduct.feedback == null) {
         result = orderProduct.id
         return orderProduct
       }
