@@ -5,8 +5,10 @@ import File from '../../../../assets/icons/file'
 import Camera from '../../../../assets/icons/camera'
 
 export default function InputSearch(props) {
+    const {hasIcons=true,containerStyle={}}=props;
+    
     return (
-        <View style={styles.inputContainer}>
+        <View style={[styles.inputContainer,containerStyle]}>
             <View style={{flex:1}}>
                 <TextInput
                     value={props.value}
@@ -16,10 +18,10 @@ export default function InputSearch(props) {
                     placeholder=' Search product'
                 />
             </View>
-            <View style={styles.iconContainer}>
+            {hasIcons && <View style={styles.iconContainer}>
                 <File onPress={props.pickImage} style={styles.iconStyle} />
                 <Camera onPress={props.takePicture} style={styles.iconStyle} />
-            </View>
+            </View>}
             <MyButton
                 title="Search"
                 style={styles.myButton}

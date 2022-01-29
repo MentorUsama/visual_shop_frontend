@@ -12,12 +12,14 @@ import Box from '../../components/components/Complaints/Box';
 const Complaints = (props) => {
     // Getting All The Orders
     const [pageLoading, setPageLoading] = useState(false);
-    var hasComplaints=false
+    var hasComplaints = false
     useEffect(async () => {
         if (props.orders == null) {
             setPageLoading(true)
             const response = await getOrders(props.access)
-            props.addOrders(response.data)
+            if (response.status == 200) {
+                props.addOrders(response.data)
+            }
             setPageLoading(false)
         }
     }, [])
@@ -29,16 +31,16 @@ const Complaints = (props) => {
                     {
                         props.orders && props.orders.map(order => {
                             if (order.complaints != null) {
-                                hasComplaints=true
-                                return <Box key={order.id} onPress={()=>props.navigation.navigate("ComplaintsDetail",{data:order})} id={order.id} status={order.orderStatus} />
+                                hasComplaints = true
+                                return <Box key={order.id} onPress={() => props.navigation.navigate("ComplaintsDetail", { data: order })} id={order.id} status={order.orderStatus} />
                             }
                         })
                     }
                     {
-                        hasComplaints==false?
+                        hasComplaints == false ?
                             <Text>No Complaints Found</Text>
-                        :
-                        null
+                            :
+                            null
                     }
                 </View>
             </ScrollView>

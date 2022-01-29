@@ -1,12 +1,5 @@
 import * as React from "react"
 import Svg, { G, Path } from "react-native-svg"
-
-
-
-// transform="rotate(-10 50 100)
-//                 translate(-36 45.5)
-//                 skewX(40)
-//                 scale(1 0.5)"
 function SvgComponent(props) {
   const {width=12.041,height=7.247,fill='#828181',direction="down"}=props
   var transformation=""
