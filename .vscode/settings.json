@@ -1,18 +1,3 @@
 {
-  "files.exclude": {
-    ".expo-shared": true,
-    ".expo": true,
-    "README.md": true,
-    "package-lock.json": true,
-    ".vscode": true,
-    "assets\\splash.png": true,
-    "assets\\icon.png": true,
-    "assets\\favicon.png": true,
-    "assets\\adaptive-icon.png": true,
-    "babel.config.js": true,
-    "package.json": true,
-    "config.js": true,
-    "app.json": true,
-    "node_modules": true
-  }
+  "files.exclude": {}
 }
