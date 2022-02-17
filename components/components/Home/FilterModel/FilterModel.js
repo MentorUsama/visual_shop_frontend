@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { View, Text, StyleSheet, ScrollView, Platform, TouchableOpacity } from 'react-native'
 import TextWithLoader from '../../TextWithLoader/TextWithLoader';
-import { Slider } from '@miblanchard/react-native-slider';
+// import { Slider } from '@miblanchard/react-native-slider';
 import Modal from '../../Model/Model'
 import Tag from '../../TagCheckBox/Tag';
 import DropDownList from '../../DropDownList/DropDownList';
@@ -52,7 +52,7 @@ export default function FilterProduct(props) {
                     {/* Price Scroller */}
                     <View style={styles.filterGap}>
                         <Text style={styles.title}>Price</Text>
-                        <Slider
+                        {/* <Slider
                             animateTransitions
                             maximumTrackTintColor="#d3d3d3"
                             maximumValue={1000}
@@ -66,7 +66,7 @@ export default function FilterProduct(props) {
                             trackStyle={{ height: 10, borderRadius: 20 }}
                             thumbTintColor="#FFFFFF"
                             thumbStyle={{ borderColor: '#BEBBBB', borderWidth: 2 }}
-                        />
+                        /> */}
                         <View style={styles.priceContainer}>
                             {
                                 isPriceChanges

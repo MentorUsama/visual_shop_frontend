@@ -1,7 +1,8 @@
 import {
     ORDER_GET_ORDERS,
     ORDER_SUBMIT_FEEDBACK,
-    ORDER_VALIDATE_COUPEN
+    ORDER_VALIDATE_COUPEN,
+    CREATE_ORDER
 } from '../Constants/apiConstants';
 import axios from 'axios';
 
@@ -78,6 +79,61 @@ export const validateCoupen = async (code,cartData) => {
         }
         else {
             return { status: null, data: "An Unknown Error Occured While validating coupen!!" }
+        }
+    }
+}
+export const createOrder = async (data,access) => {
+    try {
+        const response = await axios({
+            method: "POST",
+            url: `${CREATE_ORDER}`,
+            headers: {
+                Authorization: "Bearer " + access
+            },
+            data: data,
+        });
+        return { status: response.status, data: response.data }
+    }
+    catch (e) {
+        console.log(e.response.data)
+        if (e.response.status == 400) {
+            const keys = Object.keys(e.response.data)
+            if (keys.includes("shippingAddress")) {
+                return { status: null, data: e.response.data.shippingAddress[0] }
+            }
+            else if(keys.includes("receiverName")){
+                return {status:null,data:e.response.data.receiverName[0]}
+            }
+            else if(keys.includes("receiverContact"))
+            {
+                return {status:null,data:e.response.data.receiverContact[0]}
+            }
+            else if(keys.includes("cuopenId"))
+            {
+                return {status:null,data:e.response.data.cuopenId[0]}
+            }
+            else if(keys.includes("cityId"))
+            {
+                return {status:null,data:e.response.data.cityId[0]}
+            }
+            else if(keys.includes('orderedProducts'))
+            {
+                if(typeof e.response.data.orderedProducts[0] === 'string' || e.response.data.orderedProducts[0] instanceof String)
+                {
+                    return {status:null,data:e.response.data.orderedProducts[0]}
+                }
+                else
+                {
+                    return { status: null, data: "An Unknown Error Occured please try again" }
+                }
+            }
+            else
+            {
+                return { status: null, data: "An Unknown Error Occured please try again" }
+            }
+        }
+        else {
+            return { status: null, data: "An Unknown Error Occured please try again"}
         }
     }
 }

@@ -20,3 +20,6 @@ export {
     addOrders,
     addCheckoutData
 } from './orderAction'
+export {
+    shouldUpdateUserOrder
+} from './updateDataAction'
