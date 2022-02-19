@@ -2,7 +2,8 @@ import {
     ORDER_GET_ORDERS,
     ORDER_SUBMIT_FEEDBACK,
     ORDER_VALIDATE_COUPEN,
-    CREATE_ORDER
+    CREATE_ORDER,
+    CONFRIM_ORDER_PAYMENT
 } from '../Constants/apiConstants';
 import axios from 'axios';
 
@@ -95,7 +96,6 @@ export const createOrder = async (data,access) => {
         return { status: response.status, data: response.data }
     }
     catch (e) {
-        console.log(e.response.data)
         if (e.response.status == 400) {
             const keys = Object.keys(e.response.data)
             if (keys.includes("shippingAddress")) {
@@ -134,6 +134,36 @@ export const createOrder = async (data,access) => {
         }
         else {
             return { status: null, data: "An Unknown Error Occured please try again"}
+        }
+    }
+}
+
+
+
+
+
+
+export const confirmOrderPayment = async (access,data) => {
+    try {
+        const response = await axios({
+            method: "POST",
+            url: `${CONFRIM_ORDER_PAYMENT}`,
+            headers: {
+                Authorization: "Bearer " + access
+            },
+            data: data,
+        });
+        return { status: response.status, data: response.data }
+    }
+    catch (e) {
+        if (e.response.status == 400) {
+            const keys = Object.keys(e.response.data)
+            if (keys.includes("order_id")) {
+                return { status: null, data: e.response.data.order_id[0] }
+            }
+        }
+        else {
+            return { status: null, data: "Failed because of server error please try again !!"}
         }
     }
 }

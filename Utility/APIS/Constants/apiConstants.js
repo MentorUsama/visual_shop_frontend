@@ -30,3 +30,4 @@ export const ORDER_GET_ORDERS=`${ORDER_BASE_URL}getAllOrders/`
 export const ORDER_SUBMIT_FEEDBACK=`${ORDER_BASE_URL}giveFeedback/`
 export const ORDER_VALIDATE_COUPEN=`${ORDER_BASE_URL}validateCuopen/`
 export const CREATE_ORDER=`${ORDER_BASE_URL}createOrder/`
+export const CONFRIM_ORDER_PAYMENT =`${ORDER_BASE_URL}confirmOrderPayment/`

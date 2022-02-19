@@ -18,11 +18,11 @@ export default function ConfirmOrder(props) {
                         />
                     </View>
                     <View>
-                        <Text style={{ color: '#000000', fontSize: 12, marginTop: 10, textAlign:'center',fontWeight:'bold' }}>Transaction is Successfull</Text>
-                        <Text style={{ color: '#000000', fontSize: 12, marginTop: 10,marginBottom:10,textAlign:'center'}}>Thank you for purchasing these products. We will deliver these products as soon as possible</Text>
+                        <Text style={{ color: '#000000', fontSize: 12, marginTop: 10, textAlign:'center',fontWeight:'bold' }}>{props.message.header}</Text>
+                        <Text style={{ color: '#000000', fontSize: 12, marginTop: 10,marginBottom:10,textAlign:'center'}}>{props.message.message}</Text>
                     </View>
                     <View style={styles.buttonContainer}>
-                        <MyButton style={styles.buttonStyle}  title="View All Orders" />
+                        <MyButton style={styles.buttonStyle} onPress={props.onPress} title="View All Orders" />
                     </View>
                 </View>
             </View>
