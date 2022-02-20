@@ -25,5 +25,6 @@ export  {
     submitFeedback,
     validateCoupen,
     createOrder,
-    confirmOrderPayment
+    confirmOrderPayment,
+    cancelOrder
 } from './Order/order'

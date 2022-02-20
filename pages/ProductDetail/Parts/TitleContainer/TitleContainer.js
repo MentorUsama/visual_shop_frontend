@@ -21,7 +21,7 @@ export default function TitleContainer(props) {
                 </View>
             </View>
             <View style={styles.priceContainer}>
-                <Text style={styles.priceStyle}>{parseFloat(price)} RS</Text>
+                <Text style={styles.priceStyle}>{parseFloat(price)} $</Text>
             </View>
         </View>
     );

@@ -5,18 +5,19 @@ import { CommonActions } from '@react-navigation/native';
 
 // Strip
 import { StripeProvider, CardField, useConfirmPayment } from '@stripe/stripe-react-native';
-import { clearData } from '../../Utility/HelperFunctions/asyncStorage'
+import { clearData,storeData } from '../../Utility/HelperFunctions/asyncStorage'
 import { CART_DATA } from '../../Utility/HelperFunctions/storageKeys'
 // Redux
 import { connect } from 'react-redux';
 import * as actions from '../../store/Actions/index'
 // APIS
-import { createOrder, confirmOrderPayment } from '../../Utility/APIS/index'
+import { createOrder, confirmOrderPayment,cancelOrder } from '../../Utility/APIS/index'
 // Component
 import Credit from '../../assets/images/creditCard.png'
 import MyButton from '../../components/components/Button/MyButton'
 import ConfirmOrder from '../../components/components/CreditCard/ConfirmOrder';
 import PaymentSucced from '../../components/components/CreditCard/PaymentSuccedd'
+import CancelationFailed from '../../components/components/CreditCard/CancelationFailed'
 
 
 
@@ -33,9 +34,30 @@ const CreditCard = (props) => {
     const [paymentConfirmationFailed, setPaymentConfirmationFailed] = useState(null)
     const [clientSecret, setClientSecret] = useState(null)
     const [orderDetail, setOrderDetail] = useState(null)
+    const [orderCacel,setOrderCancel] = useState(null)
 
-    const cancelOrder = () => {
+    // Previous Data
+    const [prevCartData,setPrevCartData]= useState(null)
+
+    const cancelMyOrder = async () => {
+        setPageLoading(true)
         setCorfirmOrderPrice(null)
+        const response =  await cancelOrder(props.access,{ 'order_id': orderDetail.id })
+        console.log(response)
+        if(response.status!=200)
+        {
+            setPaymentConfirmationFailed({header:'Order Cancellation Failed',secondMessage:'We are unable to cancel the order because of following error',errorMessage:response.data})
+            setPageLoading(false)
+            return
+        }
+        props.addDataToCart(prevCartData.cartData,prevCartData.cartProductsDetail)
+        await storeData(CART_DATA,prevCartData.cartData)
+        setPageLoading(false)
+        props.navigation.reset({
+            index: 0,
+            routes: [{ name: 'HomePage'},{name:'Cart'}],
+        });
+        
     }
     const confirmMyOrder = async () => {
         setCorfirmOrderPrice(null)
@@ -107,6 +129,7 @@ const CreditCard = (props) => {
         setCorfirmOrderPrice(createOrderResponse.data.totalPrice)
         setOrderDetail(createOrderResponse.data)
         // Updating the store
+        setPrevCartData({cartData:props.cartData,cartProductsDetail:props.cartProductsDetail})
         props.shouldUpdateUserOrder(true)
         props.removeDataFromCart()
         props.removeCheckoutData()
@@ -128,8 +151,9 @@ const CreditCard = (props) => {
     return (
         <PageContainer hasPadding={true} pageLoading={pageLoading} navigation={props.navigation}>
             {/* Modals */}
-            <ConfirmOrder cancelOrder={cancelOrder} confirmMyOrder={confirmMyOrder} show={corfirmOrderPrice ? true : false} price={corfirmOrderPrice} />
+            <ConfirmOrder cancelOrder={cancelMyOrder} confirmMyOrder={confirmMyOrder} show={corfirmOrderPrice ? true : false} price={corfirmOrderPrice} />
             <PaymentSucced onPress={() => props.navigation.replace('Orders')} message={paymentSucceddModel} show={paymentSucceddModel ? true : false} />
+            <CancelationFailed viewOrder={() => props.navigation.replace('Orders')} cancelMyOrder={cancelMyOrder} message={paymentConfirmationFailed} show={paymentConfirmationFailed ? true : false} />
             <View style={{ marginTop: 20, marginBottom: 20 }}>
                 <Image
                     source={Credit}
@@ -183,6 +207,7 @@ const mapStateToProps = state => {
     return {
         checkoutData: state.orderReducer.checkoutData,
         cartData: state.shopReducer.cartData,
+        cartProductsDetail:state.shopReducer.cartProductsDetail,
         access: state.userReducer.access,
         shouldUpdate: state.updateDataReducer
     };
@@ -192,6 +217,7 @@ const mapDispatchToProps = dispatch => {
         shouldUpdateUserOrder: (shouldUpdate) => dispatch(actions.shouldUpdateUserOrder(shouldUpdate)),
         removeDataFromCart: () => dispatch(actions.addToCart(null, null)),
         removeCheckoutData: () => dispatch(actions.addCheckoutData(null)),
+        addDataToCart: (cartData,product) => dispatch(actions.addToCart(cartData,product)),
     };
 };
 export default connect(

@@ -67,7 +67,7 @@ const Cart = (props) => {
                 <View>
                     <View style={styles.priceContainer}>
                         <Text style={styles.title}>Total Price</Text>
-                        <Text style={styles.subtitle}>{`${totalPrice} RS`}</Text>
+                        <Text style={styles.subtitle}>{`${totalPrice} $`}</Text>
                     </View>
                     <View>
                         {
