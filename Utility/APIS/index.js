@@ -26,5 +26,6 @@ export  {
     validateCoupen,
     createOrder,
     confirmOrderPayment,
-    cancelOrder
+    cancelOrder,
+    createComplaint
 } from './Order/order'

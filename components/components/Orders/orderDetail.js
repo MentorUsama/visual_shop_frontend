@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity,Button } from 'react-native';
 import Collapsible from 'react-native-collapsible';
 import OrderedProductDetail from '../Orders/OrderedProductDetail';
 import DropArrow from '../../../assets/icons/downArrow'
+import MyButton from '../Button/MyButton'
 const OrderDetail = (props) => {
     const [isOpen, setIsOpen] = useState(false)
     return (
@@ -44,6 +45,14 @@ const OrderDetail = (props) => {
                                     })
                                 }
                             </View>
+                        </View>
+                        <View>
+                            {
+                                props.order.orderStatus=='PAYMENTPENDING'?<MyButton onPress={()=>props.cancelOrder(props.order.id)} title="Cancel Order" />:null
+                            }
+                            {
+                                props.order.complaints?<MyButton onPress={()=>props.navigation.navigate("ComplaintsDetail",{complaintId:props.order.complaints.id,order:props.order})} title="Show Complaint Messages"/>:<MyButton onPress={async ()=>await props.registerComplaint(props.order.id)} title="Register Complaint"/>
+                            }
                         </View>
                     </Collapsible>
                 </TouchableOpacity>

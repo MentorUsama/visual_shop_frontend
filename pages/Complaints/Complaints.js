@@ -32,7 +32,7 @@ const Complaints = (props) => {
                         props.orders && props.orders.map(order => {
                             if (order.complaints != null) {
                                 hasComplaints = true
-                                return <Box key={order.id} onPress={() => props.navigation.navigate("ComplaintsDetail", { data: order })} id={order.id} status={order.orderStatus} />
+                                return <Box key={order.id} onPress={() => props.navigation.navigate("ComplaintsDetail", { complaintId:order.complaints.id,order: order })} id={order.id} status={order.orderStatus} />
                             }
                         })
                     }

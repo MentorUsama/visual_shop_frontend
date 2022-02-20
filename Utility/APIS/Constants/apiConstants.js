@@ -32,3 +32,4 @@ export const ORDER_VALIDATE_COUPEN=`${ORDER_BASE_URL}validateCuopen/`
 export const CREATE_ORDER=`${ORDER_BASE_URL}createOrder/`
 export const CONFRIM_ORDER_PAYMENT =`${ORDER_BASE_URL}confirmOrderPayment/`
 export const CANCEL_ORDER =`${ORDER_BASE_URL}cancelOrder/`
+export const CREATE_COMPLAINT=`${ORDER_BASE_URL}addComplaint/`
