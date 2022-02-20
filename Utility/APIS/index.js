@@ -27,5 +27,7 @@ export  {
     createOrder,
     confirmOrderPayment,
     cancelOrder,
-    createComplaint
+    createComplaint,
+    getAllComplaint,
+    sendMessage
 } from './Order/order'

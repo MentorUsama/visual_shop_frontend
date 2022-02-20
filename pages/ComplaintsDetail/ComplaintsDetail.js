@@ -6,6 +6,10 @@ import { getSelectedImage } from '../../Utility/HelperFunctions/index'
 import Paddings from '../../components/container/ContentPadding';
 import Message from '../../components/components/Complaints/Message';
 import InputSearch from '../../components/components/Home/InputSearch/InputSearch';
+import {getAllComplaint,sendMessage} from '../../Utility/APIS/index'
+// Redux
+import { connect } from 'react-redux';
+import * as actions from '../../store/Actions/index'
 
 const ComplaintsDetail = (props) => {
     const [orders, setOrder] = useState(props.route.params.order)
@@ -13,9 +17,31 @@ const ComplaintsDetail = (props) => {
     const [pageLoading, setPageLoading] = useState(false);
     const [globalError, setGlobalError] = useState("")
     const [complaints,setComplaints]= useState(null)
+    const getComplaints=async ()=>{
+        const response= await getAllComplaint(props.access,orders.complaints.id)
+        if(response.status==200)
+        {
+            setComplaints(response.data)
+        }
+    }
     useEffect(async () => {
-        
+        setPageLoading(true)
+        await getComplaints()
+        setPageLoading(false)
     }, [])
+    const sendComplaint=async ()=>{
+       setPageLoading(true)
+       const resposne= await sendMessage(props.access,orders.id,userInput)
+       if(resposne.status!=200)
+       {
+           setPageLoading(false)
+           setGlobalError(resposne.data)
+           return
+       }
+       await getComplaints()
+       setUserInput("")
+       setPageLoading(false)
+    }
     return (
         <PageContainer hasPadding={false} pageLoading={pageLoading} navigation={props.navigation}>
             <View style={{ height: '100%' }}>
@@ -36,7 +62,7 @@ const ComplaintsDetail = (props) => {
                 </Paddings>
                 {/* Input Bar */}
                 <View>
-                    <InputSearch value={userInput} onChangeText={(val)=>setUserInput(val)} hasIcons={false} containerStyle={{marginBottom:1}}/>
+                    <InputSearch searchByTextHandler={sendComplaint} value={userInput} onChangeText={(val)=>setUserInput(val)} hasIcons={false} containerStyle={{marginBottom:1}}/>
                 </View>
             </View>
         </PageContainer>
@@ -44,4 +70,25 @@ const ComplaintsDetail = (props) => {
 }
 const styles = StyleSheet.create({
 })
-export default ComplaintsDetail;
+
+const mapStateToProps = state => {
+    return {
+        checkoutData: state.orderReducer.checkoutData,
+        cartData: state.shopReducer.cartData,
+        cartProductsDetail:state.shopReducer.cartProductsDetail,
+        access: state.userReducer.access,
+        shouldUpdate: state.updateDataReducer
+    };
+};
+const mapDispatchToProps = dispatch => {
+    return {
+        shouldUpdateUserOrder: (shouldUpdate) => dispatch(actions.shouldUpdateUserOrder(shouldUpdate)),
+        removeDataFromCart: () => dispatch(actions.addToCart(null, null)),
+        removeCheckoutData: () => dispatch(actions.addCheckoutData(null)),
+        addDataToCart: (cartData,product) => dispatch(actions.addToCart(cartData,product)),
+    };
+};
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(ComplaintsDetail);

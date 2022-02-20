@@ -33,3 +33,5 @@ export const CREATE_ORDER=`${ORDER_BASE_URL}createOrder/`
 export const CONFRIM_ORDER_PAYMENT =`${ORDER_BASE_URL}confirmOrderPayment/`
 export const CANCEL_ORDER =`${ORDER_BASE_URL}cancelOrder/`
 export const CREATE_COMPLAINT=`${ORDER_BASE_URL}addComplaint/`
+export const GET_ALL_COMPLAINT=`${ORDER_BASE_URL}getComplaintDetail/?complaint_id=`
+export const SEND_MESSAGES=`${ORDER_BASE_URL}sendMessage/`
