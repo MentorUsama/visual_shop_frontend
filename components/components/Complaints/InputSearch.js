@@ -1,0 +1,76 @@
+import React from 'react'
+import { View, StyleSheet, TextInput, TouchableOpacity } from 'react-native'
+import MyButton from '../Button/MyButton'
+import File from '../../../assets/icons/file'
+import Camera from '../../../assets/icons/camera'
+
+export default function InputSearch(props) {
+    const {hasIcons=true,containerStyle={}}=props;
+    
+    return (
+        <View style={[styles.inputContainer,containerStyle]}>
+            <View style={{flex:1}}>
+                <TextInput
+                    value={props.value}
+                    onChangeText={props.onChangeText}
+                    style={styles.textIputStyle}
+                    placeholderTextColor="#EEEEEE"
+                    placeholder='Your Message'
+                />
+            </View>
+            {hasIcons && <View style={styles.iconContainer}>
+                <File onPress={props.pickImage} style={styles.iconStyle} />
+                <Camera onPress={props.takePicture} style={styles.iconStyle} />
+            </View>}
+            <MyButton
+                title="Send"
+                style={styles.myButton}
+                isDisabled={props.value == ""}
+                onPress={props.searchByTextHandler}
+            />
+        </View>
+    )
+}
+const styles = StyleSheet.create({
+    inputContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        width: '100%',
+        height: 40,
+        marginBottom:10,
+        backgroundColor:'#c5c7c9'
+    },
+    textIputStyle: {
+        height: 40,
+        backgroundColor: 'transparent',
+        paddingLeft: 10,
+        color: 'black',
+        flex: 1,
+        paddingRight: 5
+    },
+    myButton: {
+        paddingLeft: 20,
+        paddingRight: 20,
+        paddingTop: 10,
+        paddingBottom: 10,
+        height: 40
+    },
+    iconContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        backgroundColor: '#FFFFFF',
+        height: 40,
+        alignItems: 'center',
+        paddingRight: 5
+    },
+    iconStyle: {
+        borderLeftColor: '#EEEEEE',
+        borderLeftWidth: 3,
+        paddingLeft: 8,
+        paddingRight: 5,
+        height: 20,
+        display: 'flex',
+        alignItems: 'center',
+        flexDirection: 'row'
+    }
+})

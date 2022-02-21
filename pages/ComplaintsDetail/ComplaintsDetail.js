@@ -5,7 +5,7 @@ import ComplaintsDetailBox from '../../components/components/Complaints/Complain
 import { getSelectedImage } from '../../Utility/HelperFunctions/index'
 import Paddings from '../../components/container/ContentPadding';
 import Message from '../../components/components/Complaints/Message';
-import InputSearch from '../../components/components/Home/InputSearch/InputSearch';
+import InputSearch from '../../components/components/Complaints/InputSearch';
 import {getAllComplaint,sendMessage} from '../../Utility/APIS/index'
 // Redux
 import { connect } from 'react-redux';
