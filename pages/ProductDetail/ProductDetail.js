@@ -11,6 +11,7 @@ import SelectSizeContainer from './Parts/SelectSizeContainer/SelectSizeContainer
 import ReviewForm from './Parts/ReviewForm/ReviewForm';
 import TitleContainer from './Parts/TitleContainer/TitleContainer';
 import Carousel from './Parts/Carousel/Carousel';
+import { useIsFocused } from "@react-navigation/native";
 // Importing Utilities and API's
 import {
     submitFeedback,
@@ -50,6 +51,7 @@ const ProductDetail = (props) => {
     const [product, setProduct] = useState(props.route.params.product)
     const sizes = getSize(product.sizes)
     const canFeedback = isUserEligibleForFeedback(props.orders, product.id)
+    const isFocused = useIsFocused();
 
     // Cart Related Data
     const productAddedToCart = isProductAddedIntoCart(props.cartData, props.route.params.product.id)
@@ -70,6 +72,13 @@ const ProductDetail = (props) => {
             setPageLoading(false)
         }
     }, [])
+    useEffect(()=>{
+        const productAddedToCart = isProductAddedIntoCart(props.cartData, props.route.params.product.id)
+        if(!productAddedToCart)
+        {
+            setIsAddedToCart(false)
+        }
+    },[isFocused])
     // Handlers
     const changeSelectedSizeHandler = (size) => {
         changeSelectedSize(size)

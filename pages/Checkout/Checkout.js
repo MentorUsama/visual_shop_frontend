@@ -328,7 +328,7 @@ const Checkout = (props) => {
                         <View style={{ display: 'flex', flexDirection: 'row' }}>
                             <Text style={[styles.subTitle, discountPrice ? styles.strike : null, { marginRight: 5 }]}>{totalPrice}</Text>
                             {discountPrice ? <Text style={[styles.subTitle, { marginRight: 5 }]}>{discountPrice}</Text> : null}
-                            <Text style={styles.subTitle}>RS</Text>
+                            <Text style={styles.subTitle}>$</Text>
                         </View>
 
                     </View>

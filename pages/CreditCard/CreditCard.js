@@ -43,7 +43,6 @@ const CreditCard = (props) => {
         setPageLoading(true)
         setCorfirmOrderPrice(null)
         const response =  await cancelOrder(props.access,{ 'order_id': orderDetail.id })
-        console.log(response)
         if(response.status!=200)
         {
             setPaymentConfirmationFailed({header:'Order Cancellation Failed',secondMessage:'We are unable to cancel the order because of following error',errorMessage:response.data})
