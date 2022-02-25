@@ -18,6 +18,7 @@ import {
     findSubcategoryName,
     findTagName
 } from '../../Utility/HelperFunctions/index'
+import { useIsFocused } from "@react-navigation/native";
 // Importing API's
 import { getAllProducts, getAllTags, getAllCategories, getFilteredProducts, searchByImage } from '../../Utility/APIS/index'
 import * as ImagePicker from 'expo-image-picker';
@@ -25,6 +26,7 @@ import AllProducts from './Parts/AllProducts';
 
 const Home = (props) => {
     const { navigation, route } = props
+    const isFocused = useIsFocused();
     const [searchText, searchTextChange] = useState("");
     const [pageLoading, setPageLoading] = useState(false);
     const [miniLoading, setMiniLoading] = useState(false)
@@ -32,8 +34,8 @@ const Home = (props) => {
     const [pickedImage, setPickedImage] = useState(null)
 
     // ====== Checking Any Global Error ======
-    useEffect(() => {
-        const unsubscribe = navigation.addListener('focus', () => {
+    useEffect(async () => {
+        const unsubscribe = navigation.addListener('focus', async () => {
             if (route.params?.error) {
                 Toast.show({
                     type: 'error',
@@ -41,32 +43,28 @@ const Home = (props) => {
                     text2: route.params.error
                 });
             }
+            props.navigation.setParams({ error: null });
+            // Getting All The Products If not Stored
+            setPageLoading(true)
+            if (props.storeProducts == null) {
+                const response = await getAllProducts(1) // Page is one as all
+                if (response.status == 200) {
+                    props.updateStoreProducts(response.data)
+                }
+                else {
+                    Toast.show({
+                        type: 'error',
+                        text1: 'Oops',
+                        text2: response.data
+                    });
+                    setPageLoading(false)
+                    return
+                }
+            }
+            setPageLoading(false)
             return unsubscribe;
         });
-        props.navigation.setParams({error: null});
     }, [route.params?.error])
-
-    // fetching product if null when back screen pressed
-    useEffect(async () => {
-        setPageLoading(true)
-        // Getting All The Products If not Stored
-        if (props.storeProducts == null) {
-            const response = await getAllProducts(1) // Page is one as all
-            if (response.status == 200) {
-                props.updateStoreProducts(response.data)
-            }
-            else {
-                Toast.show({
-                    type: 'error',
-                    text1: 'Oops',
-                    text2: response.data
-                });
-                setPageLoading(false)
-                return
-            }
-        }
-        setPageLoading(false)
-    }, [route.params])
 
     // Getting Products when first time screen load
     useEffect(async () => {
