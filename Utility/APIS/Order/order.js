@@ -28,6 +28,10 @@ export const getOrders = async (token) => {
         return { status: response.status, data: response.data }
     }
     catch (e) {
+        if (e.message == 'Network Error')
+        {
+            return { data: "Unable to get data because of network error", status: null }
+        } 
         if (e.response.status == 401) {
             return { status: e.response.status, data: e.response.data.detail }
         }
@@ -51,6 +55,10 @@ export const submitFeedback = async (feedback, access) => {
         return { status: response.status, data: response.data }
     }
     catch (e) {
+        if (e.message == 'Network Error')
+        {
+            return { data: "Unable to get data because of network error", status: null }
+        } 
         if (e.response.status == 401) {
             return { status: e.response.status, data: e.response.data.detail }
         }
@@ -69,6 +77,10 @@ export const validateCoupen = async (code,cartData) => {
         return { status: response.status, data: response.data }
     }
     catch (e) {
+        if (e.message == 'Network Error')
+        {
+            return { data: "Unable to get data because of network error", status: null }
+        } 
         if (e.response.status == 400) {
             const keys = Object.keys(e.response.data)
             if (keys.includes("cuopenCode")) {
@@ -100,6 +112,10 @@ export const createOrder = async (data,access) => {
         return { status: response.status, data: response.data }
     }
     catch (e) {
+        if (e.message == 'Network Error')
+        {
+            return { data: "Unable to get data because of network error", status: null }
+        } 
         if (e.response.status == 400) {
             const keys = Object.keys(e.response.data)
             if (keys.includes("shippingAddress")) {
@@ -155,6 +171,10 @@ export const confirmOrderPayment = async (access,data) => {
         return { status: response.status, data: response.data }
     }
     catch (e) {
+        if (e.message == 'Network Error')
+        {
+            return { data: "Unable to get data because of network error", status: null }
+        } 
         if (e.response.status == 400) {
             const keys = Object.keys(e.response.data)
             if (keys.includes("order_id")) {
@@ -180,6 +200,10 @@ export const cancelOrder = async (access,data) => {
         return { status: response.status, data: response.data }
     }
     catch (e) {
+        if (e.message == 'Network Error')
+        {
+            return { data: "Unable to get data because of network error", status: null }
+        } 
         if (e.response.status == 400) {
             const keys = Object.keys(e.response.data)
             if (keys.includes("order_id")) {
@@ -207,6 +231,10 @@ export const createComplaint =async (access,orderId) => {
         return { status: response.status, data: response.data }
     }
     catch (e) {
+        if (e.message == 'Network Error')
+        {
+            return { data: "Unable to get data because of network error", status: null }
+        } 
         if (e.response.status == 400) {
             const keys = Object.keys(e.response.data)
             if (keys.includes("orderId")) {
@@ -234,6 +262,10 @@ export const getAllComplaint=async (access,complaint_id)=>{
         return { status: response.status, data: response.data }
     }
     catch (e) {
+        if (e.message == 'Network Error')
+        {
+            return { data: "Unable to get data because of network error", status: null }
+        } 
         if (e.response.status == 400) {
             const keys = Object.keys(e.response.data)
             if (keys.includes("complaint_id")) {
@@ -262,6 +294,10 @@ export const sendMessage=async (access,order_id,message)=>{
         return { status: response.status, data: response.data }
     }
     catch (e) {
+        if (e.message == 'Network Error')
+        {
+            return { data: "Unable to get data because of network error", status: null }
+        } 
         if (e.response.status == 400) {
             const keys = Object.keys(e.response.data)
             if (keys.includes("message")) {

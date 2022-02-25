@@ -23,6 +23,10 @@ const getAllProducts = async (page) => {
         return { status: response.status, data: products }
     }
     catch (e) {
+        if (e.message == 'Network Error')
+        {
+            return { data: "Unable to get data because of network error", status: null }
+        } 
         return { status: null, data: 'Unable To Get Products!!' }
     }
 }
@@ -32,6 +36,10 @@ const getAllTags = async () => {
         return { status: response.status, data: response.data }
     }
     catch (e) {
+        if (e.message == 'Network Error')
+        {
+            return { data: "Unable to get data because of network error", status: null }
+        } 
         return { status: null, data: 'Unable To Get Tags!!' }
     }
 }
@@ -41,6 +49,10 @@ const getAllCategories = async () => {
         return { status: response.status, data: response.data }
     }
     catch (e) {
+        if (e.message == 'Network Error')
+        {
+            return { data: "Unable to get data because of network error", status: null }
+        } 
         return { status: null, data: 'Unable To Get Categories!!' }
     }
 }
@@ -50,6 +62,10 @@ const getFilteredProducts = async (data) => {
         return { status: response.status, data: response.data }
     }
     catch (e) {
+        if (e.message == 'Network Error')
+        {
+            return { data: "Unable to get data because of network error", status: null }
+        } 
         return { status: null, data: 'Unable To Get Categories!!' }
     }
 }
@@ -92,6 +108,10 @@ const getListOfProducts=async (data)=>{
         return { status: response.status, data: response.data }
     }
     catch (e) {
+        if (e.message == 'Network Error')
+        {
+            return { data: "Unable to get data because of network error", status: null }
+        } 
         return { status: null, data: 'Unable To Get Products!!' }
     }
 }

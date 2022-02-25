@@ -19,6 +19,10 @@ const customerLoginHandler = async (email, password) => {
         return { data: response.data, status: response.status }
     }
     catch (error) {
+        if (error.message == 'Network Error')
+        {
+            return { data: "Unable to get data because of network error", status: null }
+        }   
         if (error.response.status == 400) // Data is Incorect
         {
             return { data: error.response.data, status: error.response.status }
@@ -39,6 +43,10 @@ const customerGoogleAuthHandler = async (token) => {
         return { data: response.data, status: response.status }
     }
     catch (error) {
+        if (error.message == 'Network Error')
+        {
+            return { data: "Unable to get data because of network error", status: null }
+        } 
         return { data: "Something Went Wrong Please Try Again!!", status: error.response.status }
     }
 }
@@ -73,6 +81,10 @@ const customerRegister = async (email, password) => {
         return { status: response.status, data: response.data }
     }
     catch (e) {
+        if (e.message == 'Network Error')
+        {
+            return { data: "Unable to get data because of network error", status: null }
+        } 
         if (e.response.status == 400) // Usernme or password is incorrect
         {
             const keys = Object.keys(e.response.data)
@@ -98,6 +110,10 @@ const forgetPasswordHandler = async (email) => {
         return { status: response.status, data: response.data }
     }
     catch (e) {
+        if (e.message == 'Network Error')
+        {
+            return { data: "Unable to get data because of network error", status: null }
+        } 
         if (e.response.status == 400) {
             const keys = Object.keys(e.response.data)
             if (keys.includes("email")) {
@@ -120,6 +136,10 @@ const resetPasswordHandler = async (code, password) => {
         return { status: response.status, data: response.data }
     }
     catch (e) {
+        if (e.message == 'Network Error')
+        {
+            return { data: "Unable to get data because of network error", status: null }
+        } 
         if (e.response.status == 400) {
             const keys = Object.keys(e.response.data)
             if (keys.includes("password")) {
@@ -139,6 +159,10 @@ const getProvincesAndCities = async () => {
         return { status: response.status, data: response.data }
     }
     catch (e) {
+        if (e.message == 'Network Error')
+        {
+            return { data: "Unable to get data because of network error", status: null }
+        } 
         return { status: null, data: 'An Unknown Error Occured While Fetching Data For Cities' }
     }
 }
@@ -154,6 +178,10 @@ const getProfileHandler = async (token) => {
         return { status: response.status, data: response.data }
     }
     catch (e) {
+        if (e.message == 'Network Error')
+        {
+            return { data: "Unable to get data because of network error", status: null }
+        } 
         if (e.response.status == 401) {
             return { status: e.response.status, data: e.response.data.detail }
         }
@@ -173,6 +201,10 @@ const updateProfile = async (profile, access) => {
         return { status: response.status, data: response.data }
     }
     catch (e) {
+        if (e.message == 'Network Error')
+        {
+            return { data: "Unable to get data because of network error", status: null }
+        } 
         return { status: null, data: 'An Unknown Error Occured While Updating Profile' }
     }
 }
