@@ -51,7 +51,7 @@ const OrderDetail = (props) => {
                                 props.order.orderStatus=='PAYMENTPENDING'?<MyButton onPress={()=>props.cancelOrder(props.order.id)} title="Cancel Order" />:null
                             }
                             {
-                                props.order.complaints?<MyButton onPress={()=>props.navigation.navigate("ComplaintsDetail",{complaintId:props.order.complaints.id,order:props.order})} title="Show Complaint Messages"/>:<MyButton onPress={async ()=>await props.registerComplaint(props.order.id)} title="Register Complaint"/>
+                                props.order.complaints?<MyButton onPress={()=>props.navigation.navigate("ComplaintsDetail",{complaintId:props.order.complaints.id,order:props.order})} title="Show Complaint Messages"/>:<MyButton onPress={()=>props.registerComplaint(props.order)} title="Register Complaint"/>
                             }
                         </View>
                     </Collapsible>

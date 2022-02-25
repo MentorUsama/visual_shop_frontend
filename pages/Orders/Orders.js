@@ -30,7 +30,8 @@ const Orders = (props) => {
             }
         setPageLoading(false)
     }
-    const registerComplaint = async (orderId)=>{
+    const registerComplaint = async (order)=>{
+        const orderId=order.id
         setPageLoading(true)
         const response_complaint =await createComplaint(props.access,orderId)
         if(response_complaint.status!=200)
@@ -43,8 +44,10 @@ const Orders = (props) => {
             if (response.status == 200) {
                 props.addOrders(response.data)
         }
-        console.log("a")
-        setPageLoading(false)
+        // setPageLoading(false)
+        var newOrder={...order}
+        newOrder.complaints=response_complaint.data
+        props.navigation.navigate("ComplaintsDetail",{complaintId:response_complaint.data.id,order:newOrder})
     }
     const cancelMyOrder = async (orderId)=>{
         setPageLoading(true)
