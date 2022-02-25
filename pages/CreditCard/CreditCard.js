@@ -112,7 +112,7 @@ const CreditCard = (props) => {
             shippingAddress: props.checkoutData.profile.address,
             receiverName: props.checkoutData.profile.name,
             receiverContact: props.checkoutData.profile.contact,
-            cuopenId: props.checkoutData.coupen,
+            cuopenId: props.checkoutData.cuopenId,
             cityId: props.checkoutData.profile.cityId,
             orderedProducts: props.cartData,
         }
