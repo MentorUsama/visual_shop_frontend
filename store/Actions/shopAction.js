@@ -6,6 +6,13 @@ export const updateStoreProducts = (storeProducts) => {
         storeProducts:storeProducts
     };
 };
+
+export const addStoreProducts = (storeProducts) => {
+    return {
+        type: actionTypes.ADD_STORE_PRODUCTS,
+        storeProducts:storeProducts
+    };
+};
 export const addTags=(tags)=>{
     return{
         type:actionTypes.ADD_ALL_TAGS,

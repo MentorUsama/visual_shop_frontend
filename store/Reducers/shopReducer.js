@@ -32,6 +32,12 @@ const updateStoreProducts = (state, action) => {
         })
     }
 }
+const addStoreProducts = (state, action) => {
+    var products = action.storeProducts
+    return updateObject(state, {
+        storeProducts: products
+    })
+}
 const addTags=(state,action)=>{
     var tags=action.tags
     return updateObject(state, {
@@ -101,6 +107,7 @@ const reducer = (state = initialState, action) => {
         case actionTypes.ADD_FILTERED_PRODUCT: return addFilteredProduct(state, action);
         case actionTypes.UPDATE_SINGLE_PRODUCT: return updateSingleProduct(state, action);
         case actionTypes.ADD_TO_CART: return addToCart(state, action);
+        case actionTypes.ADD_STORE_PRODUCTS: return addStoreProducts(state,action);
         default:
             return state;
     }
