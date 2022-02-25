@@ -30,6 +30,7 @@ const Home = (props) => {
     const [miniLoading, setMiniLoading] = useState(false)
     const [filterModel, setFilterModel] = useState(false)
     const [pickedImage, setPickedImage] = useState(null)
+
     // ====== Checking Any Global Error ======
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
@@ -42,7 +43,31 @@ const Home = (props) => {
             }
             return unsubscribe;
         });
+        props.navigation.setParams({error: null});
     }, [route.params?.error])
+
+    // fetching product if null when back screen pressed
+    useEffect(() => {
+        setPageLoading(true)
+        // Getting All The Products If not Stored
+        if (props.storeProducts == null) {
+            const response = await getAllProducts(1) // Page is one as all
+            if (response.status == 200) {
+                props.updateStoreProducts(response.data)
+            }
+            else {
+                Toast.show({
+                    type: 'error',
+                    text1: 'Oops',
+                    text2: response.data
+                });
+                setPageLoading(false)
+                return
+            }
+        }
+        setPageLoading(false)
+    }, [route.params])
+
     // Getting Products when first time screen load
     useEffect(async () => {
         setPageLoading(true)
@@ -56,7 +81,7 @@ const Home = (props) => {
                 Toast.show({
                     type: 'error',
                     text1: 'Oops',
-                    text2: "An Error Occured While Fetching Data"
+                    text2: response.data
                 });
                 setPageLoading(false)
                 return
@@ -96,6 +121,7 @@ const Home = (props) => {
         }
         setPageLoading(false)
     }, [])
+
     // Loading More Products
     const loadProducts = async () => {
         if (props.storeProducts.nextPageNumber != -1) {
@@ -114,6 +140,7 @@ const Home = (props) => {
             setMiniLoading(false)
         }
     }
+    
     // Filter Handler
     const getFilteredProduct = async (data) => {
         setPageLoading(true)
