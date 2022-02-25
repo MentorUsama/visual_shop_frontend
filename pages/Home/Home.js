@@ -47,7 +47,7 @@ const Home = (props) => {
     }, [route.params?.error])
 
     // fetching product if null when back screen pressed
-    useEffect(() => {
+    useEffect(async () => {
         setPageLoading(true)
         // Getting All The Products If not Stored
         if (props.storeProducts == null) {
@@ -140,7 +140,7 @@ const Home = (props) => {
             setMiniLoading(false)
         }
     }
-    
+
     // Filter Handler
     const getFilteredProduct = async (data) => {
         setPageLoading(true)
