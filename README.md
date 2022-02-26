@@ -4,7 +4,7 @@ Final Year Project Frontend --- An Ecommerce Website with functionality of searc
 # Screenshot <br>
 
 ## Home Page <br>
-<img src="https://github.com/MentorUsama/visual_shop_frontend/blob/main/screenshots/home_page.jpeg" />
+<img height='200px' src="https://github.com/MentorUsama/visual_shop_frontend/blob/main/screenshots/home_page.jpeg" />
 
 ## Product Detail Page <br>
 <img src="https://github.com/MentorUsama/visual_shop_frontend/blob/main/screenshots/product_detail_page.jpeg" />
