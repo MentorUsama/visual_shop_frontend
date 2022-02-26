@@ -26,7 +26,7 @@ export const isFilterChanged = (oldFilters, newFilters) => {
     }
 
     // If any of tag change then the change has occure
-    if (newFilters.tags.length != oldFilters.tags.length)
+    if ((newFilters.tags && newFilters.tags.length) != (oldFilters.tags && oldFilters.tags.length))
         return true
     else {
         var uniqueValue = newFilters.tags.filter(val => !oldFilters.tags.includes(val))

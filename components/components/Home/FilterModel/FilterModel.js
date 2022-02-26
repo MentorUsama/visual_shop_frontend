@@ -71,7 +71,7 @@ export default function FilterProduct(props) {
                             {
                                 isPriceChanges
                                     ?
-                                    <Text style={styles.priceText}>Price: {price[0]} - {price[1]} RS</Text>
+                                    <Text style={styles.priceText}>Price: {price[0]} - {price[1]} $</Text>
                                     :
                                     props.filters != null && props.filters.price != null ?
                                         <Text style={styles.priceText}>Price: {props.filters.price[0]} - {props.filters.price[1]}</Text>

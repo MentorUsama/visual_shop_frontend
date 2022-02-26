@@ -42,26 +42,11 @@ const Home = (props) => {
                     text1: 'Oops',
                     text2: route.params.error
                 });
+                props.navigation.reset({
+                    index: 0,
+                    routes: [{name: "HomePage"}]
+                });
             }
-            props.navigation.setParams({ error: null });
-            // Getting All The Products If not Stored
-            setPageLoading(true)
-            if (props.storeProducts == null) {
-                const response = await getAllProducts(1) // Page is one as all
-                if (response.status == 200) {
-                    props.updateStoreProducts(response.data)
-                }
-                else {
-                    Toast.show({
-                        type: 'error',
-                        text1: 'Oops',
-                        text2: response.data
-                    });
-                    setPageLoading(false)
-                    return
-                }
-            }
-            setPageLoading(false)
             return unsubscribe;
         });
     }, [route.params?.error])
@@ -73,7 +58,32 @@ const Home = (props) => {
         if (props.storeProducts == null) {
             const response = await getAllProducts(1) // Page is one as all
             if (response.status == 200) {
-                props.updateStoreProducts(response.data)
+                props.addStoreProducts(response.data)
+            }
+        }
+        // Getting All The Tags
+        if (props.tags == null) {
+            const response = await getAllTags()
+            if (response.status == 200) {
+                props.addTags(response.data)
+            }
+        }
+        // Getting All The Categories
+        if (props.categories == null) {
+            const response = await getAllCategories()
+            if (response.status == 200) {
+                props.addCategories(response.data)
+            }
+        }
+        setPageLoading(false)
+    }, [])
+
+    const fetchProduct = async () => {
+        // Getting All The Products If not Stored
+        if (props.storeProducts == null) {
+            const response = await getAllProducts(1) // Page is one as all
+            if (response.status == 200) {
+                props.addStoreProducts(response.data)
             }
             else {
                 Toast.show({
@@ -118,8 +128,7 @@ const Home = (props) => {
             }
         }
         setPageLoading(false)
-    }, [])
-
+    }
     // Loading More Products
     const loadProducts = async () => {
         if (props.storeProducts.nextPageNumber != -1) {
@@ -294,6 +303,7 @@ const Home = (props) => {
                 clearTextSearch={clearTextSearch}
                 filters={props.filters}
                 clearImageSearch={clearImageSearch}
+                fetchProduct={fetchProduct}
             />
         </PageContainer>
     )
@@ -359,6 +369,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         updateStoreProducts: (products) => dispatch(actions.updateStoreProducts(products)),
+        addStoreProducts: (products) => dispatch(actions.addStoreProducts(products)),
         addTags: (tags) => dispatch(actions.addTags(tags)),
         addCategories: (categories) => dispatch(actions.addCategories(categories)),
         addFilteredProducts: (filteredProducts, filterData) => dispatch(actions.addFilteredProduct(filteredProducts, filterData))

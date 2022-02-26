@@ -43,7 +43,7 @@ export default function SearchBarFilter(props) {
                     {
                         props.filters != null && props.filters.price != null ?
                             <Tag
-                                title={`${props.filters.price[0]} - ${props.filters.price[1]} RS`}
+                                title={`${props.filters.price[0]} - ${props.filters.price[1]} $`}
                                 isBackground={true}
                                 isStatic={true}
                                 containerStyle={{ padding: 10, backgroundColor: '#FFFFFF', borderColor: '#C3C3C3', width: 100, display: 'flex', flexDirection: 'row', justifyContent: 'center' }}

@@ -3,7 +3,25 @@ import { View, Text, StyleSheet, FlatList, Image, Dimensions } from 'react-nativ
 import TextWithLoader from '../../../components/components/TextWithLoader/TextWithLoader'
 import Product from '../../../components/components/Home/Product/Product'
 import SearchedImage from '../../../components/components/Home/SearchedImage/SearchedImage'
+import MyButton from '../../../components/components/Button/MyButton'
 
+function NoProductFound(props) {
+    return (
+        <View>
+            {
+                props.storeProducts
+                    ?
+                    <Text>No Product Found</Text>
+                    :
+                    <View>
+                        <Text style={{marginBottom:10}}>Unable to fetch product from server</Text>
+                        <MyButton  onPress={props.fetchProduct} title="Try Again"/>
+                    </View>
+            }
+
+        </View>
+    )
+}
 export default function AllProducts(props) {
     const { width, height } = Dimensions.get('window');
     return (
@@ -50,10 +68,10 @@ export default function AllProducts(props) {
                             :
                             props.filteredProducts
                     }
-                    renderItem={({ item }) => <Product onPress={() => props.navigation.navigate("ProductDetail",{product:item})} item={item} containerStyle={width < 300?{width:'100%'}:{}}/>}
+                    renderItem={({ item }) => <Product onPress={() => props.navigation.navigate("ProductDetail", { product: item })} item={item} containerStyle={width < 300 ? { width: '100%' } : {}} />}
                     keyExtractor={(item) => item.id}
                     numColumns={width < 300 ? 1 : 2}
-                    ListEmptyComponent={<Text>No Product Found</Text>}
+                    ListEmptyComponent={<NoProductFound fetchProduct={props.fetchProduct} storeProducts={props.storeProducts} />}
                     columnWrapperStyle={styles.columnContainer}
                     showsVerticalScrollIndicator={false}
                     columnWrapperStyle={width < 300 ? null : styles.columnWrapperStyle}
