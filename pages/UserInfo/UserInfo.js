@@ -126,6 +126,12 @@ const UserInfo = (props) => {
                 return
             }
         }
+        if(!city)
+        {
+            setGlobalError("Please provide city")
+            setSuccess("")
+            return
+        }
         updateInformation()
     }
     const updateInformation = async () => {
