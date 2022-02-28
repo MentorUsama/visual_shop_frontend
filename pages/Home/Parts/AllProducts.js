@@ -9,6 +9,8 @@ function NoProductFound(props) {
     return (
         <View>
             {
+                props.pageLoading? // if page is loading then no need to show result
+                    <View></View>:
                 props.storeProducts
                     ?
                     <Text>No Product Found</Text>
@@ -71,7 +73,7 @@ export default function AllProducts(props) {
                     renderItem={({ item }) => <Product onPress={() => props.navigation.navigate("ProductDetail", { product: item })} item={item} containerStyle={width < 300 ? { width: '100%' } : {}} />}
                     keyExtractor={(item) => item.id}
                     numColumns={width < 300 ? 1 : 2}
-                    ListEmptyComponent={<NoProductFound fetchProduct={props.fetchProduct} storeProducts={props.storeProducts} />}
+                    ListEmptyComponent={<NoProductFound pageLoading={props.pageLoading} fetchProduct={props.fetchProduct} storeProducts={props.storeProducts} />}
                     columnWrapperStyle={styles.columnContainer}
                     showsVerticalScrollIndicator={false}
                     columnWrapperStyle={width < 300 ? null : styles.columnWrapperStyle}

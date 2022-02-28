@@ -304,6 +304,7 @@ const Home = (props) => {
                 filters={props.filters}
                 clearImageSearch={clearImageSearch}
                 fetchProduct={fetchProduct}
+                pageLoading={pageLoading} // verify if page is loading to get products
             />
         </PageContainer>
     )
