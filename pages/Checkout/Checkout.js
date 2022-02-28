@@ -154,7 +154,7 @@ const Checkout = (props) => {
     }
     const applyDiscount = async () => {
         setLoading(true)
-        const result = await validateCoupen(cuopen, props.cartData)
+        const result = await validateCoupen(cuopen, props.cartData,props.access)
         if (result.status == 200) {
             setCoupenError("")
             setDiscountedPrice(result.data.discountPrice)

@@ -67,12 +67,15 @@ export const submitFeedback = async (feedback, access) => {
         }
     }
 }
-export const validateCoupen = async (code,cartData) => {
+export const validateCoupen = async (code,cartData,access) => {
     try {
         const response = await axios({
             method: "POST",
             url: `${ORDER_VALIDATE_COUPEN}${code}`,
             data: {"orderedProducts":cartData},
+            headers: {
+                Authorization: "Bearer " + access
+            }
         });
         return { status: response.status, data: response.data }
     }
@@ -93,6 +96,10 @@ export const validateCoupen = async (code,cartData) => {
             {
                 return { status: null, data: "An Unknown Error Occured While validating coupen!!" }
             }
+        }
+        else if (e.response.status == 401) 
+        {
+            return { status: e.response.status, data: e.response.data.detail }
         }
         else {
             return { status: null, data: "An Unknown Error Occured While validating coupen!!" }
