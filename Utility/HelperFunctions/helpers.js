@@ -103,14 +103,17 @@ const findAverageRating = (feedbacks) => {
   if (feedbacks == null || feedbacks.length == 0)
     return 0
 
-  if (!feedbacks.feedback)
-    return 0
-
   var sum = 0;
+  var totalFeedback= 0;
+
   feedbacks.map(feedback => {
-    sum = sum + feedback.feedback.rating
+    if(feedback.feedback)
+    {
+      totalFeedback++;
+      sum = sum + feedback.feedback.rating
+    }
   })
-  return parseInt(sum / feedbacks.length)
+  return parseInt(sum / totalFeedback)
 }
 const isUserEligibleForFeedback = (orders, productId) => {
   var result = false
