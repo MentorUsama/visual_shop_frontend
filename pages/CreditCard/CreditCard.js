@@ -124,7 +124,7 @@ const CreditCard = (props) => {
             setPageLoading(false)
             return
         }
-        setClientSecret(createOrderResponse.data.stripe_client_secret)
+        setClientSecret(createOrderResponse.data.stripe.stripe_client_secret)
         setCorfirmOrderPrice(createOrderResponse.data.totalPrice)
         setOrderDetail(createOrderResponse.data)
         // Updating the store
