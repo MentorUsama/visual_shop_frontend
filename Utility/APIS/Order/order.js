@@ -154,6 +154,10 @@ export const createOrder = async (data,access) => {
                     return { status: null, data: "An Unknown Error Occured please try again" }
                 }
             }
+            else if(keys.includes('paymentMethod'))
+            {
+                return {status:null,data:e.response.data.paymentMethod[0]}
+            }
             else
             {
                 return { status: null, data: "An Unknown Error Occured please try again" }

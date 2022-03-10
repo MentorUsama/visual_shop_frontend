@@ -11,7 +11,7 @@ export default function ImageButton(props) {
         style={}
     } = props
     return (
-        <TouchableOpacity onPress={onPress} activeOpacity={isDisabled ? 1 : 0.8}>
+        <TouchableOpacity disabled={isDisabled} onPress={onPress} activeOpacity={isDisabled ? 1 : 0.8}>
             <View style={style}>
                 <Image
                     source={isSelected?image:greyImage}

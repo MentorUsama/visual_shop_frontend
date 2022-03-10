@@ -7,14 +7,18 @@ import MyButton from '../../components/components/Button/MyButton'
 import ImageButton from '../../components/components/ImageButton/ImageButton';
 import CheckBox from '../../components/components/CheckBox/CheckBox';
 // Importing APIS
-import { getProvincesAndCities, getProfileHandler, validateCoupen,updateProfile } from '../../Utility/APIS/index'
+import { getProvincesAndCities, getProfileHandler, validateCoupen,updateProfile,createOrder } from '../../Utility/APIS/index'
 import { getCities, getCityDetail, validateContact, getTotalPrice } from '../../Utility/HelperFunctions/index'
+import { clearData } from '../../Utility/HelperFunctions/asyncStorage'
+import { CART_DATA } from '../../Utility/HelperFunctions/storageKeys'
 // Redux
 import { connect } from 'react-redux';
 import creditCard from '../../assets/images/creditCard.png'
 import creditCardDark from '../../assets/images/creditCardDark.png'
 import jazzCash from '../../assets/images/JazzCash.png'
 import jazzCashDark from '../../assets/images/jazzCashDark.png'
+import cashOnDelivery from '../../assets/images/cash_on_delivery.png'
+import cashOnDeliveryDark from '../../assets/images/cash_on_delivery_grey.png'
 import * as actions from '../../store/Actions/index';
 
 
@@ -37,6 +41,7 @@ const Checkout = (props) => {
     // ===== Page Related States =====
     const [loading, setLoading] = useState(false);
     const [globalError, setGlobalError] = useState("")
+    const [globalError2, setGlobalError2] = useState("")
     const [success, setSuccess] = useState("")
 
 
@@ -140,7 +145,7 @@ const Checkout = (props) => {
             props.profile.name != name ||
             props.profile.address != address ||
             props.profile.contact != contact ||
-            props.profile.cityId.id != city
+            props.profile.cityId && props.profile.cityId.id != city
         )
             return true
         else
@@ -212,29 +217,59 @@ const Checkout = (props) => {
             provinceId: province
         }
         // Saving Data To Server If it is checked
+        setLoading(true)
         if (saveProfile && isProfileUpdate()) {
-            setLoading(true)
             const cityDetail = getCityDetail(props.provincesAndCities, province, city)
             const response = await updateProfile(profileData, props.access)
             if (response.status == 200) {
                 profileData.cityId = cityDetail
                 props.updateProfile(profileData)
             }
-            else {
-                setGlobalError(response.data)
-            }
-            setLoading(false)
         }
-        // Saving Data into Redux
-        props.addCheckoutData({
-            profile: profileData,
-            coupen: cuopenId ? cuopen : null,
-            orignalPrice: totalPrice,
-            discountPrice: cuopenId ? discountPrice : null,
-            cuopenId: cuopenId
-        })
-        // Navigating To Another Page
-        props.navigation.navigate(selectedPaymentMethod == "jazz" ? "JazzCash" : "CreditCard")
+        if (selectedPaymentMethod == "cash")
+        {
+            // Validating the data
+            const billingDetail = {
+                shippingAddress: profileData.address,
+                receiverName: profileData.name,
+                receiverContact: profileData.contact,
+                cuopenId: cuopenId,
+                cityId: profileData.cityId,
+                orderedProducts: props.cartData,
+                paymentMethod:"CASH"
+            }
+            // Getting the secret key of the client
+            const createOrderResponse = await createOrder(billingDetail, props.access)
+            setLoading(false)
+            if (createOrderResponse.status != 200) // If error occured
+            {
+                setGlobalError2(createOrderResponse.data)
+                console.log(createOrderResponse.data)
+                return
+            }
+            props.removeDataFromCart()
+            props.removeCheckoutData()
+            props.shouldUpdateUserOrder(true)
+            await clearData(CART_DATA)
+            props.navigation.reset({
+                index: 0,
+                routes: [{ name: 'HomePage'},{name:'Orders'}],
+            });
+        }
+        else
+        {
+            setLoading(false)
+            // Saving Data into Redux
+            props.addCheckoutData({
+                profile: profileData,
+                coupen: cuopenId ? cuopen : null,
+                orignalPrice: totalPrice,
+                discountPrice: cuopenId ? discountPrice : null,
+                cuopenId: cuopenId
+            })
+            // Navigating To Another Page
+            props.navigation.navigate(selectedPaymentMethod == "jazz" ? "JazzCash" : "CreditCard")
+        }   
     }
     return (
         <PageContainer hasPadding={true} navigation={props.navigation} pageLoading={loading}>
@@ -348,10 +383,20 @@ const Checkout = (props) => {
                             isSelected={selectedPaymentMethod == "jazz" ? true : false}
                             style={{ width: 100, height: 40 }}
                             onPress={() => setSelectedPaymentMethod("jazz")}
+                            isDisabled={true}
                         />
+                        <ImageButton
+                            image={cashOnDelivery}
+                            greyImage={cashOnDeliveryDark}
+                            isSelected={selectedPaymentMethod == "cash" ? true : false}
+                            style={{ width: 100, height: 40 }}
+                            onPress={() => setSelectedPaymentMethod("cash")}
+                        />
+
                     </View>
+                    <Text style={styles.errorColor}>{globalError2}</Text>
                     <MyButton
-                        title="Proceed"
+                        title={selectedPaymentMethod == "cash"?"Place order":"Proceed"}
                         style={{ marginTop: 10 }}
                         isDisabled={validate() == true ? selectedPaymentMethod == null ? true : false : true}
                         onPress={proceedPayment}
@@ -412,7 +457,11 @@ const mapDispatchToProps = dispatch => {
         setProvincesAndCities: (cities) => dispatch(actions.setProvincesAndCities(cities)),
         setProfile: (profile) => dispatch(actions.setProfile(profile)),
         updateProfile: (profile) => dispatch(actions.updateProfile(profile)),
-        addCheckoutData: (checkoutData) => dispatch(actions.addCheckoutData(checkoutData))
+        addCheckoutData: (checkoutData) => dispatch(actions.addCheckoutData(checkoutData)),
+        removeDataFromCart: () => dispatch(actions.addToCart(null, null)),
+        removeCheckoutData: () => dispatch(actions.addCheckoutData(null)),
+        shouldUpdateUserOrder: (shouldUpdate) => dispatch(actions.shouldUpdateUserOrder(shouldUpdate)),
+
     };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Checkout);

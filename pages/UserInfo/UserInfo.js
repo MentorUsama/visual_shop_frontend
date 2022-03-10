@@ -111,7 +111,7 @@ const UserInfo = (props) => {
             props.profile.name != name ||
             props.profile.address != address ||
             props.profile.contact != contact ||
-            props.profile.cityId.id != city
+            props.profile.cityId && props.profile.cityId.id != city
         )
             return true
         else
