@@ -75,9 +75,9 @@ const CreditCard = (props) => {
         // Updating the payment status to the server
         const payment_status = await confirmOrderPayment(props.access, { 'order_id': orderDetail.id })
         if (payment_status.status == 200) {
-            if (payment_status.data.status == 'shipping') {
+            if (payment_status.data.status == 'packaging') {
                 setPaymentSucceddModel({
-                    message: 'Thank you for purchasing. Your product is on the way and will reach to you soon',
+                    message: 'Thank you for purchasing.You product is under packaging and soon will shipped to you.',
                     header: 'Transaction Successfull'
                 })
                 setPageLoading(false)
@@ -115,6 +115,7 @@ const CreditCard = (props) => {
             cuopenId: props.checkoutData.cuopenId,
             cityId: props.checkoutData.profile.cityId,
             orderedProducts: props.cartData,
+            paymentMethod:"CARD"
         }
         // Getting the secret key of the client
         const createOrderResponse = await createOrder(billingDetail, props.access)
