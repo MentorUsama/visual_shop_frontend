@@ -21,6 +21,10 @@ const OrderDetailBox = (props) => {
                         <Text style={styles.boxText}>{props.order.orderDate}</Text>
                     </View>
                     <View style={styles.boxContentContainer}>
+                        <Text style={styles.boxTitle}>Payment Method</Text>
+                        <Text style={styles.boxText}>{props.order.paymentMethod}</Text>
+                    </View>
+                    <View style={styles.boxContentContainer}>
                         <Text style={styles.boxTitle}>Status</Text>
                         <Text style={styles.boxText}>{props.order.orderStatus}</Text>
                     </View>

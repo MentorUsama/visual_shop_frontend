@@ -22,6 +22,10 @@ const OrderDetail = (props) => {
                         <Text style={styles.boxText}>{props.order.orderDate}</Text>
                     </View>
                     <View style={styles.boxContentContainer}>
+                        <Text style={styles.boxTitle}>Payment Method</Text>
+                        <Text style={styles.boxText}>{props.order.paymentMethod}</Text>
+                    </View>
+                    <View style={styles.boxContentContainer}>
                         <Text style={styles.boxTitle}>Status</Text>
                         <Text style={styles.boxText}>{props.order.orderStatus}</Text>
                     </View>
@@ -48,7 +52,10 @@ const OrderDetail = (props) => {
                         </View>
                         <View>
                             {
-                                props.order.orderStatus=='PAYMENTPENDING'?<MyButton onPress={()=>props.cancelOrder(props.order.id)} title="Cancel Order" />:null
+                                props.order.paymentMethod=='CARD' && props.order.orderStatus=='Payment_pending'?<MyButton onPress={()=>props.cancelOrder(props.order.id)} title="Cancel Order" />:null
+                            }
+                            {
+                                props.order.paymentMethod=='CASH' && props.order.orderStatus=='packaging'?<MyButton onPress={()=>props.cancelOrder(props.order.id)} title="Cancel Order" />:null
                             }
                             {
                                 props.order.complaints?<MyButton onPress={()=>props.navigation.navigate("ComplaintsDetail",{complaintId:props.order.complaints.id,order:props.order})} title="Show Complaint Messages"/>:<MyButton onPress={()=>props.registerComplaint(props.order)} title="Register Complaint"/>
