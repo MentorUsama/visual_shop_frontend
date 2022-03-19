@@ -32,6 +32,8 @@ const Home = (props) => {
     const [miniLoading, setMiniLoading] = useState(false)
     const [filterModel, setFilterModel] = useState(false)
     const [pickedImage, setPickedImage] = useState(null)
+    const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
+    const [camerStatus, requestCameraPermission] = ImagePicker.useCameraPermissions();
 
     // ====== Checking Any Global Error ======
     useEffect(async () => {
@@ -215,9 +217,16 @@ const Home = (props) => {
     }
     const pickImage = async () => {
         // ===== Getting The Permission =====
-        const permission = await ImagePicker.getMediaLibraryPermissionsAsync(true)
-        if (permission.status != 'granted') {
-            Alert.alert('Camer Permission Required', 'Please Grant Permission to Upload Picture', [{ text: 'Okay' }])
+        const data=await requestPermission(true)
+        if (data && data.granted==false) {
+            if(data.canAskAgain==false)
+            {
+                Alert.alert('Camer Permission Required', 'Please allow camera permission from your mobile setting to use this feature', [{ text: 'Okay' }])
+            }
+            else
+            {
+                Alert.alert('Camer Permission Required', 'Camera permission is required', [{ text: 'Okay' }])
+            }
             return
         }
         // ===== Getting The Image ======
@@ -242,9 +251,18 @@ const Home = (props) => {
     }
     const takePicture = async () => {
         // Getting Permission
-        const permission = await ImagePicker.getCameraPermissionsAsync();
-        if (permission.status != 'granted') {
-            Alert.alert('Camer Permission Required', 'Please Grant Permission to take Picture', [{ text: 'Okay' }])
+        // const permission = await ImagePicker.getCameraPermissionsAsync();
+        const data=await requestCameraPermission()
+        console.log(data)
+        if (data.granted==false) {
+            if(data.actions==false)
+            {
+                Alert.alert('Camer Permission Required', 'Please Grant Permission to take Picture from your system setting.', [{ text: 'Okay' }])
+            }
+            else
+            {
+                Alert.alert('Camer Permission Required', 'Please Grant Permission to take Picture.', [{ text: 'Okay' }])
+            }
             return
         }
         // Getting The Image
