@@ -1,5 +1,5 @@
 // Domain
-export const BASE_URL="https://nervous-falcon-55.loca.lt/";
+export const BASE_URL="https://application-mock-server.loca.lt/";
 // Apps
 export const CUSTOMER_BASE_URL=`${BASE_URL}api/customer/`;
 export const SHOP_BASE_URL=`${BASE_URL}api/shop/`;
@@ -24,6 +24,7 @@ export const SHOP_GET_ALL_TAGS=`${SHOP_BASE_URL}getAllTags/`
 export const SHOP_GET_ALL_CATEGORIES=`${SHOP_BASE_URL}getAllCategories/`
 export const GET_FILTERED_PRODUCT=`${SHOP_BASE_URL}filterProducts`
 export const GET_LIST_OF_PRODUCT=`${SHOP_BASE_URL}getListOfProducts/`
+export const GET_PRODUCT_BY_IMAGE=`${SHOP_BASE_URL}products/search-by-image`
 
 // =============== Full API's Orders===============
 export const ORDER_GET_ORDERS=`${ORDER_BASE_URL}getAllOrders/`

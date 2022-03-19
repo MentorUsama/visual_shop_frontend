@@ -31,7 +31,6 @@ const Home = (props) => {
     const [pageLoading, setPageLoading] = useState(false);
     const [miniLoading, setMiniLoading] = useState(false)
     const [filterModel, setFilterModel] = useState(false)
-    const [pickedImage, setPickedImage] = useState(null)
     const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
     const [camerStatus, requestCameraPermission] = ImagePicker.useCameraPermissions();
 
@@ -157,7 +156,6 @@ const Home = (props) => {
         if (response.status == 200) {
             props.addFilteredProducts(response.data, data)
         }
-        setPickedImage(null)
         setPageLoading(false)
     }
     const filterHandler = async (data) => {
@@ -215,6 +213,15 @@ const Home = (props) => {
             props.addFilteredProducts(null, null)
         }
     }
+    const handleSearchByImage=async (myImage)=>{
+        setPageLoading(true)
+            const searchedResult = await searchByImage(myImage.uri)
+            if (searchedResult.status == 200) {
+                // props.addFilteredProducts(searchedResult.data, null)
+                // setPickedImage(myImage.uri)
+            }
+        setPageLoading(false)
+    }
     const pickImage = async () => {
         // ===== Getting The Permission =====
         const data=await requestPermission(true)
@@ -238,22 +245,11 @@ const Home = (props) => {
         });
         // ===== Gettting The Data From Server ======
         if (!myImage.cancelled) {
-            setPageLoading(true)
-
-            const searchedResult = await searchByImage("usama")
-            if (searchedResult.status == 200) {
-                props.addFilteredProducts(searchedResult.data, null)
-                setPickedImage(myImage.uri)
-            }
-
-            setPageLoading(false)
+            await handleSearchByImage(myImage)
         }
     }
     const takePicture = async () => {
-        // Getting Permission
-        // const permission = await ImagePicker.getCameraPermissionsAsync();
         const data=await requestCameraPermission()
-        console.log(data)
         if (data.granted==false) {
             if(data.actions==false)
             {
@@ -273,18 +269,11 @@ const Home = (props) => {
         })
         // Doing Search By Image
         if (!imageResult.cancelled) {
-            setPageLoading(true)
-            const searchedResult = await searchByImage("usama")
-            if (searchedResult.status == 200) {
-                props.addFilteredProducts(searchedResult.data, null)
-                setPickedImage(imageResult.uri)
-            }
-            setPageLoading(false)
+            await handleSearchByImage(imageResult)
         }
     }
     const clearImageSearch = () => {
-        setPickedImage(null)
-        props.addFilteredProducts(null, null)
+        
     }
     return (
         <PageContainer hasPadding={true} pageLoading={pageLoading} navigation={props.navigation}>
@@ -311,7 +300,7 @@ const Home = (props) => {
             />
             <AllProducts
                 storeProducts={props.storeProducts}
-                pickedImage={pickedImage}
+                pickedImage={null}
                 navigation={props.navigation}
                 miniLoading={miniLoading}
                 loadProducts={loadProducts}

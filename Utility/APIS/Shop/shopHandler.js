@@ -3,7 +3,8 @@ import {
     GET_LIST_OF_PRODUCT,
     SHOP_GET_ALL_CATEGORIES,
     SHOP_GET_ALL_TAGS,
-    SHOP_GET_PRODUCTS
+    SHOP_GET_PRODUCTS,
+    GET_PRODUCT_BY_IMAGE
 } from '../Constants/apiConstants';
 import axios from 'axios';
 
@@ -70,37 +71,40 @@ const getFilteredProducts = async (data) => {
     }
 }
 const searchByImage = async (image) => {
-    var fakeProduct = [{
-        "id": 12,
-        "images": [
+    var bodyFormData = new FormData();
+    bodyFormData.append('image', image); 
+    try {
+        const response = await axios({
+            method: "post",
+            url: GET_PRODUCT_BY_IMAGE,
+            data: bodyFormData,
+            headers: { "Content-Type": "multipart/form-data" },
+        });
+        return { status: response.status, data: response.data}
+    }
+    catch (e) {
+        if (e.message == 'Network Error')
+        {
+            return { data: "Unable to get data because of network error", status: null }
+        } 
+        if (e.response.status == 400) {
+            const keys = Object.keys(e.response.data)
+            if (keys.includes("image")) {
+                return { status: null, data: e.response.data.image}
+            }
+            else
             {
-                "id": 41,
-                "imageColor": null,
-                "image": "https://visualshopp.herokuapp.com/images/image1_default_eqnVFmu.png"
+                return { status: null, data: "Parrameter missing"}
             }
-        ],
-        "feedbacks": [],
-        "name": "Fake Product",
-        "quantity": 10,
-        "price": "10.000",
-        "description": "Lorem Ipsum is simply a dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-        "sizes": "None",
-        "subCategoryId": {
-            "id": 6,
-            "name": "shirts",
-            "categoryId": {
-                "id": 3,
-                "name": "women clothing"
-            }
-        },
-        "tags": [
-            {
-                "id": 28,
-                "name": "long sleeve"
-            }
-        ]
-    }]
-    return {status:200,data:fakeProduct}
+        }
+        else if(e.response.status == 404)
+        {
+            return {status: null, data: e.response.data.message[0]}
+        }
+        else {
+            return { status: null, data: "Unable to get result because of unknown error"}
+        }
+    }
 }
 const getListOfProducts=async (data)=>{
     try {
