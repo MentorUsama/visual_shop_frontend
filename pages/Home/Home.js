@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Alert } from 'react-native';
+import { StyleSheet, Alert,Image } from 'react-native';
 // Redux
 import { connect } from 'react-redux';
 import * as actions from '../../store/Actions/index'
@@ -8,6 +8,7 @@ import PageContainer from '../../components/container/PageContainer'
 import Toast from 'react-native-toast-message';
 import HeroContainer from './Parts/HeroContainer';
 import SearchBarFilter from './Parts/SearchBarFilter';
+import {PermissionsAndroid} from 'react-native';
 // Importing Helpers
 import {
     isFilteredApplied,
@@ -33,8 +34,9 @@ const Home = (props) => {
     const [filterModel, setFilterModel] = useState(false)
     const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
     const [camerStatus, requestCameraPermission] = ImagePicker.useCameraPermissions();
-
+    const [sampleImage, setSampleImage] = useState(null);
     // ====== Checking Any Global Error ======
+    // console.log(props.imageSearchedResult)
     useEffect(async () => {
         const unsubscribe = navigation.addListener('focus', async () => {
             if (route.params?.error) {
@@ -165,6 +167,7 @@ const Home = (props) => {
             searchText: props.filters != null ? props.filters.searchText : null
         }
         await getFilteredProduct(filteredData)
+        clearImageSearch()
     }
     const searchByTextHandler = async () => {
         var filteredData;
@@ -194,7 +197,7 @@ const Home = (props) => {
             tags: null,
             categoryId: null,
             subcategoryId: null,
-            searchText: props.filters.searchText
+            searchText: props.filters?props.filters.searchText:null
         }
         if (filteredData.searchText != null) {
             await getFilteredProduct(filteredData)
@@ -215,10 +218,32 @@ const Home = (props) => {
     }
     const handleSearchByImage=async (myImage)=>{
         setPageLoading(true)
-            const searchedResult = await searchByImage(myImage.uri)
+            const searchedResult = await searchByImage(myImage)
+            // console.log(searchedResult)
             if (searchedResult.status == 200) {
-                // props.addFilteredProducts(searchedResult.data, null)
-                // setPickedImage(myImage.uri)
+                clearTextSearch()
+                clearFilter()
+                props.addImageSearchedResult({
+                    features:searchedResult.data.features,
+                    products:searchedResult.data.products,
+                    imageURI:myImage.uri,
+                    features_extracted:searchedResult.data.features_extracted
+                })
+            }
+            else if(searchedResult.status== 404)
+            {
+                clearTextSearch()
+                clearFilter()
+                props.addImageSearchedResult({
+                    features:null,
+                    products:[],
+                    imageURI:myImage.uri,
+                    features_extracted:searchedResult.data.features_extracted
+                })
+            }
+            else
+            {
+                // console.log(searchedResult)
             }
         setPageLoading(false)
     }
@@ -236,9 +261,17 @@ const Home = (props) => {
             }
             return
         }
+        // const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,{title: 'We need your permission'});
+        // if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        //     console.log('You can use the camera');
+        // }
+        // else
+        // {
+            
+        // }
         // ===== Getting The Image ======
         let myImage = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
             aspect: [4, 3],
             quality: 1,
@@ -264,19 +297,35 @@ const Home = (props) => {
         // Getting The Image
         const imageResult = await ImagePicker.launchCameraAsync({
             allowsEditing: true,
-            aspect: [16, 9],
-            quality: 0.5
+            aspect: [4, 3],
+            quality: 0.1,
         })
         // Doing Search By Image
         if (!imageResult.cancelled) {
             await handleSearchByImage(imageResult)
+            setSampleImage(imageResult.uri)
+        }
+        else
+        {
+            // console.log(imageResult)
         }
     }
     const clearImageSearch = () => {
-        
+        props.addImageSearchedResult({
+            features:null,
+            imageURI:null,
+            products:null,
+            features_extracted:null
+        })
     }
     return (
         <PageContainer hasPadding={true} pageLoading={pageLoading} navigation={props.navigation}>
+            {
+                sampleImage?<Image
+                style={{ width: 100, height: 100 }}
+                source={{ uri: sampleImage }}
+            />:null
+            }
             {/* <Loader loading={pageLoading} /> */}
             <HeroContainer />
             <SearchBarFilter
@@ -300,11 +349,16 @@ const Home = (props) => {
             />
             <AllProducts
                 storeProducts={props.storeProducts}
-                pickedImage={null}
+
+                pickedImage={props.imageSearchedResult.imageURI}
+                features={props.imageSearchedResult.features}
+                features_extracted={props.imageSearchedResult.features_extracted}
+                featuresProducts={props.imageSearchedResult.products}
+
                 navigation={props.navigation}
                 miniLoading={miniLoading}
                 loadProducts={loadProducts}
-                filteredProducts={props.filteredProducts}
+                filteredProducts={props.filteredProducts?props.filteredProducts:props.imageSearchedResult.products} // Filter product can be null, or product got by applying filter or product got by searching by image
                 isFilteredApplied={isFilteredApplied(props.filters)}
                 clearFilter={clearFilter}
                 clearTextSearch={clearTextSearch}
@@ -371,7 +425,8 @@ const mapStateToProps = state => {
         tags: state.shopReducer.tags,
         categories: state.shopReducer.categories,
         filteredProducts: state.shopReducer.filteredProducts,
-        filters: state.shopReducer.filters
+        filters: state.shopReducer.filters,
+        imageSearchedResult:state.shopReducer.imageSearchedResult
     };
 };
 const mapDispatchToProps = dispatch => {
@@ -380,7 +435,8 @@ const mapDispatchToProps = dispatch => {
         addStoreProducts: (products) => dispatch(actions.addStoreProducts(products)),
         addTags: (tags) => dispatch(actions.addTags(tags)),
         addCategories: (categories) => dispatch(actions.addCategories(categories)),
-        addFilteredProducts: (filteredProducts, filterData) => dispatch(actions.addFilteredProduct(filteredProducts, filterData))
+        addFilteredProducts: (filteredProducts, filterData) => dispatch(actions.addFilteredProduct(filteredProducts, filterData)),
+        addImageSearchedResult:(imageSearchedResult)=> dispatch(actions.addImageSearchedResult(imageSearchedResult))
     };
 };
 export default connect(

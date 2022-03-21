@@ -7,6 +7,8 @@ import {
     GET_PRODUCT_BY_IMAGE
 } from '../Constants/apiConstants';
 import axios from 'axios';
+import { Platform } from 'react-native';
+import mime from "mime";
 
 
 
@@ -70,12 +72,20 @@ const getFilteredProducts = async (data) => {
         return { status: null, data: 'Unable To Get Categories!!' }
     }
 }
+
 const searchByImage = async (image) => {
+    const newImageUri =  "file:///" + image.uri.split("file:/").join("");
+    const type = mime.getType(newImageUri)
+    const name=image.uri.split("/").pop()
     var bodyFormData = new FormData();
-    bodyFormData.append('image', image); 
+    bodyFormData.append('image',{
+        uri:  Platform.OS !== 'android' ? 'file://' + image.uri: image.uri,
+        name:name,
+        type:type
+    }); 
     try {
         const response = await axios({
-            method: "post",
+            method: "POST",
             url: GET_PRODUCT_BY_IMAGE,
             data: bodyFormData,
             headers: { "Content-Type": "multipart/form-data" },
@@ -90,7 +100,7 @@ const searchByImage = async (image) => {
         if (e.response.status == 400) {
             const keys = Object.keys(e.response.data)
             if (keys.includes("image")) {
-                return { status: null, data: e.response.data.image}
+                return { status: null, data: e.response.data.image[0]}
             }
             else
             {
@@ -99,7 +109,7 @@ const searchByImage = async (image) => {
         }
         else if(e.response.status == 404)
         {
-            return {status: null, data: e.response.data.message[0]}
+            return {status: 404, data: e.response.data}
         }
         else {
             return { status: null, data: "Unable to get result because of unknown error"}

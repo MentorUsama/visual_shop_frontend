@@ -45,3 +45,9 @@ export const addToCart=(cartData,product)=>{
         product:product
     }
 }
+export const addImageSearchedResult=(imageSearchedResult)=>{
+    return {
+        type:actionTypes.ADD_IMAGE_SEARCHED_RESULT,
+        imageSearchedResult:imageSearchedResult
+    }
+}

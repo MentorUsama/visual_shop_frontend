@@ -3,7 +3,6 @@ import { updateObject } from '../StoreUtility/utility';
 import {CART_DATA} from '../../Utility/HelperFunctions/storageKeys'
 import {storeData,clearData} from '../../Utility/HelperFunctions/asyncStorage'
 
-
 // States
 const initialState = {
     storeProducts: null,
@@ -12,7 +11,13 @@ const initialState = {
     filteredProducts:null,
     filters:null,
     cartData:null,
-    cartProductsDetail:null // There might be possibility that product detail not available on store product because of next and previous page therefore we store cart data info seperately.
+    cartProductsDetail:null, // There might be possibility that product detail not available on store product because of next and previous page therefore we store cart data info seperately.
+    imageSearchedResult:{
+        features:null,
+        imageURI:null,
+        products:null,
+        features_extracted:null
+    }
 };
 
 
@@ -98,6 +103,11 @@ export const addToCart=(state,action)=>{
         cartProductsDetail:action.product
     })
 }   
+export const addImageSearchedResult=(state,action)=>{
+    return updateObject(state,{
+        imageSearchedResult:action.imageSearchedResult
+    })
+}   
 // Reducer
 const reducer = (state = initialState, action) => {
     switch (action.type) {
@@ -108,6 +118,7 @@ const reducer = (state = initialState, action) => {
         case actionTypes.UPDATE_SINGLE_PRODUCT: return updateSingleProduct(state, action);
         case actionTypes.ADD_TO_CART: return addToCart(state, action);
         case actionTypes.ADD_STORE_PRODUCTS: return addStoreProducts(state,action);
+        case actionTypes.ADD_IMAGE_SEARCHED_RESULT: return addImageSearchedResult(state,action);
         default:
             return state;
     }

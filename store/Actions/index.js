@@ -14,7 +14,8 @@ export {
     addFilteredProduct,
     updateSingleProduct,
     addToCart,
-    addStoreProducts
+    addStoreProducts,
+    addImageSearchedResult
 } from './shopAction'
 
 export {
