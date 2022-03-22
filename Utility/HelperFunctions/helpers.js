@@ -260,9 +260,6 @@ const findProductInCart=(products,productId)=>{
   return products.find((product)=>product.id==productId)
 }
 
-
-
-
   export {
     diff_minutes,
     ValidateEmail,

@@ -4,21 +4,22 @@ import TextWithLoader from '../../../components/components/TextWithLoader/TextWi
 import Product from '../../../components/components/Home/Product/Product'
 import SearchedImage from '../../../components/components/Home/SearchedImage/SearchedImage'
 import MyButton from '../../../components/components/Button/MyButton'
+import FeaturesDetected from '../../../components/components/Home/FeaturesDetected/FeaturesDetected'
 
 function NoProductFound(props) {
     return (
         <View>
             {
-                props.pageLoading? // if page is loading then no need to show result
-                    <View></View>:
-                props.storeProducts
-                    ?
-                    <Text>No Product Found</Text>
-                    :
-                    <View>
-                        <Text style={{marginBottom:10}}>Unable to fetch product from server</Text>
-                        <MyButton  onPress={props.fetchProduct} title="Try Again"/>
-                    </View>
+                props.pageLoading ? // if page is loading then no need to show result
+                    <View></View> :
+                    props.storeProducts
+                        ?
+                        <Text>No Product Found</Text>
+                        :
+                        <View>
+                            <Text style={{ marginBottom: 10 }}>Unable to fetch product from server</Text>
+                            <MyButton onPress={props.fetchProduct} title="Try Again" />
+                        </View>
             }
 
         </View>
@@ -55,6 +56,16 @@ export default function AllProducts(props) {
                         pickedImage={props.pickedImage}
                         clearImageSearch={props.clearImageSearch}
                     />
+                    : null
+            }
+            {
+                // Showing the features detected
+                props.features_extracted ?
+                    <View style={styles.featureContainer}>
+                        {
+                            props.features_extracted?props.features_extracted.map(feature=><FeaturesDetected feature={feature[0]} percentage={feature[1]} />):null
+                        }
+                    </View>
                     : null
             }
             {/* Products Container */}
@@ -98,5 +109,11 @@ const styles = StyleSheet.create({
     },
     productContainer: {
         flex: 1
+    },
+    featureContainer:{
+        display:'flex',
+        flexDirection:'row',
+        flexWrap:'wrap',
+        marginBottom:10
     }
 })

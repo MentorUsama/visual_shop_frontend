@@ -36,7 +36,6 @@ const Home = (props) => {
     const [camerStatus, requestCameraPermission] = ImagePicker.useCameraPermissions();
     const [sampleImage, setSampleImage] = useState(null);
     // ====== Checking Any Global Error ======
-    // console.log(props.imageSearchedResult)
     useEffect(async () => {
         const unsubscribe = navigation.addListener('focus', async () => {
             if (route.params?.error) {
@@ -219,7 +218,6 @@ const Home = (props) => {
     const handleSearchByImage=async (myImage)=>{
         setPageLoading(true)
             const searchedResult = await searchByImage(myImage)
-            // console.log(searchedResult)
             if (searchedResult.status == 200) {
                 clearTextSearch()
                 clearFilter()
@@ -227,7 +225,7 @@ const Home = (props) => {
                     features:searchedResult.data.features,
                     products:searchedResult.data.products,
                     imageURI:myImage.uri,
-                    features_extracted:searchedResult.data.features_extracted
+                    features_extracted:searchedResult.data.feature_extracted,
                 })
             }
             else if(searchedResult.status== 404)
@@ -238,12 +236,16 @@ const Home = (props) => {
                     features:null,
                     products:[],
                     imageURI:myImage.uri,
-                    features_extracted:searchedResult.data.features_extracted
+                    features_extracted:searchedResult.data.feature_extracted
                 })
             }
             else
             {
-                // console.log(searchedResult)
+                Toast.show({
+                    type: 'error',
+                    text1: 'Oops',
+                    text2: searchedResult.data
+                });
             }
         setPageLoading(false)
     }
@@ -304,10 +306,6 @@ const Home = (props) => {
         if (!imageResult.cancelled) {
             await handleSearchByImage(imageResult)
             setSampleImage(imageResult.uri)
-        }
-        else
-        {
-            // console.log(imageResult)
         }
     }
     const clearImageSearch = () => {

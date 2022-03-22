@@ -4,7 +4,7 @@ import Cross from '../../../../assets/icons/cross'
 
 export default function SearchedImage(props) {
     return (
-        <View style={{ marginBottom: 20, display: 'flex', flexDirection: 'row' }}>
+        <View style={{ marginBottom: 5, display: 'flex', flexDirection: 'row' }}>
             <View>
                 <Image
                     style={{ width: 100, height: 100 }}
