@@ -63,7 +63,7 @@ export default function AllProducts(props) {
                 props.features_extracted ?
                     <View style={styles.featureContainer}>
                         {
-                            props.features_extracted?props.features_extracted.map(feature=><FeaturesDetected feature={feature[0]} percentage={feature[1]} />):null
+                            props.features_extracted?props.features_extracted.map(feature=><FeaturesDetected key={feature[0]} feature={feature[0]} percentage={feature[1]} />):null
                         }
                     </View>
                     : null
