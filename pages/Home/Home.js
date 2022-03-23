@@ -9,6 +9,7 @@ import Toast from 'react-native-toast-message';
 import HeroContainer from './Parts/HeroContainer';
 import SearchBarFilter from './Parts/SearchBarFilter';
 import {PermissionsAndroid} from 'react-native';
+import * as ImageManipulator from 'expo-image-manipulator';
 // Importing Helpers
 import {
     isFilteredApplied,
@@ -34,7 +35,6 @@ const Home = (props) => {
     const [filterModel, setFilterModel] = useState(false)
     const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
     const [camerStatus, requestCameraPermission] = ImagePicker.useCameraPermissions();
-    const [sampleImage, setSampleImage] = useState(null);
     // ====== Checking Any Global Error ======
     useEffect(async () => {
         const unsubscribe = navigation.addListener('focus', async () => {
@@ -216,6 +216,7 @@ const Home = (props) => {
         }
     }
     const handleSearchByImage=async (myImage)=>{
+        console.log(myImage)
         setPageLoading(true)
             const searchedResult = await searchByImage(myImage)
             if (searchedResult.status == 200) {
@@ -280,6 +281,7 @@ const Home = (props) => {
         });
         // ===== Gettting The Data From Server ======
         if (!myImage.cancelled) {
+            // const manipResult = await ImageManipulator.manipulateAsync(myImage.uri, [{ resize:{height: 394, width: 526} }], {base64:true})
             await handleSearchByImage(myImage)
         }
     }
@@ -300,12 +302,12 @@ const Home = (props) => {
         const imageResult = await ImagePicker.launchCameraAsync({
             allowsEditing: true,
             aspect: [4, 3],
-            quality: 0.1,
+            quality: 0,
         })
         // Doing Search By Image
         if (!imageResult.cancelled) {
-            await handleSearchByImage(imageResult)
-            setSampleImage(imageResult.uri)
+            const manipResult = await ImageManipulator.manipulateAsync(imageResult.uri, [{ resize:{height: 394, width: 526} }], {base64:true})
+            await handleSearchByImage(manipResult)
         }
     }
     const clearImageSearch = () => {
@@ -318,12 +320,6 @@ const Home = (props) => {
     }
     return (
         <PageContainer hasPadding={true} pageLoading={pageLoading} navigation={props.navigation}>
-            {
-                sampleImage?<Image
-                style={{ width: 100, height: 100 }}
-                source={{ uri: sampleImage }}
-            />:null
-            }
             {/* <Loader loading={pageLoading} /> */}
             <HeroContainer />
             <SearchBarFilter
@@ -375,7 +371,6 @@ const Home = (props) => {
 const styles = StyleSheet.create({
     heroContainer: {
         marginTop: 10,
-
     },
     title: {
         color: '#000000',

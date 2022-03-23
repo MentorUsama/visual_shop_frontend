@@ -43,7 +43,8 @@
     "react-native-web-swiper": "^2.2.2",
     "react-redux": "^7.2.6",
     "redux-thunk": "^2.4.1",
-    "remote-redux-devtools": "^0.5.16"
+    "remote-redux-devtools": "^0.5.16",
+    "expo-image-manipulator": "~10.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

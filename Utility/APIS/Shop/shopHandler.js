@@ -83,13 +83,23 @@ const searchByImage = async (image) => {
         name:name,
         type:type
     }); 
+
+
     try {
-        const response = await axios({
-            method: "POST",
-            url: GET_PRODUCT_BY_IMAGE,
-            data: bodyFormData,
-            headers: { "Content-Type": "multipart/form-data" },
-        });
+        // const response = await axios({
+        //     method: "POST",
+        //     url: GET_PRODUCT_BY_IMAGE,
+        //     data: bodyFormData,
+        //     headers: { "Content-Type": "multipart/form-data" },
+        // });
+        const response =await  axios.post(GET_PRODUCT_BY_IMAGE, bodyFormData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+            transformRequest: (data, headers) => {
+                // !!! override data to return formData
+                // since axios converts that to string
+                return bodyFormData;
+            },
+        })
         return { status: response.status, data: response.data}
     }
     catch (e) {
