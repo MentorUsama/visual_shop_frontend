@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Platform } from 'react-native';
 import PageContainer from '../../components/container/PageContainer'
 import DropDrown from '../../components/components/DropDown/DropDrown';
 import InputField from '../../components/components/Input/InputField';
@@ -10,6 +10,7 @@ import { getCities, getCityDetail, validateContact } from '../../Utility/HelperF
 // Redux
 import { connect } from 'react-redux';
 import * as actions from '../../store/Actions/index';
+const isAndroid = Platform.OS === 'android';
 
 
 const UserInfo = (props) => {
@@ -54,7 +55,7 @@ const UserInfo = (props) => {
 
 
     // ===== Preloading Data =====
-    useEffect( () => {
+    useEffect(() => {
         const asyncHandler = async () => {
             setLoading(true)
             var profile = props.profile;
@@ -129,8 +130,7 @@ const UserInfo = (props) => {
                 return
             }
         }
-        if(!city)
-        {
+        if (!city) {
             setGlobalError("Please provide city")
             setSuccess("")
             return
@@ -167,7 +167,7 @@ const UserInfo = (props) => {
             <View style={{ marginTop: 60 }}></View>
             {/* Title */}
             <Text style={styles.titleColor}>Personal Information</Text>
-            <View style={{marginTop:5,marginBottom:5}}>
+            <View style={{ marginTop: 5, marginBottom: 5 }}>
                 <Text style={styles.errorColor}>{globalError}</Text>
                 <Text style={styles.successColor}>{success}</Text>
             </View>
@@ -194,29 +194,34 @@ const UserInfo = (props) => {
                 isNumeric={true}
                 value={contact}>
             </InputField>
-            <DropDrown
-                title="State"
-                data={props.provincesAndCities}
-                placeholder="Please Select Your Province"
-                value={province}
-                setValue={(val) => provinceHandler(val)}
-                name="provinces"
-                open={openProvince}
-                setOpen={openHandler}
-                zIndex={5000}
-            />
-            <DropDrown
-                title="City"
-                data={getCities(props.provincesAndCities, province)}
-                placeholder={province == null ? "Select Your Province First" : "Please Select Your City"}
-                value={city}
-                disabled={province == null ? true : false}
-                setValue={(val) => setCity(val)}
-                name="cities"
-                open={openCity}
-                setOpen={openHandler}
-            />
-            <View style={{zIndex:1,elevation:1}} zIndex={1}>
+            <View style={!isAndroid && { zIndex: 200 }}>
+                <DropDrown
+                    title="State"
+                    data={props.provincesAndCities}
+                    placeholder="Please Select Your Province"
+                    value={province}
+                    setValue={(val) => provinceHandler(val)}
+                    name="provinces"
+                    open={openProvince}
+                    setOpen={openHandler}
+                    zIndex={200}
+                />
+            </View>
+            <View style={!isAndroid && { zIndex: 100 }}>
+                <DropDrown
+                    title="City"
+                    data={getCities(props.provincesAndCities, province)}
+                    placeholder={province == null ? "Select Your Province First" : "Please Select Your City"}
+                    value={city}
+                    disabled={province == null ? true : false}
+                    setValue={(val) => setCity(val)}
+                    name="cities"
+                    open={openCity}
+                    setOpen={openHandler}
+                    zIndex={100}
+                />
+            </View>
+            <View style={{ zIndex: 1, elevation: 1 }} zIndex={1}>
                 <MyButton
                     onPress={validate}
                     isDisabled={!isProfileUpdate()}

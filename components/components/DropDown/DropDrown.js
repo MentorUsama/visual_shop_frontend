@@ -103,8 +103,9 @@ const myStyle = StyleSheet.create({
         alignContent: 'center',
         alignItems: 'center',
         paddingTop: 0,
-        height: 33,
-        opacity: 1
+        // height: 33,
+        opacity: 1,
+        // backgroundColor:'red'
     },
     styleActive: {
         flexDirection: 'row',
@@ -117,7 +118,7 @@ const myStyle = StyleSheet.create({
         alignContent: 'center',
         alignItems: 'center',
         paddingTop: 0,
-        height: 33,
+        // height: 33,
         opacity: 1
     },
     iconContainerStyle:{
