@@ -54,52 +54,55 @@ const UserInfo = (props) => {
 
 
     // ===== Preloading Data =====
-    useEffect(async () => {
-        setLoading(true)
-        var profile = props.profile;
-        var provincesAndCities = props.provincesAndCities
+    useEffect( () => {
+        const asyncHandler = async () => {
+            setLoading(true)
+            var profile = props.profile;
+            var provincesAndCities = props.provincesAndCities
 
-        if (props.profile == null) {
-            const profileResponse = await getProfileHandler(props.access)
-            if (profileResponse.status == 200) {
-                profile = profileResponse.data
-                props.setProfile(profileResponse.data)
+            if (props.profile == null) {
+                const profileResponse = await getProfileHandler(props.access)
+                if (profileResponse.status == 200) {
+                    profile = profileResponse.data
+                    props.setProfile(profileResponse.data)
+                }
+                else {
+                    setLoading(false)
+                    props.navigation.navigate({
+                        name: "HomePage",
+                        params: { error: 'Unable To Fetch Profile Data From Server!!' },
+                        merge: true
+                    })
+                    return
+                }
             }
-            else {
-                setLoading(false)
-                props.navigation.navigate({
-                    name: "HomePage",
-                    params: { error: 'Unable To Fetch Profile Data From Server!!' },
-                    merge: true
-                })
-                return
+            if (props.provincesAndCities == null) {
+                const provincesResponse = await getProvincesAndCities()
+                if (provincesResponse.status == 200) {
+                    provincesAndCities = provincesResponse.data
+                    props.setProvincesAndCities(provincesResponse.data)
+                }
+                else {
+                    setLoading(false)
+                    props.navigation.navigate({
+                        name: "HomePage",
+                        params: { error: 'Unable To Fetch Cities Data From Server!!' },
+                        merge: true
+                    })
+                    return;
+                }
             }
+            // Setting Up The data
+            if (profile.cityId != null) {
+                setProvince(profile.cityId.provinceId.id)
+                setCity(profile.cityId.id)
+                setName(profile.name)
+                setAddress(profile.address)
+                setContact(profile.contact)
+            }
+            setLoading(false)
         }
-        if (props.provincesAndCities == null) {
-            const provincesResponse = await getProvincesAndCities()
-            if (provincesResponse.status == 200) {
-                provincesAndCities = provincesResponse.data
-                props.setProvincesAndCities(provincesResponse.data)
-            }
-            else {
-                setLoading(false)
-                props.navigation.navigate({
-                    name: "HomePage",
-                    params: { error: 'Unable To Fetch Cities Data From Server!!' },
-                    merge: true
-                })
-                return;
-            }
-        }
-        // Setting Up The data
-        if (profile.cityId != null) {
-            setProvince(profile.cityId.provinceId.id)
-            setCity(profile.cityId.id)
-            setName(profile.name)
-            setAddress(profile.address)
-            setContact(profile.contact)
-        }
-        setLoading(false)
+        asyncHandler()
     }, [])
 
 
@@ -200,7 +203,7 @@ const UserInfo = (props) => {
                 name="provinces"
                 open={openProvince}
                 setOpen={openHandler}
-                zIndex={50001}
+                zIndex={5000}
             />
             <DropDrown
                 title="City"
@@ -213,11 +216,13 @@ const UserInfo = (props) => {
                 open={openCity}
                 setOpen={openHandler}
             />
-            <MyButton
-                onPress={validate}
-                isDisabled={!isProfileUpdate()}
-                title="Update"
-            />
+            <View style={{zIndex:1,elevation:1}} zIndex={1}>
+                <MyButton
+                    onPress={validate}
+                    isDisabled={!isProfileUpdate()}
+                    title="Update"
+                />
+            </View>
         </PageContainer>
     )
 }

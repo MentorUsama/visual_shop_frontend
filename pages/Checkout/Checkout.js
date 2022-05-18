@@ -71,69 +71,73 @@ const Checkout = (props) => {
     }
 
     // ===== Preloading Data =====
-    useEffect(async () => {
-        setLoading(true)
-        var profile = props.profile;
-        var provincesAndCities = props.provincesAndCities
+    useEffect( () => {
+        const asyncHandler = async () => 
+        {
+            setLoading(true)
+            var profile = props.profile;
+            var provincesAndCities = props.provincesAndCities
 
-        if (props.profile == null) {
-            const profileResponse = await getProfileHandler(props.access)
-            if (profileResponse.status == 200) {
-                profile = profileResponse.data
-                props.setProfile(profileResponse.data)
+            if (props.profile == null) {
+                const profileResponse = await getProfileHandler(props.access)
+                if (profileResponse.status == 200) {
+                    profile = profileResponse.data
+                    props.setProfile(profileResponse.data)
+                }
+                else {
+                    setLoading(false)
+                    props.navigation.navigate({
+                        name: "HomePage",
+                        params: { error: 'Unable To Fetch Profile Data From Server!!' },
+                        merge: true
+                    })
+                    return
+                }
+            }
+            if (props.provincesAndCities == null) {
+                const provincesResponse = await getProvincesAndCities()
+                if (provincesResponse.status == 200) {
+                    provincesAndCities = provincesResponse.data
+                    props.setProvincesAndCities(provincesResponse.data)
+                }
+                else {
+                    setLoading(false)
+                    props.navigation.navigate({
+                        name: "HomePage",
+                        params: { error: 'Unable To Fetch Cities Data From Server!!' },
+                        merge: true
+                    })
+                    return;
+                }
+            }
+            // Setting Up The data
+            if (props.checkoutData) {
+                setProvince(props.checkoutData.profile.provinceId)
+                setCity(props.checkoutData.profile.cityId)
+                setName(props.checkoutData.profile.name)
+                setAddress(props.checkoutData.profile.address)
+                setContact(props.checkoutData.profile.contact)
+                setCoupen(props.checkoutData.coupen)
+                if (props.checkoutData.cuopenId != null) {
+                    var newCoupen = props.checkoutData
+                    newCoupen.discountPrice = null
+                    newCoupen.cuopenId = null
+                    newCoupen.orignalPrice = null
+                    props.addCheckoutData(newCoupen)
+                }
             }
             else {
-                setLoading(false)
-                props.navigation.navigate({
-                    name: "HomePage",
-                    params: { error: 'Unable To Fetch Profile Data From Server!!' },
-                    merge: true
-                })
-                return
+                if (profile.cityId != null) {
+                    setProvince(profile.cityId.provinceId.id)
+                    setCity(profile.cityId.id)
+                }
+                setName(profile.name)
+                setAddress(profile.address)
+                setContact(profile.contact)
             }
+            setLoading(false)
         }
-        if (props.provincesAndCities == null) {
-            const provincesResponse = await getProvincesAndCities()
-            if (provincesResponse.status == 200) {
-                provincesAndCities = provincesResponse.data
-                props.setProvincesAndCities(provincesResponse.data)
-            }
-            else {
-                setLoading(false)
-                props.navigation.navigate({
-                    name: "HomePage",
-                    params: { error: 'Unable To Fetch Cities Data From Server!!' },
-                    merge: true
-                })
-                return;
-            }
-        }
-        // Setting Up The data
-        if (props.checkoutData) {
-            setProvince(props.checkoutData.profile.provinceId)
-            setCity(props.checkoutData.profile.cityId)
-            setName(props.checkoutData.profile.name)
-            setAddress(props.checkoutData.profile.address)
-            setContact(props.checkoutData.profile.contact)
-            setCoupen(props.checkoutData.coupen)
-            if (props.checkoutData.cuopenId != null) {
-                var newCoupen = props.checkoutData
-                newCoupen.discountPrice = null
-                newCoupen.cuopenId = null
-                newCoupen.orignalPrice = null
-                props.addCheckoutData(newCoupen)
-            }
-        }
-        else {
-            if (profile.cityId != null) {
-                setProvince(profile.cityId.provinceId.id)
-                setCity(profile.cityId.id)
-            }
-            setName(profile.name)
-            setAddress(profile.address)
-            setContact(profile.contact)
-        }
-        setLoading(false)
+        asyncHandler()
     }, [])
 
 

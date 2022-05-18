@@ -24,10 +24,13 @@ const ComplaintsDetail = (props) => {
             setComplaints(response.data)
         }
     }
-    useEffect(async () => {
-        setPageLoading(true)
-        await getComplaints()
-        setPageLoading(false)
+    useEffect( () => {
+        const asyncHandler=async ()=>{
+            setPageLoading(true)
+            await getComplaints()
+            setPageLoading(false)
+        }
+        asyncHandler()
     }, [])
     const sendComplaint=async ()=>{
        setPageLoading(true)

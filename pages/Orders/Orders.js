@@ -12,15 +12,18 @@ import { cancelOrder,createComplaint } from '../../Utility/APIS/index'
 const Orders = (props) => {
     const [pageLoading, setPageLoading] = useState(false);
     const [globalError, setGlobalError] = useState("")
-    useEffect(async () => {
-        if (props.orders == null || props.shouldUpdateUserOrder) {
-            setPageLoading(true)
-            const response = await getOrders(props.access)
-            if (response.status == 200) {
-                props.addOrders(response.data)
+    useEffect( () => {
+        const asyncHandler = async () => {
+            if (props.orders == null || props.shouldUpdateUserOrder) {
+                setPageLoading(true)
+                const response = await getOrders(props.access)
+                if (response.status == 200) {
+                    props.addOrders(response.data)
+                }
+                setPageLoading(false)
             }
-            setPageLoading(false)
         }
+        asyncHandler()
     }, [])
     const getAllOrders = async ()=>{
         setPageLoading(true)

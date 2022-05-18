@@ -36,48 +36,54 @@ const Home = (props) => {
     const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
     const [camerStatus, requestCameraPermission] = ImagePicker.useCameraPermissions();
     // ====== Checking Any Global Error ======
-    useEffect(async () => {
-        const unsubscribe = navigation.addListener('focus', async () => {
-            if (route.params?.error) {
-                Toast.show({
-                    type: 'error',
-                    text1: 'Oops',
-                    text2: route.params.error
-                });
-                props.navigation.reset({
-                    index: 0,
-                    routes: [{name: "HomePage"}]
-                });
-            }
-            return unsubscribe;
-        });
+    useEffect( () => {
+        const asyncHandler=async ()=>{
+            const unsubscribe = navigation.addListener('focus', async () => {
+                if (route.params?.error) {
+                    Toast.show({
+                        type: 'error',
+                        text1: 'Oops',
+                        text2: route.params.error
+                    });
+                    props.navigation.reset({
+                        index: 0,
+                        routes: [{name: "HomePage"}]
+                    });
+                }
+                return unsubscribe;
+            });
+        }
+        asyncHandler();
     }, [route.params?.error])
 
     // Getting Products when first time screen load
-    useEffect(async () => {
-        setPageLoading(true)
-        // Getting All The Products If not Stored
-        if (props.storeProducts == null) {
-            const response = await getAllProducts(1) // Page is one as all
-            if (response.status == 200) {
-                props.addStoreProducts(response.data)
+    useEffect( () => {
+        const asyncHandler=async ()=>{
+            setPageLoading(true)
+            // Getting All The Products If not Stored
+            if (props.storeProducts == null) {
+                const response = await getAllProducts(1) // Page is one as all
+                if (response.status == 200) {
+                    props.addStoreProducts(response.data)
+                }
             }
-        }
-        // Getting All The Tags
-        if (props.tags == null) {
-            const response = await getAllTags()
-            if (response.status == 200) {
-                props.addTags(response.data)
+            // Getting All The Tags
+            if (props.tags == null) {
+                const response = await getAllTags()
+                if (response.status == 200) {
+                    props.addTags(response.data)
+                }
             }
-        }
-        // Getting All The Categories
-        if (props.categories == null) {
-            const response = await getAllCategories()
-            if (response.status == 200) {
-                props.addCategories(response.data)
+            // Getting All The Categories
+            if (props.categories == null) {
+                const response = await getAllCategories()
+                if (response.status == 200) {
+                    props.addCategories(response.data)
+                }
             }
+            setPageLoading(false)
         }
-        setPageLoading(false)
+        asyncHandler()
     }, [])
 
     const fetchProduct = async () => {

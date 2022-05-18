@@ -1,0 +1,2 @@
+export const KEY_ANDROID_CLIENT_ID="691282853878-d1ohn9bnrcs8vf3dvfud2n328fu2lh6q.apps.googleusercontent.com"
+export const KEY_IOS_CLIENT_ID="691282853878-rlj0kfnbjmmcvfscqvbppcebpv6l73kh.apps.googleusercontent.com"

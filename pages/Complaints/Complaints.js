@@ -13,15 +13,18 @@ const Complaints = (props) => {
     // Getting All The Orders
     const [pageLoading, setPageLoading] = useState(false);
     var hasComplaints = false
-    useEffect(async () => {
-        if (props.orders == null) {
-            setPageLoading(true)
-            const response = await getOrders(props.access)
-            if (response.status == 200) {
-                props.addOrders(response.data)
+    useEffect( () => {
+        const asyncHandler=async ()=>{
+            if (props.orders == null) {
+                setPageLoading(true)
+                const response = await getOrders(props.access)
+                if (response.status == 200) {
+                    props.addOrders(response.data)
+                }
+                setPageLoading(false)
             }
-            setPageLoading(false)
         }
+        asyncHandler()
     }, [])
     return (
         <PageContainer hasPadding={true} pageLoading={pageLoading} navigation={props.navigation}>

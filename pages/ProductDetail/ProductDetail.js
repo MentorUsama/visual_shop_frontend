@@ -61,16 +61,19 @@ const ProductDetail = (props) => {
     const [selectedImage, setSelectedImage] = useState(isProductHasColor ? getSelectedImage(product.images, productAddedToCart) : null)
     const [quantity, setQuantity] = useState(productAddedToCart ? productAddedToCart.totalQuantity : 1)
     // Getting Some Data if not present
-    useEffect(async () => {
-        // Getting The All Orders (To Check if he need to give any feedback)
-        if (props.orders == null && props.access != "") {
-            setPageLoading(true)
-            const response = await getOrders(props.access)
-            if (response.status == 200) {
-                props.addOrders(response.data)
+    useEffect( () => {
+        const asyncHandler = async () => {
+            // Getting The All Orders (To Check if he need to give any feedback)
+            if (props.orders == null && props.access != "") {
+                setPageLoading(true)
+                const response = await getOrders(props.access)
+                if (response.status == 200) {
+                    props.addOrders(response.data)
+                }
+                setPageLoading(false)
             }
-            setPageLoading(false)
         }
+        asyncHandler()
     }, [])
     useEffect(()=>{
         const productAddedToCart = isProductAddedIntoCart(props.cartData, props.route.params.product.id)
