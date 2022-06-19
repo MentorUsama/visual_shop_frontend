@@ -1,37 +1,63 @@
 import React from 'react'
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
+import FeaturesDetected from '../FeaturesDetected/FeaturesDetected'
 
+const get_feature = (features, product_id) => {
+    const feature = features.find(feature => feature[1] == product_id)
+    return (
+        <View>
+            {
+                feature ?
+                    <FeaturesDetected percentage={feature[3]} />
+                    :
+                    null
+            }
+        </View>
+    )
+}
 export default function Product(props) {
     const { containerStyle = {} } = props
     return (
-        <TouchableOpacity onPress={props.onPress} activeOpacity={0.8} key={props.item.id} style={[styles.productContainer, containerStyle]}>
+        <TouchableOpacity style={styles.touchable_opacity_container} activeOpacity={0.8} onPress={props.onPress} key={props.item.id}>
             {
-                props.item.images == null ?
-                    null :
-                    props.item.images.length == 0 ?
-                        null :
-                        <Image
-                            source={{
-                                uri: props.item.images[0].image,
-                            }}
-                            style={styles.imageStyle}
-                        />
+                props.features_extracted ?
+                    <View>
+                        {get_feature(props.features_extracted, props.item.id)}
+                    </View>
+                    : null
             }
-            <View style={styles.textContainer}>
-                <Text style={styles.title} numberOfLines={2}>{props.item.name}</Text>
-                <View style={styles.priceContainer}>
-                    <Text>Price</Text>
-                    <Text>{props.item.price}</Text>
+            <View style={[styles.productContainer, containerStyle]}>
+                {
+                    props.item.images == null ?
+                        null :
+                        props.item.images.length == 0 ?
+                            null :
+                            <Image
+                                source={{
+                                    uri: props.item.images[0].image,
+                                }}
+                                style={styles.imageStyle}
+                            />
+                }
+                <View style={styles.textContainer}>
+                    <Text style={styles.title} numberOfLines={2}>{props.item.name}</Text>
+                    <View style={styles.priceContainer}>
+                        <Text>Price</Text>
+                        <Text>{props.item.price}</Text>
+                    </View>
                 </View>
             </View>
         </TouchableOpacity>
     )
 }
 const styles = StyleSheet.create({
-    productContainer: {
-        backgroundColor: '#FFFFFF',
+    touchable_opacity_container: {
         width: '45%',
         marginBottom: '10%',
+        backgroundColor: 'transparent',
+    },
+    productContainer: {
+        backgroundColor: '#FFFFFF',
         shadowColor: "#000",
         shadowOffset: {
             width: 0,

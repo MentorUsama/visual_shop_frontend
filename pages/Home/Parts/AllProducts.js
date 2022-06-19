@@ -58,7 +58,7 @@ export default function AllProducts(props) {
                     />
                     : null
             }
-            {
+            {/* {
                 // Showing the features detected
                 props.features_extracted ?
                     <View style={styles.featureContainer}>
@@ -67,7 +67,7 @@ export default function AllProducts(props) {
                         }
                     </View>
                     : null
-            }
+            } */}
             {/* Products Container */}
             <View style={styles.productContainer}>
                 <FlatList
@@ -81,7 +81,7 @@ export default function AllProducts(props) {
                             :
                             props.filteredProducts
                     }
-                    renderItem={({ item }) => <Product onPress={() => props.navigation.navigate("ProductDetail", { product: item })} item={item} containerStyle={width < 300 ? { width: '100%' } : {}} />}
+                    renderItem={({ item }) => <Product onPress={() => props.navigation.navigate("ProductDetail", { product: item })} item={item} containerStyle={width < 300 ? { width: '100%' } : {}} features_extracted={props.features_extracted} />}
                     keyExtractor={(item) => item.id}
                     numColumns={width < 300 ? 1 : 2}
                     ListEmptyComponent={<NoProductFound pageLoading={props.pageLoading} fetchProduct={props.fetchProduct} storeProducts={props.storeProducts} />}

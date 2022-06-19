@@ -2,11 +2,11 @@ import { View, Text,StyleSheet } from 'react-native'
 import React from 'react'
 
 export default function FeaturesDetected(props) {
-    const {isMatched=true,feature,percentage} =props
+    const {percentage} =props
   return (
     <View style={styles.featureContainer}>
       <View style={styles.heading}>
-        <Text style={styles.text}>{feature}</Text>
+        <Text style={styles.text}>Similarity</Text>
       </View>
       <View style={styles.heading2}>
         <Text style={styles.text2}>{percentage.toFixed(1)} %</Text>
@@ -19,15 +19,16 @@ const styles = StyleSheet.create({
       display:'flex',
       flexDirection:'row',
       marginBottom:5,
-      marginRight:10
+      // marginRight:5,
+      width:'100%'
   },
   heading:{
     minWidth:50,
     backgroundColor:'#FF7465',
     fontSize:20,
     padding:5,
-    borderTopLeftRadius:6,
-    borderBottomLeftRadius:6,
+    // borderTopLeftRadius:6,
+    // borderBottomLeftRadius:6,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -48,8 +49,9 @@ const styles = StyleSheet.create({
     backgroundColor:'#FFFFFF',
     fontSize:20,
     padding:5,
-    borderTopRightRadius:6,
-    borderBottomRightRadius:6,
+    flex:1,
+    // borderTopRightRadius:6,
+    // borderBottomRightRadius:6,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -57,7 +59,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.20,
     shadowRadius: 1.41,
-
     elevation: 2,
   },
   text2:{

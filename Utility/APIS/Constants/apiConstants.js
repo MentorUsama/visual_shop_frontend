@@ -1,5 +1,5 @@
 // Domain
-export const BASE_URL="https://visualshopp.herokuapp.com/";
+export const BASE_URL="https://b29e-175-107-237-199.ap.ngrok.io/";
 // Apps
 export const CUSTOMER_BASE_URL=`${BASE_URL}api/customer/`;
 export const SHOP_BASE_URL=`${BASE_URL}api/shop/`;

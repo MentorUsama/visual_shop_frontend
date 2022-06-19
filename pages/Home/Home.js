@@ -229,7 +229,6 @@ const Home = (props) => {
                 clearTextSearch()
                 clearFilter()
                 props.addImageSearchedResult({
-                    features:searchedResult.data.features,
                     products:searchedResult.data.products,
                     imageURI:myImage.uri,
                     features_extracted:searchedResult.data.feature_extracted,
@@ -240,7 +239,6 @@ const Home = (props) => {
                 clearTextSearch()
                 clearFilter()
                 props.addImageSearchedResult({
-                    features:null,
                     products:[],
                     imageURI:myImage.uri,
                     features_extracted:searchedResult.data.feature_extracted
@@ -351,7 +349,6 @@ const Home = (props) => {
                 storeProducts={props.storeProducts}
 
                 pickedImage={props.imageSearchedResult.imageURI}
-                features={props.imageSearchedResult.features}
                 features_extracted={props.imageSearchedResult.features_extracted}
                 featuresProducts={props.imageSearchedResult.products}
 

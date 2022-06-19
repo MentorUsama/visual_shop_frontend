@@ -13,7 +13,6 @@ const initialState = {
     cartData:null,
     cartProductsDetail:null, // There might be possibility that product detail not available on store product because of next and previous page therefore we store cart data info seperately.
     imageSearchedResult:{
-        features:null,
         imageURI:null,
         products:null,
         features_extracted:null
